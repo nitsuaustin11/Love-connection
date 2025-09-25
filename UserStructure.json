@@ -1,0 +1,71 @@
+{
+  "first_name": "Alex",
+  "last_name": "Morgan",
+  "unique_id": "user_00123",
+  "email": "alex.morgan@example.com",
+  "birth_date": "",
+  "descriiption": "",
+  "interest": "",
+  "5 words": "",
+  "status": "active",
+  "subscription_plan": "pro",
+  "personality_types": [{
+    "test": "6 human needs",
+    "results_type": "scale",
+    "my_top_two_human_needs_are": ["love/connection","growth"],
+    "personality_description:": "based on your results, you find the most from growth and love",
+    "message_for_ai_therapist": "my top two personalities are blank, blank, info, info info"
+  }, {"test":"6 human needs",
+  "results_type": "singluar"}],
+
+  "journal_log": [
+    "What are three things you’re grateful for today?",
+    "Describe a moment this week that challenged you.",
+    "What emotions did you notice most strongly today?"
+  ],
+  "contacts": [
+    {
+      "name": "Jamie Lee",
+      "relationship": "therapist",
+      "email": "jamie.lee@therapyhub.com"
+    },
+    {
+      "name": "Taylor Smith",
+      "relationship": "friend",
+      "email": "taylor.smith@email.com"
+    }
+  ],
+  "therapy_sessions": [
+    {
+      "session_id": "sess_001",
+      "date": "2025-09-20",
+      "therapist": "Jamie Lee",
+      "notes": "Discussed coping mechanisms for stress."
+    },
+    {
+      "session_id": "sess_002",
+      "date": "2025-09-24",
+      "therapist": "Jamie Lee",
+      "notes": "Reviewed progress on anxiety management."
+    }
+  ],
+  "emotion_history": [
+    {
+      "date": "2025-09-23",
+      "mood": "anxious",
+      "intensity": 7,
+      "notes": "Workload felt overwhelming."
+    },
+    {
+      "date": "2025-09-24",
+      "mood": "calm",
+      "intensity": 4,
+      "notes": "Morning meditation was helpful."
+    }
+  ],
+  "current_check": {
+    "mood": "content",
+    "intensity": 5,
+    "notes": "Feeling balanced after today’s walk."
+  }
+}

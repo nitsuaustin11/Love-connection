@@ -1,0 +1,161 @@
+{
+  "checkinId": "checkin_20240925_001",
+  "userId": "firebase_auth_uid_12345",
+  "startedAt": "2024-09-25T18:00:00.000Z",
+  "completedAt": "2024-09-25T18:08:00.000Z",
+  "status": "completed",
+
+  "primaryEmotion": {
+    "emotion": "Frustration",
+    "selectedAt": "2024-09-25T18:00:00.000Z"
+  },
+
+  "immediateFeedback": {
+    "timeframe": {
+      "question": "When did this start affecting you?",
+      "type": "single_select",
+      "options": [
+        "10 minutes ago",
+        "last hour",
+        "several hours ago",
+        "yesterday",
+        "2-5 days ago",
+        "more than a week ago"
+      ],
+      "answer": "several hours ago",
+      "answeredAt": "2024-09-25T18:01:00.000Z"
+    },
+
+    "whatHappened": {
+      "question": "What happened?",
+      "type": "text_input",
+      "maxLength": 300,
+      "answer": "Multiple system crashes occurred right before an important deadline, and I have a client presentation tomorrow that I feel unprepared for.",
+      "answeredAt": "2024-09-25T18:02:00.000Z"
+    },
+
+    "whatTriggered": {
+      "question": "What triggered this feeling?",
+      "type": "text_input",
+      "maxLength": 250,
+      "answer": "The server crashed for the third time today while I was trying to finish my project. I realized I might not meet the deadline.",
+      "answeredAt": "2024-09-25T18:03:00.000Z"
+    },
+
+    "checkInReason": {
+      "question": "What made you feel the need to check in?",
+      "type": "text_input",
+      "maxLength": 200,
+      "answer": "I felt overwhelmed and needed to process these feelings before they got worse. I could feel the frustration building up.",
+      "answeredAt": "2024-09-25T18:04:00.000Z"
+    },
+
+    "symptoms": {
+      "question": "How has this been affecting you?",
+      "type": "multi_select",
+      "maxSelections": 12,
+      "options": [
+        "Loss of appetite",
+        "Drained of energy",
+        "Can't sleep",
+        "Agitated/Irritable",
+        "Difficulty concentrating",
+        "Tension in body",
+        "Restlessness",
+        "Feeling overwhelmed",
+        "Mood swings",
+        "Avoiding social contact",
+        "Procrastination",
+        "Physical headaches"
+      ],
+      "answers": ["Drained of energy", "Tension in body", "Feeling overwhelmed", "Difficulty concentrating"],
+      "answeredAt": "2024-09-25T18:05:00.000Z"
+    },
+
+    "intensityLevel": {
+      "question": "On a scale of 1-10, how strong is this emotion?",
+      "type": "slider",
+      "minValue": 1,
+      "maxValue": 10,
+      "answer": 7,
+      "answeredAt": "2024-09-25T18:06:00.000Z"
+    }
+  },
+
+  "digDeeper": {
+    "completed": true,
+    "completedAt": "2024-09-25T18:08:00.000Z",
+
+    "externalFactors": {
+      "question": "What are external factors that contributed to this?",
+      "type": "text_input",
+      "maxLength": 400,
+      "answer": "Server issues beyond my control, unrealistic timeline set by management, and lack of backup systems when technology fails.",
+      "answeredAt": "2024-09-25T18:06:30.000Z"
+    },
+
+    "controlFactors": {
+      "question": "What do you have control of?",
+      "type": "text_input",
+      "maxLength": 400,
+      "answer": "I can control my response to the situation, ask for help when needed, break tasks into smaller pieces, and prepare as much as possible for tomorrow's presentation.",
+      "answeredAt": "2024-09-25T18:07:00.000Z"
+    },
+
+    "selfNarrative": {
+      "question": "What story are you telling yourself that might be making this more or less than it is?",
+      "type": "text_input",
+      "maxLength": 400,
+      "answer": "I keep telling myself that I'm completely unprepared and that everyone will see I'm incompetent. I'm catastrophizing that this one bad day will ruin my reputation.",
+      "answeredAt": "2024-09-25T18:07:30.000Z"
+    },
+
+    "copingHistory": {
+      "question": "Have you experienced this specific emotion before? If so, what helped you get through it?",
+      "type": "text_input",
+      "maxLength": 350,
+      "answer": "Yes, I've felt this work frustration before. Taking short breaks, talking to my colleague Sarah, and reminding myself that technical problems are temporary usually helps me regain perspective.",
+      "answeredAt": "2024-09-25T18:08:00.000Z"
+    },
+
+    "supportNeeds": {
+      "question": "Right now, what type of support would be most helpful to you?",
+      "type": "single_select",
+      "options": [
+        "Someone to listen without giving advice",
+        "Practical solutions and next steps",
+        "Encouragement and reassurance",
+        "Help reframing my perspective",
+        "Distraction from the situation",
+        "Professional guidance",
+        "Just need to express my feelings"
+      ],
+      "answer": "Help reframing my perspective",
+      "answeredAt": "2024-09-25T18:08:00.000Z"
+    }
+  },
+
+  "completionMetadata": {
+    "immediateFeedbackTime": 360,
+    "digDeeperTime": 120,
+    "totalTimeSpent": 480,
+    "immediateFeedbackCompleted": true,
+    "digDeeperCompleted": true,
+    "questionsSkipped": 0
+  },
+
+  "nextActions": {
+    "sendToAiTherapist": true,
+    "sendToContacts": ["contact_002"],
+    "includeDigDeeperInContext": true,
+    "scheduleFollowUp": false
+  },
+
+  "generatedInsights": {
+    "emotionalPattern": "Work-related frustration with external technical factors",
+    "strengthsIdentified": ["Self-awareness", "Ability to identify control vs external factors"],
+    "recommendedCoping": ["Break tasks into smaller pieces", "Reach out to colleague Sarah", "Practice perspective reframing"],
+    "riskFactors": ["Catastrophic thinking", "Perfectionism"],
+    "contextDepth": "full"
+  }
+}

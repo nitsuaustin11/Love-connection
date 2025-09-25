@@ -1,0 +1,343 @@
+{
+  "uid": "firebase_auth_uid_12345",
+  "email": "alex.morgan@example.com",
+
+  "profile": {
+    "firstName": "Alex",
+    "lastName": "Morgan",
+    "description": "Working on managing emotional wellness through self-awareness",
+    "fiveWords": ["curious", "resilient", "empathetic", "growing", "hopeful"]
+  },
+
+  "accountStatus": {
+    "status": "active",
+    "createdAt": "2024-09-25T12:00:00.000Z",
+    "lastActiveAt": "2024-09-25T18:30:00.000Z",
+    "emailVerified": true
+  },
+
+  "subscription": {
+    "plan": "pro",
+    "status": "active",
+    "stripeCustomerId": "cus_stripe123",
+    "subscriptionId": "sub_stripe456",
+    "currentPeriodStart": "2024-09-25T00:00:00.000Z",
+    "currentPeriodEnd": "2024-10-25T23:59:59.000Z",
+    "cancelAtPeriodEnd": false,
+    "features": {
+      "unlimitedAiMessages": true,
+      "personalityInsights": true,
+      "emotionAnalytics": true,
+      "exportData": true,
+      "prioritySupport": true,
+      "advancedFollowUp": true
+    }
+  },
+
+  "personalityTypes": {
+    "type1": {
+      "name": "Analytical Thinker",
+      "description": "Processes emotions through logic and reasoning",
+      "strength": 8,
+      "isActive": true,
+      "lastModified": "2024-09-20T10:00:00.000Z"
+    },
+    "type2": {
+      "name": "Empathetic Connector",
+      "description": "Deeply feels and connects with others' emotions",
+      "strength": 9,
+      "isActive": true,
+      "lastModified": "2024-09-15T14:30:00.000Z"
+    },
+    "type3": {
+      "name": "Creative Expresser",
+      "description": "Uses creativity to process and express emotions",
+      "strength": 6,
+      "isActive": false,
+      "lastModified": "2024-09-10T09:15:00.000Z"
+    },
+    "type4": {
+      "name": "Practical Problem-Solver",
+      "description": "Focuses on actionable solutions to emotional challenges",
+      "strength": 7,
+      "isActive": true,
+      "lastModified": "2024-09-18T16:20:00.000Z"
+    },
+    "type5": {
+      "name": "Spiritual Seeker",
+      "description": "Finds meaning through spiritual or philosophical perspectives",
+      "strength": 4,
+      "isActive": false,
+      "lastModified": "2024-09-05T11:45:00.000Z"
+    },
+    "type6": {
+      "name": "Social Collaborator",
+      "description": "Processes emotions through social interaction and community",
+      "strength": 8,
+      "isActive": true,
+      "lastModified": "2024-09-22T13:10:00.000Z"
+    }
+  },
+
+  "currentCheckin": {
+    "checkinId": "checkin_20240925_001",
+    "startedAt": "2024-09-25T18:00:00.000Z",
+    "status": "immediate_feedback_completed",
+
+    "primaryEmotion": {
+      "emotion": "Frustration",
+      "selectedAt": "2024-09-25T18:00:00.000Z"
+    },
+
+    "immediateFeedback": {
+      "timeframe": {
+        "question": "When did this start affecting you?",
+        "answer": "several hours ago",
+        "answeredAt": "2024-09-25T18:01:00.000Z"
+      },
+      "whatHappened": {
+        "question": "What happened?",
+        "answer": "Multiple system crashes occurred right before an important deadline, and I have a client presentation tomorrow that I feel unprepared for.",
+        "answeredAt": "2024-09-25T18:02:00.000Z"
+      },
+      "whatTriggered": {
+        "question": "What triggered this feeling?",
+        "answer": "The server crashed for the third time today while I was trying to finish my project. I realized I might not meet the deadline.",
+        "answeredAt": "2024-09-25T18:03:00.000Z"
+      },
+      "checkInReason": {
+        "question": "What made you feel the need to check in?",
+        "answer": "I felt overwhelmed and needed to process these feelings before they got worse. I could feel the frustration building up.",
+        "answeredAt": "2024-09-25T18:04:00.000Z"
+      },
+      "symptoms": {
+        "question": "How has this been affecting you?",
+        "answers": ["Drained of energy", "Tension in body", "Feeling overwhelmed", "Difficulty concentrating"],
+        "answeredAt": "2024-09-25T18:05:00.000Z"
+      },
+      "intensityLevel": {
+        "question": "On a scale of 1-10, how strong is this emotion?",
+        "answer": 7,
+        "answeredAt": "2024-09-25T18:06:00.000Z"
+      }
+    },
+
+    "digDeeper": {
+      "completed": false,
+      "completedAt": null
+    }
+  },
+
+  "emotionHistory": [
+    {
+      "id": "checkin_20240925_001",
+      "emotion": "Frustration",
+      "selectedAt": "2024-09-25T18:00:00.000Z",
+      "status": "completed",
+      "immediateFeedback": {
+        "timeframe": {
+          "question": "When did this start affecting you?",
+          "answer": "several hours ago"
+        },
+        "whatHappened": {
+          "question": "What happened?",
+          "answer": "Multiple system crashes occurred right before an important deadline"
+        },
+        "whatTriggered": {
+          "question": "What triggered this feeling?",
+          "answer": "The server crashed for the third time today while I was trying to finish my project"
+        },
+        "checkInReason": {
+          "question": "What made you feel the need to check in?",
+          "answer": "I felt overwhelmed and needed to process these feelings"
+        },
+        "symptoms": {
+          "question": "How has this been affecting you?",
+          "answers": ["Drained of energy", "Tension in body", "Feeling overwhelmed", "Difficulty concentrating"]
+        },
+        "intensityLevel": {
+          "question": "On a scale of 1-10, how strong is this emotion?",
+          "answer": 7
+        }
+      },
+      "digDeeper": {
+        "completed": true,
+        "externalFactors": {
+          "question": "What are external factors that contributed to this?",
+          "answer": "Server issues beyond my control, unrealistic timeline set by management"
+        },
+        "controlFactors": {
+          "question": "What do you have control of?",
+          "answer": "I can control my response to the situation, ask for help when needed"
+        }
+      },
+      "gptContextSent": true,
+      "sentToContacts": ["ai_therapist"]
+    },
+    {
+      "id": "checkin_20240924_001",
+      "emotion": "Sadness/Grief",
+      "selectedAt": "2024-09-24T16:30:00.000Z",
+      "status": "completed",
+      "immediateFeedback": {
+        "timeframe": {
+          "question": "When did this start affecting you?",
+          "answer": "yesterday"
+        },
+        "whatHappened": {
+          "question": "What happened?",
+          "answer": "Today marks one year since my grandmother passed away"
+        },
+        "whatTriggered": {
+          "question": "What triggered this feeling?",
+          "answer": "Seeing old photos and finding letters she wrote to me"
+        },
+        "checkInReason": {
+          "question": "What made you feel the need to check in?",
+          "answer": "Missing her so much today and needing to process these feelings"
+        },
+        "symptoms": {
+          "question": "How has this been affecting you?",
+          "answers": ["Heavy chest", "Tears", "Loss of appetite"]
+        },
+        "intensityLevel": {
+          "question": "On a scale of 1-10, how strong is this emotion?",
+          "answer": 6
+        }
+      },
+      "digDeeper": {
+        "completed": false
+      },
+      "gptContextSent": true,
+      "sentToContacts": ["ai_therapist", "contact_002"]
+    }
+  ],
+
+  "availableEmotions": [
+    "Anger",
+    "Loneliness",
+    "Frustration",
+    "Shame",
+    "Fear",
+    "Sadness/Grief",
+    "Guilt",
+    "Hopeless"
+  ],
+
+  "messageThreads": [
+    {
+      "threadId": "thread_ai_001",
+      "participantType": "ai_therapist",
+      "participantName": "AI Therapist",
+      "lastMessageAt": "2024-09-25T18:15:00.000Z",
+      "messageCount": 47,
+      "isActive": true,
+      "recentMessages": [
+        {
+          "id": "msg_001",
+          "sender": "user",
+          "content": "I'm feeling frustrated today with work challenges",
+          "timestamp": "2024-09-25T18:05:00.000Z",
+          "emotionContext": "checkin_20240925_001"
+        },
+        {
+          "id": "msg_002",
+          "sender": "ai_therapist",
+          "content": "I understand you're experiencing frustration, particularly around work deadline pressure and technical difficulties. Given your personality as an Analytical Thinker and Practical Problem-Solver, let's break this down into manageable parts. What specific aspect of the deadline feels most overwhelming right now?",
+          "timestamp": "2024-09-25T18:15:00.000Z",
+          "basedOnContext": true
+        }
+      ]
+    },
+    {
+      "threadId": "thread_contact_002",
+      "participantType": "contact",
+      "participantId": "contact_002",
+      "participantName": "Taylor Smith",
+      "lastMessageAt": "2024-09-24T19:00:00.000Z",
+      "messageCount": 12,
+      "isActive": true,
+      "recentMessages": [
+        {
+          "id": "msg_003",
+          "sender": "user",
+          "content": "Having a tough day remembering grandma. It's been a year now.",
+          "timestamp": "2024-09-24T17:00:00.000Z",
+          "emotionContext": "checkin_20240924_001"
+        },
+        {
+          "id": "msg_004",
+          "sender": "contact",
+          "content": "I'm here for you. She would be so proud of how much you've grown this year. Want to talk about some of your favorite memories of her?",
+          "timestamp": "2024-09-24T19:00:00.000Z",
+          "basedOnContext": false
+        }
+      ]
+    }
+  ],
+
+  "contacts": [
+    {
+      "id": "contact_001",
+      "name": "AI Therapist",
+      "type": "ai_therapist",
+      "isActive": true,
+      "canReceiveEmotionUpdates": true,
+      "addedAt": "2024-09-25T12:00:00.000Z"
+    },
+    {
+      "id": "contact_002",
+      "name": "Taylor Smith",
+      "type": "friend",
+      "relationship": "close friend",
+      "email": "taylor.smith@email.com",
+      "canReceiveEmotionUpdates": true,
+      "isActive": true,
+      "addedAt": "2024-09-18T12:00:00.000Z"
+    }
+  ],
+
+  "gptMessageContext": {
+    "lastUpdated": "2024-09-25T18:00:00.000Z",
+    "personalityContext": {
+      "activeTypes": ["Analytical Thinker", "Empathetic Connector", "Practical Problem-Solver", "Social Collaborator"],
+      "strengths": [8, 9, 7, 8],
+      "summary": "User combines analytical thinking with deep empathy, prefers practical solutions, and processes emotions through social connection"
+    },
+    "currentEmotionalContext": {
+      "primaryEmotion": "Frustration",
+      "intensity": 7,
+      "triggers": ["work deadline pressure", "technical difficulties"],
+      "physicalState": ["tension in shoulders", "clenched jaw"],
+      "thoughtPatterns": "Nothing is going right today, I can't seem to make progress on anything",
+      "situationalContext": "Had multiple technical issues while trying to meet an important deadline"
+    },
+    "recentEmotionalPatterns": [
+      {"emotion": "Frustration", "frequency": 3, "averageIntensity": 6.5},
+      {"emotion": "Fear", "frequency": 2, "averageIntensity": 7.5},
+      {"emotion": "Sadness/Grief", "frequency": 1, "averageIntensity": 6}
+    ],
+    "communicationPreferences": {
+      "preferredResponseStyle": "analytical_yet_empathetic",
+      "wantsActionableAdvice": true,
+      "openToVulnerability": true
+    }
+  },
+
+  "appPreferences": {
+    "notifications": {
+      "dailyCheckinReminders": true,
+      "messageResponses": true,
+      "personalityTestReminders": false
+    },
+    "privacy": {
+      "shareEmotionDataWithContacts": true,
+      "allowAiLearning": true,
+      "anonymousUsageData": false
+    },
+    "ui": {
+      "theme": "light",
+      "language": "en"
+    }
+  }
+}

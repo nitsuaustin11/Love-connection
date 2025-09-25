@@ -1,0 +1,34 @@
+** Pages: 
+
+the main and home page: will have a check in page. users can select between several emotions to state the current emotion they are feeling. 
+the specific emotions we will be able to select are :  
+  ['Anger',
+  'Loneliness',
+  'Frustration',
+  'Shame',
+  'Fear',
+  'Sadness/Grief',
+  'Guilt',
+  'Hopeless']
+once an emotion is selected, it will navigate the user to a "follow-up" page. each button directs to the "follow-up" page. 
+however the follow up page populates based on the emotion, for now follow up page will remain blank. 
+
+the second main page: 
+Personality schematic page, should be titled "Personality Test". this is where each user can modify their profiles Personality settings. 
+the Personality page will display 6 different Personality types. wherein, every user can modify, adjust, what personality types they are.
+
+the last is the Message page:
+the message page will contain various message threads sent between users. and the "ai therapist". 
+
+the function that each of these pages handles is, what id call the "GPT-Message-Context". this is a data object that is 
+eventually going to be stringifyed to send to the "AI therapist". essentially, 
+
+the personalities page handles Context for a users personality -> this changes less frequently/rarely. 
+the Checkin page handles Context for immediate emotional experience -> this is updated frequently. 
+The messaging room handles context about the users immediate feedback about their emotion. 
+
+so when a user logs into the app. they will be able to click an emotion "check in" -> should check to see what personality types are available to add to the context, (if none make it so one is reqired to be filled in) -> "follow-up" (provides more info/context about the specific emotion) -> send to someone in contacts or to ai therapist. 
+
+keep in mind: this file is not for the purpose of developing the app. this is just to provide context about what data objects we need for the user, for the app, and stuff. 
+
+

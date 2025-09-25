@@ -1,0 +1,253 @@
+{
+  "mbti": {
+    "id": "mbti",
+    "name": "Myers–Briggs Type Indicator",
+    "types": {
+      "INTJ": {
+        "title": "INTJ — The Strategist",
+        "display": "Independent, systems thinker, long-range planner.",
+        "summary": "Strategic and future-oriented, INTJs enjoy building models to solve complex problems. They value competence, autonomy, and clarity of purpose.",
+        "firstPerson": "Based on my MBTI results, I’m an INTJ. I’m a systems thinker who enjoys turning complexity into strategy. I have high standards for competence and I prefer independence and efficiency. I value clear logic and long‑term planning, and I’m motivated by solving challenging problems. I can come across as reserved, but I’m deeply committed to ideas that make a difference. I thrive when I’m building and optimizing frameworks that last."
+      },
+      "ENFP": {
+        "title": "ENFP — The Inspirer",
+        "display": "Enthusiastic, imaginative, people-centered.",
+        "summary": "ENFPs thrive on possibilities and authentic connection. They bring energy to new ideas and motivate others through vision and empathy.",
+        "firstPerson": "Based on my MBTI results, I’m an ENFP. I’m enthusiastic and imaginative, and I’m energized by new ideas and genuine connection. I value freedom and alignment with my values, and I motivate people through vision and optimism. I can generate options quickly and see potential where others see limits. I thrive when I can explore and create with purpose."
+      },
+      "ISTJ": {
+        "title": "ISTJ — The Inspector",
+        "display": "Responsible, practical, detail-oriented.",
+        "summary": "ISTJs value reliability and order, excelling at creating and following clear processes.",
+        "firstPerson": "Based on my MBTI results, I’m an ISTJ. I’m dependable and methodical, and I like proven processes that keep things organized. I have a strong sense of duty and I follow through on commitments. I value clarity, facts, and structure, and I’m at my best when expectations are concrete. I can be reserved with feelings, but I show care by being reliable and thorough. I thrive when I can plan ahead and execute with precision."
+      },
+      "ISFJ": {
+        "title": "ISFJ — The Protector",
+        "display": "Loyal, careful, considerate.",
+        "summary": "ISFJs safeguard people and traditions with quiet diligence and empathy.",
+        "firstPerson": "Based on my MBTI results, I’m an ISFJ. I’m attentive and considerate, and I notice practical details others miss. I have a protective streak and I like supporting people behind the scenes. I value tradition and steadiness, and I’m motivated by being useful and dependable. I may hesitate to put myself first, but I’m quietly persistent when it matters. I thrive in environments where care and consistency are appreciated."
+      },
+      "INFJ": {
+        "title": "INFJ — The Guide",
+        "display": "Insightful, principled, compassionate.",
+        "summary": "INFJs seek meaning and alignment of values, often mentoring others toward growth.",
+        "firstPerson": "Based on my MBTI results, I’m an INFJ. I’m guided by values and long‑range meaning, and I look for the why behind what people do. I have a calm intensity and I prefer depth over breadth in relationships. I value harmony and authenticity, and I’m energized by helping people grow. I can be private with my own needs, yet I’m insightful about patterns and possibilities. I thrive when my work aligns with a cause."
+      },
+      "INTP": {
+        "title": "INTP — The Architect",
+        "display": "Analytical, abstract, curious.",
+        "summary": "INTPs deconstruct systems and pursue elegant explanations, prioritizing logic and truth.",
+        "firstPerson": "Based on my MBTI results, I’m an INTP. I’m curious and analytical, and I enjoy deconstructing systems to find elegant explanations. I value accuracy and independence of thought more than consensus. I can lose track of time when I’m exploring concepts, and I like freedom to connect ideas across domains. I thrive when I can solve puzzles without unnecessary constraints."
+      },
+      "ISTP": {
+        "title": "ISTP — The Troubleshooter",
+        "display": "Hands-on, adaptable, analytical.",
+        "summary": "ISTPs explore how things work and keep calm under pressure, favoring practical solutions.",
+        "firstPerson": "Based on my MBTI results, I’m an ISTP. I’m hands‑on, analytical, and calm under pressure. I like figuring out how things work and I learn best by doing. I value freedom and adaptability, and I prefer simple, practical solutions over theory. I can be private and straightforward, and I move on quickly once a problem is solved. I thrive in fast, tactile environments where quick decisions matter."
+      },
+      "ISFP": {
+        "title": "ISFP — The Artisan",
+        "display": "Gentle, aesthetic, present-focused.",
+        "summary": "ISFPs express values through tangible experiences and personal authenticity.",
+        "firstPerson": "Based on my MBTI results, I’m an ISFP. I’m gentle, observant, and attuned to the present moment. I have a strong inner compass and I express who I am through experiences and aesthetics. I value authenticity and kindness, and I prefer actions over big speeches. I can be quiet, but I care deeply and I notice the human side of things. I thrive when I have space to create and live according to my values."
+      },
+      "INFP": {
+        "title": "INFP — The Idealist",
+        "display": "Imaginative, values-driven, empathetic.",
+        "summary": "INFPs pursue meaning and authenticity, aligning actions with inner ideals.",
+        "firstPerson": "Based on my MBTI results, I’m an INFP. I’m idealistic and reflective, and I look for meaning in what I do. I have a strong sense of personal values and I’m motivated by authenticity and possibility. I value empathy and imagination, and I enjoy expressing myself through ideas or creative work. I can be reserved until trust is built. I thrive when I can champion causes I believe in."
+      },
+      "ENTJ": {
+        "title": "ENTJ — The Commander",
+        "display": "Decisive, organized, goal-driven.",
+        "summary": "ENTJs marshal resources to achieve ambitious outcomes with clarity and resolve.",
+        "firstPerson": "Based on my MBTI results, I’m an ENTJ. I’m strategic, results‑oriented, and comfortable leading complex efforts. I value efficiency, clarity, and strong execution. I challenge inefficiency and I push for better systems and outcomes. I can be direct, but my focus is on the mission. I thrive where big goals and crisp decisions are required."
+      },
+      "ENFJ": {
+        "title": "ENFJ — The Mentor",
+        "display": "Encouraging, organized, relational.",
+        "summary": "ENFJs galvanize people around shared values and growth.",
+        "firstPerson": "Based on my MBTI results, I’m an ENFJ. I’m encouraging, organized, and purpose‑driven. I value growth and alignment of values, and I’m skilled at rallying people around a shared vision. I notice interpersonal dynamics and work to create harmony without losing momentum. I thrive when I can mentor others and move meaningful work forward."
+      },
+      "ENTP": {
+        "title": "ENTP — The Debater",
+        "display": "Inventive, outspoken, quick-thinking.",
+        "summary": "ENTPs test ideas in real time, challenging assumptions to find better paths.",
+        "firstPerson": "Based on my MBTI results, I’m an ENTP. I’m inventive and quick‑thinking, and I like to challenge assumptions to improve systems. I value debate as a way to test ideas, and I enjoy connecting disparate concepts. I can be outspoken, but I’m aiming at better solutions, not just arguments. I thrive in dynamic environments that reward experimentation."
+      },
+      "ESTJ": {
+        "title": "ESTJ — The Supervisor",
+        "display": "Decisive, structured, efficient.",
+        "summary": "ESTJs coordinate plans and people to deliver consistent results.",
+        "firstPerson": "Based on my MBTI results, I’m an ESTJ. I’m organized, decisive, and focused on execution. I value clear roles, measurable goals, and efficient processes. I’m comfortable taking charge and making tough calls to keep things moving. I can be straightforward and pragmatic, and I expect commitments to be honored. I thrive where structure and accountability matter."
+      },
+      "ESFJ": {
+        "title": "ESFJ — The Provider",
+        "display": "Supportive, cooperative, community-minded.",
+        "summary": "ESFJs stabilize groups through care, tradition, and practical help.",
+        "firstPerson": "Based on my MBTI results, I’m an ESFJ. I’m supportive and community‑minded, and I notice the human needs that hold groups together. I value cooperation, responsibility, and follow‑through. I like traditions that create stability and I take pride in being dependable. I thrive when I can create a welcoming environment where people feel cared for."
+      },
+      "ESFP": {
+        "title": "ESFP — The Entertainer",
+        "display": "Lively, spontaneous, experiential.",
+        "summary": "ESFPs bring warmth and fun, tuning into the present moment.",
+        "firstPerson": "Based on my MBTI results, I’m an ESFP. I’m lively, warm, and tuned into experiences that bring people together. I value spontaneity and connection, and I like to make the most of the moment. I’m observant and practical, and I prefer learning by trying. I can be direct yet supportive. I thrive when I can share joy and help others feel included."
+      },
+      "ESTP": {
+        "title": "ESTP — The Dynamo",
+        "display": "Energetic, pragmatic, bold.",
+        "summary": "ESTPs move fast, troubleshoot, and adapt to opportunities.",
+        "firstPerson": "Based on my MBTI results, I’m an ESTP. I’m energetic, pragmatic, and action‑oriented. I like to move fast, troubleshoot problems, and seize opportunities. I value results and real‑world feedback, and I prefer straight talk over abstraction. I can be bold in high‑stakes moments, and I read the situation as it unfolds. I thrive where initiative and flexibility are rewarded."
+      }
+    }
+  },
+  "six_human_needs": {
+    "id": "six_human_needs",
+    "name": "Tony Robbins – Six Human Needs",
+    "needs": {
+      "certainty": "Certainty/Stability",
+      "variety": "Variety/Uncertainty",
+      "significance": "Significance",
+      "love_connection": "Love & Connection",
+      "growth": "Growth",
+      "contribution": "Contribution"
+    },
+    "need_summaries": {
+      "certainty": "I feel safe when life is predictable. Clear plans, reliable routines, and trusted commitments lower my stress and help me perform.",
+      "variety": "I’m energized by novelty and change. New challenges, experiences, and spontaneity keep me engaged and creative.",
+      "significance": "I want to matter and make a difference. Recognition, meaningful goals, and visible impact motivate me to bring my best.",
+      "love_connection": "I thrive on closeness and belonging. Warm relationships, empathy, and shared moments help me feel grounded and seen.",
+      "growth": "I’m driven to improve. Learning new skills and stretching my capabilities give me momentum and purpose.",
+      "contribution": "I’m fulfilled when I serve beyond myself. Helping, mentoring, and creating value for others give my work meaning."
+    },
+    "detailed_personality": {
+      "certainty": "hecertainty is my top need, I build structure into my days, plan ahead, and reduce risk so I can focus. Clear expectations and steady routines help me stay calm and deliver. When life becomes unpredictable, I feel anxious, on‑edge, and tempted to over‑control details to get stability back.",
+      "variety": "variety leads, I seek novelty, exploration, and change. I learn fast, switch contexts easily, and feel alive when I’m experimenting or discovering something new. If things get too repetitive, I feel bored, restless, and boxed‑in, and my motivation drops.",
+      "significance": "significance is primary, I’m driven to have visible impact and to be respected for excellence. I set high standards, lean into responsibility, and choose roles where my contribution is clear. If my efforts go unnoticed, I can feel overlooked, insecure, or defensive, and I may push harder to prove myself.",
+      "love_connection": "Love & connection comes first, I invest in closeness, trust, and shared moments. I’m at my best in supportive, collaborative environments where people feel seen. When connection is missing, I feel lonely, rejected, or overly sensitive to distance, and I may over‑extend to win back closeness.",
+      "growth": "growth is my top driver, I set learning goals, chase stretch assignments, and seek feedback. Progress—more than outcomes—keeps me engaged. If I can’t grow, I feel stagnant, frustrated, and doubtful about the path I’m on.",
+      "contribution": "contribution leads, I’m motivated by serving something bigger—mentoring, supporting, and building things that help others. I choose work with purpose and community impact. When I can’t contribute, I feel empty, irrelevant, or disengaged, and I look for ways to give back."
+    },
+    "unmet_emotions": {
+      "certainty": ["anxious", "tense", "irritable", "controlling"],
+      "variety": ["bored", "restless", "distracted", "impulsive"],
+      "significance": ["overlooked", "insecure", "resentful", "defensive"],
+      "love_connection": ["lonely", "rejected", "oversensitive", "people‑pleasing"],
+      "growth": ["stagnant", "frustrated", "disengaged", "self‑doubting"],
+      "contribution": ["empty", "irrelevant", "guilty", "disconnected"]
+    },
+    "response_templates": {
+      "display": "Primary needs: {{primary_label}} & {{secondary_label}}",
+      "firstPerson": "My top need is {{primary_label}}. {{primary_detailed}} When this need isn’t met, I tend to feel {{primary_unmet_emotions_joined}}. My secondary need is {{secondary_label}}. {{secondary_detailed}} Together, these shape my decisions and habits. {{distribution_lines}}"
+    }
+  },
+  "love_languages": {
+    "id": "love_languages",
+    "name": "Five Love Languages",
+    "languages": {
+      "words_of_affirmation": {
+        "label": "Words of Affirmation",
+        "summary": "You feel most loved through sincere verbal appreciation, encouragement, and thoughtful messages.",
+        "firstPerson": "I feel most loved when appreciation is spoken or written—specific encouragement, thoughtful notes, and genuine verbal support."
+      },
+      "quality_time": {
+        "label": "Quality Time",
+        "summary": "Undivided attention, shared focus, and meaningful presence are your strongest love signals.",
+        "firstPerson": "I feel most loved when we share focused time—unhurried conversations, eye contact, and being fully present together."
+      },
+      "receiving_gifts": {
+        "label": "Receiving Gifts",
+        "summary": "Tangible tokens of care—large or small—help you feel seen and remembered.",
+        "firstPerson": "I feel most loved when I’m given thoughtful tokens that say, ‘I was thinking of you’—it’s the meaning and attention behind the gift."
+      },
+      "acts_of_service": {
+        "label": "Acts of Service",
+        "summary": "Helpful actions and follow-through communicate love more than words.",
+        "firstPerson": "I feel most loved when someone lightens my load—pitching in, following through, and turning care into practical help."
+      },
+      "physical_touch": {
+        "label": "Physical Touch",
+        "summary": "Affectionate contact and closeness anchor your connection.",
+        "firstPerson": "I feel most loved through warm, appropriate touch—hugs, a hand on my shoulder, and small moments of closeness."
+      }
+    },
+    "response_templates": {
+      "display": "Primary: {{primary_label}} • Secondary: {{secondary_label}}",
+      "firstPerson": "My primary love language is {{primary_label}}. {{primary_firstPerson}} My secondary love language is {{secondary_label}}. {{secondary_firstPerson}} {{distribution_lines}}"
+    }
+  },
+  "ui": {
+    "display_modes": {
+      "summary_card": {
+        "title_field": "title_or_name",
+        "lines": [
+          { "source": "mbti.types[TYPE].display" },
+          { "source": "six_human_needs.response_templates.display" },
+          { "source": "love_languages.response_templates.display" }
+        ]
+      },
+      "detailed_profile": {
+        "sections": [
+          {
+            "id": "mbti_profile",
+            "heading": "MBTI",
+            "fields": [
+              { "label": "Type", "source": "mbti_type_code" },
+              { "label": "Display", "source": "mbti.types[TYPE].display" },
+              { "label": "Summary", "source": "mbti.types[TYPE].summary" },
+              { "label": "First‑person", "source": "mbti.types[TYPE].firstPerson" }
+            ]
+          },
+          {
+            "id": "six_needs_profile",
+            "heading": "Six Human Needs",
+            "fields": [
+              { "label": "Primary Pair", "source": "six_human_needs.response_templates.display" },
+              { "label": "Primary Need Summary", "source": "six_human_needs.need_summaries[PRIMARY_KEY]" },
+              { "label": "Primary Detailed Personality", "source": "six_human_needs.detailed_personality[PRIMARY_KEY]" },
+              { "label": "When Unmet (chips)", "source": "six_human_needs.unmet_emotions[PRIMARY_KEY]" },
+              { "label": "Secondary Need Summary", "source": "six_human_needs.need_summaries[SECONDARY_KEY]" },
+              { "label": "Secondary Detailed Personality", "source": "six_human_needs.detailed_personality[SECONDARY_KEY]" },
+              { "label": "First‑person Overview", "source": "six_human_needs.response_templates.firstPerson" }
+            ]
+          },
+          {
+            "id": "love_languages_profile",
+            "heading": "Love Languages",
+            "fields": [
+              { "label": "Primary/Secondary", "source": "love_languages.response_templates.display" },
+              { "label": "Primary (first‑person)", "source": "love_languages.languages[PRIMARY_LANG].firstPerson" },
+              { "label": "Secondary (first‑person)", "source": "love_languages.languages[SECONDARY_LANG].firstPerson" },
+              { "label": "Combined (first‑person)", "source": "love_languages.response_templates.firstPerson" }
+            ]
+          }
+        ]
+      },
+      "inline_chip": {
+        "mbti": { "source": "mbti_type_code" },
+        "six_human_needs": { "source": "six_human_needs.response_templates.display" },
+        "love_languages": { "source": "love_languages.response_templates.display" }
+      }
+    },
+    "placeholder_docs": {
+      "HOW_TO_FILL_TEMPLATES": "Use your computed results to replace tokens. Six Human Needs: identify PRIMARY_KEY and SECONDARY_KEY by weight; map to human labels; compose distribution_lines (e.g., 'Growth 28% · Contribution 24% · …'). Pull detailed text from detailed_personality[KEY] and unmet chips from unmet_emotions[KEY]. Love Languages: choose primary/secondary, map to labels, and use languages[KEY].firstPerson for first‑person text. MBTI: access mbti.types[TYPE].* fields.",
+      "TOKEN_REFERENCE": {
+        "TYPE": "User’s 4‑letter MBTI code (e.g., 'INTJ')",
+        "PRIMARY_KEY": "Top Six Human Needs key (e.g., 'growth')",
+        "SECONDARY_KEY": "Second Six Human Needs key",
+        "primary_label": "Human label for PRIMARY_KEY (e.g., 'Growth')",
+        "secondary_label": "Human label for SECONDARY_KEY",
+        "primary_detailed": "Text from six_human_needs.detailed_personality[PRIMARY_KEY]",
+        "secondary_detailed": "Text from six_human_needs.detailed_personality[SECONDARY_KEY]",
+        "primary_unmet_emotions_joined": "Join of six_human_needs.unmet_emotions[PRIMARY_KEY], e.g., 'stagnant, frustrated, disengaged'",
+        "distribution_lines": "Formatted breakdown of weights, e.g., 'Growth 28% · Contribution 24% · …'",
+        "PRIMARY_LANG": "Primary love language key (e.g., 'quality_time')",
+        "SECONDARY_LANG": "Secondary love language key",
+        "primary_label_lang": "Label for PRIMARY_LANG",
+        "secondary_label_lang": "Label for SECONDARY_LANG",
+        "primary_firstPerson": "love_languages.languages[PRIMARY_LANG].firstPerson",
+        "secondary_firstPerson": "love_languages.languages[SECONDARY_LANG].firstPerson"
+      }
+    }
+  }
+}
