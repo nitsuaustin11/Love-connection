@@ -15,11 +15,10 @@ const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [name, setName] = useState('');
   const { signUp, loading, error } = useAuthStore();
 
   const handleSignUp = async () => {
-    if (!email || !password || !confirmPassword || !name) {
+    if (!email || !password || !confirmPassword) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
@@ -35,8 +34,8 @@ const SignUpScreen = ({ navigation }) => {
     }
 
     try {
-      await signUp(email, password, { name });
-      Alert.alert('Success', 'Account created successfully!');
+      await signUp(email, password);
+      // Navigation to profile creation will be handled by auth flow
     } catch (error) {
       Alert.alert('Sign Up Error', error.message);
     }
@@ -49,14 +48,9 @@ const SignUpScreen = ({ navigation }) => {
     >
       <View style={styles.form}>
         <Text style={styles.title}>Create Account</Text>
-
-        <TextInput
-          style={styles.input}
-          placeholder="Full Name"
-          value={name}
-          onChangeText={setName}
-          autoCapitalize="words"
-        />
+        <Text style={styles.subtitle}>
+          Start your wellness journey with LoveConnect
+        </Text>
 
         <TextInput
           style={styles.input}
@@ -129,7 +123,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#e91e63',
     textAlign: 'center',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
     marginBottom: 30,
+    lineHeight: 22,
   },
   input: {
     borderWidth: 1,

@@ -9,6 +9,7 @@ import { Ionicons, FontAwesome, Feather, Octicons } from '@expo/vector-icons';
 import useAuthStore from './src/store/authStore';
 import LoginScreen from './src/screens/LoginScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
+import CreateProfileScreen from './src/screens/CreateProfileScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import PersonalityTestScreen from './src/screens/PersonalityTestScreen';
 import CheckInScreen from './src/screens/CheckInScreen';
@@ -73,7 +74,7 @@ export default function App() {
     const unsubscribe = initializeAuth();
     setInitializing(false);
 
-    
+
     return unsubscribe;
   }, []);
 
@@ -85,13 +86,23 @@ export default function App() {
     );
   }
 
+  // Check if user needs to complete profile
+  const needsProfileCompletion = user && (!user.profileCompleted && !user.firstName);
+
   return (
     <NavigationContainer>
       <StatusBar style="auto" />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
-          <Stack.Screen name="MainTabs" component={TabNavigator} />
+          needsProfileCompletion ? (
+            // User is logged in but needs to complete profile
+            <Stack.Screen name="CreateProfile" component={CreateProfileScreen} />
+          ) : (
+            // User is logged in and has completed profile
+            <Stack.Screen name="MainTabs" component={TabNavigator} />
+          )
         ) : (
+          // User is not logged in
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />

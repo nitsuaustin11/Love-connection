@@ -6,8 +6,12 @@ import {
   onAuthStateChanged,
   sendPasswordResetEmail
 } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../../Firebaseconfig';
+import { auth } from '../../Firebaseconfig';
+import {
+  initializeUserProfile,
+  getUserProfile,
+  createDefaultUserProfile
+} from '../services/userProfileService';
 
 const useAuthStore = create((set, get) => ({
   user: null,
@@ -17,16 +21,34 @@ const useAuthStore = create((set, get) => ({
   initializeAuth: () => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        const userData = userDoc.exists() ? userDoc.data() : {};
+        try {
+          // Get existing profile data
+          const existingProfile = await getUserProfile(user.uid);
 
-        set({
-          user: {
-            ...user,
-            ...userData
-          },
-          loading: false
-        });
+          // Initialize or update profile to ensure completeness
+          const completeProfile = await initializeUserProfile(user, existingProfile);
+
+          set({
+            user: {
+              ...user,
+              ...completeProfile
+            },
+            loading: false,
+            error: null
+          });
+        } catch (error) {
+          console.error('Error initializing user profile:', error);
+          set({
+            user: {
+              ...user,
+              // Fallback to basic user data if profile initialization fails
+              uid: user.uid,
+              email: user.email
+            },
+            loading: false,
+            error: 'Failed to load profile data'
+          });
+        }
       } else {
         set({ user: null, loading: false });
       }
@@ -45,16 +67,17 @@ const useAuthStore = create((set, get) => ({
     }
   },
 
-  signUp: async (email, password, userData = {}) => {
+  signUp: async (email, password) => {
     try {
       set({ loading: true, error: null });
       const { user } = await createUserWithEmailAndPassword(auth, email, password);
 
-      await setDoc(doc(db, 'users', user.uid), {
-        email: user.email,
-        createdAt: new Date().toISOString(),
-        ...userData
-      });
+      // Create basic user profile - detailed profile will be completed
+      // in CreateProfileScreen after successful signup
+      await initializeUserProfile(user, null, { profileCompleted: false });
+
+      // Note: The auth state change listener will automatically
+      // load the profile and route to CreateProfileScreen for completion
 
     } catch (error) {
       set({ error: error.message, loading: false });
@@ -81,7 +104,28 @@ const useAuthStore = create((set, get) => ({
     }
   },
 
-  clearError: () => set({ error: null })
+  clearError: () => set({ error: null }),
+
+  refreshUserProfile: async () => {
+    try {
+      const currentUser = get().user;
+      if (!currentUser) return;
+
+      // Get updated profile data
+      const updatedProfile = await getUserProfile(currentUser.uid);
+
+      if (updatedProfile) {
+        set({
+          user: {
+            ...currentUser,
+            ...updatedProfile
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error refreshing user profile:', error);
+    }
+  }
 }));
 
 export default useAuthStore;
