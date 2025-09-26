@@ -1,314 +1,310 @@
-{
-  "personality_Test": {
-    "test_types": {
-      "mbti": {
-        "Test_information": {
-          "test_name": "MBTI (Myers-Briggs Type Indicator)",
-          "test_description": "Discover your psychological preferences in how you perceive the world and make decisions",
-          "card_summary": "Understand your cognitive style and decision-making patterns",
-          "completion_time": "10-15 minutes",
-          "external_test_url": "https://www.16personalities.com/free-personality-test",
-          "test_link": {
-            "url": "https://www.16personalities.com/free-personality-test",
-            "button_text": "Take the Test",
-            "description": "Complete the official 16Personalities assessment"
-          },
-          "input_type": "single_select",
-          "types_of_results": [
-            {
-              "result_name": "INTJ",
-              "result_title": "The Strategist",
-              "result_summary": "Independent, systems thinker, long-range planner.",
-              "result_description": "Strategic and future-oriented, INTJs enjoy building models to solve complex problems. They value competence, autonomy, and clarity of purpose.",
-              "result_Gpt_context": "My Results from the MBII personality test are: INTJ: 'the Strategist', general info: summary: {results_summary}, description: {results_description} i want you to conceptualize my personality using these results, research accurate MBII result information to understand me more precicely: and provide me information that could be useful based on my current experience, which i will provide you below:"
-            },
-            {
-              "result_name": "INTP",
-              "result_title": "The Thinker",
-              "result_summary": "Logical, independent, and theoretical.",
-              "result_description": "INTPs are analytical problem-solvers who enjoy exploring theoretical concepts and possibilities. They value intellectual freedom and precision.",
-              "result_Gpt_context": "My Results from the MBTI personality test are: INTP: 'The Thinker', general info: summary: Logical, independent, and theoretical., description: INTPs are analytical problem-solvers who enjoy exploring theoretical concepts and possibilities. They value intellectual freedom and precision. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "ENTJ",
-              "result_title": "The Commander",
-              "result_summary": "Natural-born leader, strategic and determined.",
-              "result_description": "ENTJs are decisive leaders who organize people and resources to achieve long-term goals. They value efficiency and competence.",
-              "result_Gpt_context": "My Results from the MBTI personality test are: ENTJ: 'The Commander', general info: summary: Natural-born leader, strategic and determined., description: ENTJs are decisive leaders who organize people and resources to achieve long-term goals. They value efficiency and competence. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "ENTP",
-              "result_title": "The Debater",
-              "result_summary": "Innovative, curious, and intellectually challenging.",
-              "result_description": "ENTPs are creative innovators who enjoy exploring new possibilities and challenging conventional thinking. They thrive on intellectual stimulation.",
-              "result_Gpt_context": "My Results from the MBTI personality test are: ENTP: 'The Debater', general info: summary: Innovative, curious, and intellectually challenging., description: ENTPs are creative innovators who enjoy exploring new possibilities and challenging conventional thinking. They thrive on intellectual stimulation. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "INFJ",
-              "result_title": "The Advocate",
-              "result_summary": "Insightful, inspiring, and principled.",
-              "result_description": "INFJs are compassionate visionaries who seek to understand people and help them reach their potential. They value authenticity and meaningful connections.",
-              "result_Gpt_context": "My Results from the MBTI personality test are: INFJ: 'The Advocate', general info: summary: Insightful, inspiring, and principled., description: INFJs are compassionate visionaries who seek to understand people and help them reach their potential. They value authenticity and meaningful connections. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "INFP",
-              "result_title": "The Mediator",
-              "result_summary": "Idealistic, loyal, and value-driven.",
-              "result_description": "INFPs are guided by their values and seek harmony in their relationships and environment. They are creative and deeply empathetic.",
-              "result_Gpt_context": "My Results from the MBTI personality test are: INFP: 'The Mediator', general info: summary: Idealistic, loyal, and value-driven., description: INFPs are guided by their values and seek harmony in their relationships and environment. They are creative and deeply empathetic. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "ENFJ",
-              "result_title": "The Teacher",
-              "result_summary": "Charismatic, inspiring, and natural leaders.",
-              "result_description": "ENFJs are passionate about helping others reach their potential. They're natural teachers and coaches who create positive change.",
-              "result_Gpt_context": "My Results from the MBTI personality test are: ENFJ: 'The Teacher', general info: summary: Charismatic, inspiring, and natural leaders., description: ENFJs are passionate about helping others reach their potential. They're natural teachers and coaches who create positive change. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "ENFP",
-              "result_title": "The Inspirer",
-              "result_summary": "Enthusiastic, creative, and people-focused.",
-              "result_description": "ENFPs are passionate about possibilities and connections. They bring energy to teams and love exploring new ideas with others.",
-              "result_Gpt_context": "My Results from the MBTI personality test are: ENFP: 'The Inspirer', general info: summary: Enthusiastic, creative, and people-focused., description: ENFPs are passionate about possibilities and connections. They bring energy to teams and love exploring new ideas with others. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "ISTJ",
-              "result_title": "The Protector",
-              "result_summary": "Responsible, detailed, and systematic.",
-              "result_description": "ISTJs are reliable and methodical, preferring proven methods and clear structures. They value tradition and commitment to responsibilities.",
-              "result_Gpt_context": "My Results from the MBTI personality test are: ISTJ: 'The Protector', general info: summary: Responsible, detailed, and systematic., description: ISTJs are reliable and methodical, preferring proven methods and clear structures. They value tradition and commitment to responsibilities. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "ISFJ",
-              "result_title": "The Defender",
-              "result_summary": "Warm, responsible, and considerate.",
-              "result_description": "ISFJs are nurturing protectors who are dedicated to serving others. They value stability and work behind the scenes to support people.",
-              "result_Gpt_context": "My Results from the MBTI personality test are: ISFJ: 'The Defender', general info: summary: Warm, responsible, and considerate., description: ISFJs are nurturing protectors who are dedicated to serving others. They value stability and work behind the scenes to support people. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "ESTJ",
-              "result_title": "The Executive",
-              "result_summary": "Organized, decisive, and traditional.",
-              "result_description": "ESTJs are natural administrators who value order, structure, and getting things done efficiently. They are practical and results-oriented.",
-              "result_Gpt_context": "My Results from the MBTI personality test are: ESTJ: 'The Executive', general info: summary: Organized, decisive, and traditional., description: ESTJs are natural administrators who value order, structure, and getting things done efficiently. They are practical and results-oriented. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "ESFJ",
-              "result_title": "The Consul",
-              "result_summary": "Caring, social, and community-minded.",
-              "result_description": "ESFJs are warm-hearted cooperators who value harmony and helping others. They are attentive to the needs of people around them.",
-              "result_Gpt_context": "My Results from the MBTI personality test are: ESFJ: 'The Consul', general info: summary: Caring, social, and community-minded., description: ESFJs are warm-hearted cooperators who value harmony and helping others. They are attentive to the needs of people around them. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "ISTP",
-              "result_title": "The Craftsman",
-              "result_summary": "Practical, adaptable, and action-oriented.",
-              "result_description": "ISTPs are hands-on problem solvers who prefer to learn through experience. They value independence and practical solutions.",
-              "result_Gpt_context": "My Results from the MBTI personality test are: ISTP: 'The Craftsman', general info: summary: Practical, adaptable, and action-oriented., description: ISTPs are hands-on problem solvers who prefer to learn through experience. They value independence and practical solutions. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "ISFP",
-              "result_title": "The Artist",
-              "result_summary": "Gentle, caring, and aesthetically aware.",
-              "result_description": "ISFPs are sensitive artists who live in the moment and express themselves through their values and creativity. They seek authenticity and beauty.",
-              "result_Gpt_context": "My Results from the MBTI personality test are: ISFP: 'The Artist', general info: summary: Gentle, caring, and aesthetically aware., description: ISFPs are sensitive artists who live in the moment and express themselves through their values and creativity. They seek authenticity and beauty. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "ESTP",
-              "result_title": "The Entrepreneur",
-              "result_summary": "Energetic, perceptive, and spontaneous.",
-              "result_description": "ESTPs are dynamic adaptors who live in the moment and enjoy taking action. They are resourceful and excel in crisis situations.",
-              "result_Gpt_context": "My Results from the MBTI personality test are: ESTP: 'The Entrepreneur', general info: summary: Energetic, perceptive, and spontaneous., description: ESTPs are dynamic adaptors who live in the moment and enjoy taking action. They are resourceful and excel in crisis situations. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "ESFP",
-              "result_title": "The Entertainer",
-              "result_summary": "Enthusiastic, spontaneous, and people-centered.",
-              "result_description": "ESFPs are energetic entertainers who love people and new experiences. They are spontaneous and bring joy and warmth to others.",
-              "result_Gpt_context": "My Results from the MBTI personality test are: ESFP: 'The Entertainer', general info: summary: Enthusiastic, spontaneous, and people-centered., description: ESFPs are energetic entertainers who love people and new experiences. They are spontaneous and bring joy and warmth to others. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            }
-          ]
-        },
-        "Ui_information": {
-          "card_color": "#6B46C1",
-          "card_icon": "brain",
-          "result_display_format": "Your Results: {result_name} - {result_title}",
-          "no_results_text": "No results currently"
-        },
-        "add_results_page": {
-          "input_method": "dropdown_select",
-          "instruction_text": "Select your MBTI personality type",
-          "all_options": [
-            "INTJ - The Strategist",
-            "INTP - The Thinker",
-            "ENTJ - The Commander",
-            "ENTP - The Debater",
-            "INFJ - The Advocate",
-            "INFP - The Mediator",
-            "ENFJ - The Teacher",
-            "ENFP - The Inspirer",
-            "ISTJ - The Protector",
-            "ISFJ - The Defender",
-            "ESTJ - The Executive",
-            "ESFJ - The Consul",
-            "ISTP - The Craftsman",
-            "ISFP - The Artist",
-            "ESTP - The Entrepreneur",
-            "ESFP - The Entertainer"
-          ]
-        },
-        "gpt_context": "User's MBTI type provides insight into their cognitive preferences, decision-making style, and communication patterns. Use this to tailor therapeutic responses to their natural way of processing information and relationships."
+{"mbti": 
+    {
+    "Test_information": {
+      "test_name": "MBTI (Myers-Briggs Type Indicator)",
+      "test_description": "Discover your psychological preferences in how you perceive the world and make decisions",
+      "card_summary": "Understand your cognitive style and decision-making patterns",
+      "completion_time": "10-15 minutes",
+      "external_test_url": "https://www.16personalities.com/free-personality-test",
+      "test_link": {
+        "url": "https://www.16personalities.com/free-personality-test",
+        "button_text": "Take the Test",
+        "description": "Complete the official 16Personalities assessment"
       },
-      "sixHumanNeeds": {
-        "Test_information": {
-          "test_name": "Six Human Needs Assessment",
-          "test_description": "Discover which of the six fundamental human drives motivate your decisions and behaviors",
-          "card_summary": "Identify your core motivational drivers and what fulfills you",
-          "completion_time": "8-12 minutes",
-          "external_test_url": "https://www.tonyrobbins.com/human-needs-assessment/",
-          "test_link": {
-            "url": "https://www.tonyrobbins.com/human-needs-assessment/",
-            "button_text": "Take the Test",
-            "description": "Complete Tony Robbins' Six Human Needs Assessment"
-          },
-          "input_type": "percentage_sliders",
-          "types_of_results": [
-            {
-              "result_name": "growth",
-              "result_title": "Growth",
-              "result_summary": "Driven by continuous improvement and expansion",
-              "result_description": "People with Growth as their primary need are motivated by progress, learning, and developing their potential. They seek new experiences and challenges.",
-              "result_Gpt_context": "My Results from the Six Human Needs personality test are: Growth: 'Primary Need', general info: summary: Driven by continuous improvement and expansion, description: People with Growth as their primary need are motivated by progress, learning, and developing their potential. They seek new experiences and challenges. I want you to conceptualize my personality using these results, research accurate Six Human Needs result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "love_connection",
-              "result_title": "Love & Connection",
-              "result_summary": "Motivated by relationships and belonging",
-              "result_description": "Those driven by Love & Connection prioritize relationships, empathy, and shared experiences. They value intimacy and emotional bonds.",
-              "result_Gpt_context": "My Results from the Six Human Needs personality test are: Love & Connection: 'Primary Need', general info: summary: Motivated by relationships and belonging, description: Those driven by Love & Connection prioritize relationships, empathy, and shared experiences. They value intimacy and emotional bonds. I want you to conceptualize my personality using these results, research accurate Six Human Needs result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "certainty",
-              "result_title": "Certainty",
-              "result_summary": "Seeks security, stability, and predictability",
-              "result_description": "People with Certainty as their top need value security, comfort, and avoiding pain. They prefer familiar environments and predictable outcomes.",
-              "result_Gpt_context": "My Results from the Six Human Needs personality test are: Certainty: 'Primary Need', general info: summary: Seeks security, stability, and predictability, description: People with Certainty as their top need value security, comfort, and avoiding pain. They prefer familiar environments and predictable outcomes. I want you to conceptualize my personality using these results, research accurate Six Human Needs result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "variety",
-              "result_title": "Variety",
-              "result_summary": "Craves novelty, excitement, and change",
-              "result_description": "Those driven by Variety seek new experiences, surprises, and stimulation. They enjoy change and can become bored with routine.",
-              "result_Gpt_context": "My Results from the Six Human Needs personality test are: Variety: 'Primary Need', general info: summary: Craves novelty, excitement, and change, description: Those driven by Variety seek new experiences, surprises, and stimulation. They enjoy change and can become bored with routine. I want you to conceptualize my personality using these results, research accurate Six Human Needs result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "significance",
-              "result_title": "Significance",
-              "result_summary": "Motivated by recognition and unique contribution",
-              "result_description": "People with Significance as their primary need want to feel special, important, and valued. They seek recognition and want to make a unique contribution.",
-              "result_Gpt_context": "My Results from the Six Human Needs personality test are: Significance: 'Primary Need', general info: summary: Motivated by recognition and unique contribution, description: People with Significance as their primary need want to feel special, important, and valued. They seek recognition and want to make a unique contribution. I want you to conceptualize my personality using these results, research accurate Six Human Needs result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "contribution",
-              "result_title": "Contribution",
-              "result_summary": "Driven by service and making a difference",
-              "result_description": "Those motivated by Contribution want to serve others and make a positive impact. They find fulfillment in giving and creating value beyond themselves.",
-              "result_Gpt_context": "My Results from the Six Human Needs personality test are: Contribution: 'Primary Need', general info: summary: Driven by service and making a difference, description: Those motivated by Contribution want to serve others and make a positive impact. They find fulfillment in giving and creating value beyond themselves. I want you to conceptualize my personality using these results, research accurate Six Human Needs result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            }
-          ]
+      "input_type": "single_select",
+      "types_of_results": [
+        {
+          "result_name": "INTJ",
+          "result_title": "The Strategist",
+          "result_summary": "Independent, systems thinker, long-range planner.",
+          "result_description": "Strategic and future-oriented, INTJs enjoy building models to solve complex problems. They value competence, autonomy, and clarity of purpose.",
+          "result_Gpt_context": "My Results from the MBII personality test are: INTJ: 'the Strategist', general info: summary: {results_summary}, description: {results_description} i want you to conceptualize my personality using these results, research accurate MBII result information to understand me more precicely: and provide me information that could be useful based on my current experience, which i will provide you below:"
         },
-        "Ui_information": {
-          "card_color": "#059669",
-          "card_icon": "heart",
-          "result_display_format": "Your Results: Primary - {primary_need}, Secondary - {secondary_need}",
-          "no_results_text": "No results currently"
+        {
+          "result_name": "INTP",
+          "result_title": "The Thinker",
+          "result_summary": "Logical, independent, and theoretical.",
+          "result_description": "INTPs are analytical problem-solvers who enjoy exploring theoretical concepts and possibilities. They value intellectual freedom and precision.",
+          "result_Gpt_context": "My Results from the MBTI personality test are: INTP: 'The Thinker', general info: summary: Logical, independent, and theoretical., description: INTPs are analytical problem-solvers who enjoy exploring theoretical concepts and possibilities. They value intellectual freedom and precision. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
         },
-        "add_results_page": {
-          "input_method": "percentage_sliders",
-          "instruction_text": "Distribute 100% across the six human needs based on your priorities",
-          "slider_options": [
-            "Growth",
-            "Love & Connection",
-            "Certainty",
-            "Variety",
-            "Significance",
-            "Contribution"
-          ],
-          "validation": "total_must_equal_100"
+        {
+          "result_name": "ENTJ",
+          "result_title": "The Commander",
+          "result_summary": "Natural-born leader, strategic and determined.",
+          "result_description": "ENTJs are decisive leaders who organize people and resources to achieve long-term goals. They value efficiency and competence.",
+          "result_Gpt_context": "My Results from the MBTI personality test are: ENTJ: 'The Commander', general info: summary: Natural-born leader, strategic and determined., description: ENTJs are decisive leaders who organize people and resources to achieve long-term goals. They value efficiency and competence. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
         },
-        "gpt_context": "User's Six Human Needs reveal their core motivational drivers. Use this to understand what truly motivates them and how to frame therapeutic suggestions in ways that align with their deepest needs."
+        {
+          "result_name": "ENTP",
+          "result_title": "The Debater",
+          "result_summary": "Innovative, curious, and intellectually challenging.",
+          "result_description": "ENTPs are creative innovators who enjoy exploring new possibilities and challenging conventional thinking. They thrive on intellectual stimulation.",
+          "result_Gpt_context": "My Results from the MBTI personality test are: ENTP: 'The Debater', general info: summary: Innovative, curious, and intellectually challenging., description: ENTPs are creative innovators who enjoy exploring new possibilities and challenging conventional thinking. They thrive on intellectual stimulation. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "INFJ",
+          "result_title": "The Advocate",
+          "result_summary": "Insightful, inspiring, and principled.",
+          "result_description": "INFJs are compassionate visionaries who seek to understand people and help them reach their potential. They value authenticity and meaningful connections.",
+          "result_Gpt_context": "My Results from the MBTI personality test are: INFJ: 'The Advocate', general info: summary: Insightful, inspiring, and principled., description: INFJs are compassionate visionaries who seek to understand people and help them reach their potential. They value authenticity and meaningful connections. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "INFP",
+          "result_title": "The Mediator",
+          "result_summary": "Idealistic, loyal, and value-driven.",
+          "result_description": "INFPs are guided by their values and seek harmony in their relationships and environment. They are creative and deeply empathetic.",
+          "result_Gpt_context": "My Results from the MBTI personality test are: INFP: 'The Mediator', general info: summary: Idealistic, loyal, and value-driven., description: INFPs are guided by their values and seek harmony in their relationships and environment. They are creative and deeply empathetic. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "ENFJ",
+          "result_title": "The Teacher",
+          "result_summary": "Charismatic, inspiring, and natural leaders.",
+          "result_description": "ENFJs are passionate about helping others reach their potential. They're natural teachers and coaches who create positive change.",
+          "result_Gpt_context": "My Results from the MBTI personality test are: ENFJ: 'The Teacher', general info: summary: Charismatic, inspiring, and natural leaders., description: ENFJs are passionate about helping others reach their potential. They're natural teachers and coaches who create positive change. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "ENFP",
+          "result_title": "The Inspirer",
+          "result_summary": "Enthusiastic, creative, and people-focused.",
+          "result_description": "ENFPs are passionate about possibilities and connections. They bring energy to teams and love exploring new ideas with others.",
+          "result_Gpt_context": "My Results from the MBTI personality test are: ENFP: 'The Inspirer', general info: summary: Enthusiastic, creative, and people-focused., description: ENFPs are passionate about possibilities and connections. They bring energy to teams and love exploring new ideas with others. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "ISTJ",
+          "result_title": "The Protector",
+          "result_summary": "Responsible, detailed, and systematic.",
+          "result_description": "ISTJs are reliable and methodical, preferring proven methods and clear structures. They value tradition and commitment to responsibilities.",
+          "result_Gpt_context": "My Results from the MBTI personality test are: ISTJ: 'The Protector', general info: summary: Responsible, detailed, and systematic., description: ISTJs are reliable and methodical, preferring proven methods and clear structures. They value tradition and commitment to responsibilities. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "ISFJ",
+          "result_title": "The Defender",
+          "result_summary": "Warm, responsible, and considerate.",
+          "result_description": "ISFJs are nurturing protectors who are dedicated to serving others. They value stability and work behind the scenes to support people.",
+          "result_Gpt_context": "My Results from the MBTI personality test are: ISFJ: 'The Defender', general info: summary: Warm, responsible, and considerate., description: ISFJs are nurturing protectors who are dedicated to serving others. They value stability and work behind the scenes to support people. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "ESTJ",
+          "result_title": "The Executive",
+          "result_summary": "Organized, decisive, and traditional.",
+          "result_description": "ESTJs are natural administrators who value order, structure, and getting things done efficiently. They are practical and results-oriented.",
+          "result_Gpt_context": "My Results from the MBTI personality test are: ESTJ: 'The Executive', general info: summary: Organized, decisive, and traditional., description: ESTJs are natural administrators who value order, structure, and getting things done efficiently. They are practical and results-oriented. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "ESFJ",
+          "result_title": "The Consul",
+          "result_summary": "Caring, social, and community-minded.",
+          "result_description": "ESFJs are warm-hearted cooperators who value harmony and helping others. They are attentive to the needs of people around them.",
+          "result_Gpt_context": "My Results from the MBTI personality test are: ESFJ: 'The Consul', general info: summary: Caring, social, and community-minded., description: ESFJs are warm-hearted cooperators who value harmony and helping others. They are attentive to the needs of people around them. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "ISTP",
+          "result_title": "The Craftsman",
+          "result_summary": "Practical, adaptable, and action-oriented.",
+          "result_description": "ISTPs are hands-on problem solvers who prefer to learn through experience. They value independence and practical solutions.",
+          "result_Gpt_context": "My Results from the MBTI personality test are: ISTP: 'The Craftsman', general info: summary: Practical, adaptable, and action-oriented., description: ISTPs are hands-on problem solvers who prefer to learn through experience. They value independence and practical solutions. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "ISFP",
+          "result_title": "The Artist",
+          "result_summary": "Gentle, caring, and aesthetically aware.",
+          "result_description": "ISFPs are sensitive artists who live in the moment and express themselves through their values and creativity. They seek authenticity and beauty.",
+          "result_Gpt_context": "My Results from the MBTI personality test are: ISFP: 'The Artist', general info: summary: Gentle, caring, and aesthetically aware., description: ISFPs are sensitive artists who live in the moment and express themselves through their values and creativity. They seek authenticity and beauty. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "ESTP",
+          "result_title": "The Entrepreneur",
+          "result_summary": "Energetic, perceptive, and spontaneous.",
+          "result_description": "ESTPs are dynamic adaptors who live in the moment and enjoy taking action. They are resourceful and excel in crisis situations.",
+          "result_Gpt_context": "My Results from the MBTI personality test are: ESTP: 'The Entrepreneur', general info: summary: Energetic, perceptive, and spontaneous., description: ESTPs are dynamic adaptors who live in the moment and enjoy taking action. They are resourceful and excel in crisis situations. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "ESFP",
+          "result_title": "The Entertainer",
+          "result_summary": "Enthusiastic, spontaneous, and people-centered.",
+          "result_description": "ESFPs are energetic entertainers who love people and new experiences. They are spontaneous and bring joy and warmth to others.",
+          "result_Gpt_context": "My Results from the MBTI personality test are: ESFP: 'The Entertainer', general info: summary: Enthusiastic, spontaneous, and people-centered., description: ESFPs are energetic entertainers who love people and new experiences. They are spontaneous and bring joy and warmth to others. I want you to conceptualize my personality using these results, research accurate MBTI result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        }
+      ]
+    },
+    "Ui_information": {
+      "card_color": "#6B46C1",
+      "card_icon": "brain",
+      "result_display_format": "Your Results: {result_name} - {result_title}",
+      "no_results_text": "No results currently"
+    },
+    "add_results_page": {
+      "input_method": "dropdown_select",
+      "instruction_text": "Select your MBTI personality type",
+      "all_options": [
+        "INTJ - The Strategist",
+        "INTP - The Thinker",
+        "ENTJ - The Commander",
+        "ENTP - The Debater",
+        "INFJ - The Advocate",
+        "INFP - The Mediator",
+        "ENFJ - The Teacher",
+        "ENFP - The Inspirer",
+        "ISTJ - The Protector",
+        "ISFJ - The Defender",
+        "ESTJ - The Executive",
+        "ESFJ - The Consul",
+        "ISTP - The Craftsman",
+        "ISFP - The Artist",
+        "ESTP - The Entrepreneur",
+        "ESFP - The Entertainer"
+      ]
+    },
+    "gpt_context": "User's MBTI type provides insight into their cognitive preferences, decision-making style, and communication patterns. Use this to tailor therapeutic responses to their natural way of processing information and relationships."
+  },
+  "sixHumanNeeds": {
+    "Test_information": {
+      "test_name": "Six Human Needs Assessment",
+      "test_description": "Discover which of the six fundamental human drives motivate your decisions and behaviors",
+      "card_summary": "Identify your core motivational drivers and what fulfills you",
+      "completion_time": "8-12 minutes",
+      "external_test_url": "https://www.tonyrobbins.com/human-needs-assessment/",
+      "test_link": {
+        "url": "https://www.tonyrobbins.com/human-needs-assessment/",
+        "button_text": "Take the Test",
+        "description": "Complete Tony Robbins' Six Human Needs Assessment"
       },
-      "loveLanguages": {
-        "Test_information": {
-          "test_name": "Love Languages Assessment",
-          "test_description": "Discover how you prefer to give and receive love in relationships",
-          "card_summary": "Learn how you express and receive love most effectively",
-          "completion_time": "5-8 minutes",
-          "external_test_url": "https://www.5lovelanguages.com/quizzes/love-language",
-          "test_link": {
-            "url": "https://www.5lovelanguages.com/quizzes/love-language",
-            "button_text": "Take the Test",
-            "description": "Complete Gary Chapman's official Love Languages quiz"
-          },
-          "input_type": "percentage_sliders",
-          "types_of_results": [
-            {
-              "result_name": "quality_time",
-              "result_title": "Quality Time",
-              "result_summary": "Values focused attention and presence",
-              "result_description": "People with Quality Time as their love language feel most loved through focused attention, meaningful conversations, and shared experiences without distractions.",
-              "result_Gpt_context": "My Results from the Love Languages personality test are: Quality Time: 'Primary Love Language', general info: summary: Values focused attention and presence, description: People with Quality Time as their love language feel most loved through focused attention, meaningful conversations, and shared experiences without distractions. I want you to conceptualize my personality using these results, research accurate Love Languages result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "words_of_affirmation",
-              "result_title": "Words of Affirmation",
-              "result_summary": "Appreciates verbal and written encouragement",
-              "result_description": "Those with Words of Affirmation as their love language value verbal appreciation, encouragement, and positive communication.",
-              "result_Gpt_context": "My Results from the Love Languages personality test are: Words of Affirmation: 'Primary Love Language', general info: summary: Appreciates verbal and written encouragement, description: Those with Words of Affirmation as their love language value verbal appreciation, encouragement, and positive communication. I want you to conceptualize my personality using these results, research accurate Love Languages result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "acts_of_service",
-              "result_title": "Acts of Service",
-              "result_summary": "Values helpful actions and thoughtful gestures",
-              "result_description": "People with Acts of Service as their love language feel loved when others do helpful things for them, showing care through actions rather than words.",
-              "result_Gpt_context": "My Results from the Love Languages personality test are: Acts of Service: 'Primary Love Language', general info: summary: Values helpful actions and thoughtful gestures, description: People with Acts of Service as their love language feel loved when others do helpful things for them, showing care through actions rather than words. I want you to conceptualize my personality using these results, research accurate Love Languages result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "physical_touch",
-              "result_title": "Physical Touch",
-              "result_summary": "Values appropriate physical connection",
-              "result_description": "Those with Physical Touch as their love language feel loved through appropriate physical affection, hugs, and touch as expressions of care.",
-              "result_Gpt_context": "My Results from the Love Languages personality test are: Physical Touch: 'Primary Love Language', general info: summary: Values appropriate physical connection, description: Those with Physical Touch as their love language feel loved through appropriate physical affection, hugs, and touch as expressions of care. I want you to conceptualize my personality using these results, research accurate Love Languages result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            },
-            {
-              "result_name": "receiving_gifts",
-              "result_title": "Receiving Gifts",
-              "result_summary": "Appreciates thoughtful tokens of affection",
-              "result_description": "People with Receiving Gifts as their love language value thoughtful presents and tokens that show they were remembered and cared for.",
-              "result_Gpt_context": "My Results from the Love Languages personality test are: Receiving Gifts: 'Primary Love Language', general info: summary: Appreciates thoughtful tokens of affection, description: People with Receiving Gifts as their love language value thoughtful presents and tokens that show they were remembered and cared for. I want you to conceptualize my personality using these results, research accurate Love Languages result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
-            }
-          ]
+      "input_type": "percentage_sliders",
+      "types_of_results": [
+        {
+          "result_name": "growth",
+          "result_title": "Growth",
+          "result_summary": "Driven by continuous improvement and expansion",
+          "result_description": "People with Growth as their primary need are motivated by progress, learning, and developing their potential. They seek new experiences and challenges.",
+          "result_Gpt_context": "My Results from the Six Human Needs personality test are: Growth: 'Primary Need', general info: summary: Driven by continuous improvement and expansion, description: People with Growth as their primary need are motivated by progress, learning, and developing their potential. They seek new experiences and challenges. I want you to conceptualize my personality using these results, research accurate Six Human Needs result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
         },
-        "Ui_information": {
-          "card_color": "#DC2626",
-          "card_icon": "gift",
-          "result_display_format": "Your Results: Primary - {primary_language}, Secondary - {secondary_language}",
-          "no_results_text": "No results currently"
+        {
+          "result_name": "love_connection",
+          "result_title": "Love & Connection",
+          "result_summary": "Motivated by relationships and belonging",
+          "result_description": "Those driven by Love & Connection prioritize relationships, empathy, and shared experiences. They value intimacy and emotional bonds.",
+          "result_Gpt_context": "My Results from the Six Human Needs personality test are: Love & Connection: 'Primary Need', general info: summary: Motivated by relationships and belonging, description: Those driven by Love & Connection prioritize relationships, empathy, and shared experiences. They value intimacy and emotional bonds. I want you to conceptualize my personality using these results, research accurate Six Human Needs result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
         },
-        "add_results_page": {
-          "input_method": "percentage_sliders",
-          "instruction_text": "Distribute 100% across the five love languages based on your preferences",
-          "slider_options": [
-            "Quality Time",
-            "Words of Affirmation",
-            "Acts of Service",
-            "Physical Touch",
-            "Receiving Gifts"
-          ],
-          "validation": "total_must_equal_100"
+        {
+          "result_name": "certainty",
+          "result_title": "Certainty",
+          "result_summary": "Seeks security, stability, and predictability",
+          "result_description": "People with Certainty as their top need value security, comfort, and avoiding pain. They prefer familiar environments and predictable outcomes.",
+          "result_Gpt_context": "My Results from the Six Human Needs personality test are: Certainty: 'Primary Need', general info: summary: Seeks security, stability, and predictability, description: People with Certainty as their top need value security, comfort, and avoiding pain. They prefer familiar environments and predictable outcomes. I want you to conceptualize my personality using these results, research accurate Six Human Needs result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
         },
-        "gpt_context": "User's Love Languages reveal how they prefer to give and receive love. Use this to understand their relationship patterns and suggest ways to improve connections with others that align with their natural preferences."
-      }
-    }
+        {
+          "result_name": "variety",
+          "result_title": "Variety",
+          "result_summary": "Craves novelty, excitement, and change",
+          "result_description": "Those driven by Variety seek new experiences, surprises, and stimulation. They enjoy change and can become bored with routine.",
+          "result_Gpt_context": "My Results from the Six Human Needs personality test are: Variety: 'Primary Need', general info: summary: Craves novelty, excitement, and change, description: Those driven by Variety seek new experiences, surprises, and stimulation. They enjoy change and can become bored with routine. I want you to conceptualize my personality using these results, research accurate Six Human Needs result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "significance",
+          "result_title": "Significance",
+          "result_summary": "Motivated by recognition and unique contribution",
+          "result_description": "People with Significance as their primary need want to feel special, important, and valued. They seek recognition and want to make a unique contribution.",
+          "result_Gpt_context": "My Results from the Six Human Needs personality test are: Significance: 'Primary Need', general info: summary: Motivated by recognition and unique contribution, description: People with Significance as their primary need want to feel special, important, and valued. They seek recognition and want to make a unique contribution. I want you to conceptualize my personality using these results, research accurate Six Human Needs result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "contribution",
+          "result_title": "Contribution",
+          "result_summary": "Driven by service and making a difference",
+          "result_description": "Those motivated by Contribution want to serve others and make a positive impact. They find fulfillment in giving and creating value beyond themselves.",
+          "result_Gpt_context": "My Results from the Six Human Needs personality test are: Contribution: 'Primary Need', general info: summary: Driven by service and making a difference, description: Those motivated by Contribution want to serve others and make a positive impact. They find fulfillment in giving and creating value beyond themselves. I want you to conceptualize my personality using these results, research accurate Six Human Needs result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        }
+      ]
+    },
+    "Ui_information": {
+      "card_color": "#059669",
+      "card_icon": "heart",
+      "result_display_format": "Your Results: Primary - {primary_need}, Secondary - {secondary_need}",
+      "no_results_text": "No results currently"
+    },
+    "add_results_page": {
+      "input_method": "percentage_sliders",
+      "instruction_text": "Distribute 100% across the six human needs based on your priorities",
+      "slider_options": [
+        "Growth",
+        "Love & Connection",
+        "Certainty",
+        "Variety",
+        "Significance",
+        "Contribution"
+      ],
+      "validation": "total_must_equal_100"
+    },
+    "gpt_context": "User's Six Human Needs reveal their core motivational drivers. Use this to understand what truly motivates them and how to frame therapeutic suggestions in ways that align with their deepest needs."
+  },
+  "loveLanguages": {
+    "Test_information": {
+      "test_name": "Love Languages Assessment",
+      "test_description": "Discover how you prefer to give and receive love in relationships",
+      "card_summary": "Learn how you express and receive love most effectively",
+      "completion_time": "5-8 minutes",
+      "external_test_url": "https://www.5lovelanguages.com/quizzes/love-language",
+      "test_link": {
+        "url": "https://www.5lovelanguages.com/quizzes/love-language",
+        "button_text": "Take the Test",
+        "description": "Complete Gary Chapman's official Love Languages quiz"
+      },
+      "input_type": "percentage_sliders",
+      "types_of_results": [
+        {
+          "result_name": "quality_time",
+          "result_title": "Quality Time",
+          "result_summary": "Values focused attention and presence",
+          "result_description": "People with Quality Time as their love language feel most loved through focused attention, meaningful conversations, and shared experiences without distractions.",
+          "result_Gpt_context": "My Results from the Love Languages personality test are: Quality Time: 'Primary Love Language', general info: summary: Values focused attention and presence, description: People with Quality Time as their love language feel most loved through focused attention, meaningful conversations, and shared experiences without distractions. I want you to conceptualize my personality using these results, research accurate Love Languages result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "words_of_affirmation",
+          "result_title": "Words of Affirmation",
+          "result_summary": "Appreciates verbal and written encouragement",
+          "result_description": "Those with Words of Affirmation as their love language value verbal appreciation, encouragement, and positive communication.",
+          "result_Gpt_context": "My Results from the Love Languages personality test are: Words of Affirmation: 'Primary Love Language', general info: summary: Appreciates verbal and written encouragement, description: Those with Words of Affirmation as their love language value verbal appreciation, encouragement, and positive communication. I want you to conceptualize my personality using these results, research accurate Love Languages result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "acts_of_service",
+          "result_title": "Acts of Service",
+          "result_summary": "Values helpful actions and thoughtful gestures",
+          "result_description": "People with Acts of Service as their love language feel loved when others do helpful things for them, showing care through actions rather than words.",
+          "result_Gpt_context": "My Results from the Love Languages personality test are: Acts of Service: 'Primary Love Language', general info: summary: Values helpful actions and thoughtful gestures, description: People with Acts of Service as their love language feel loved when others do helpful things for them, showing care through actions rather than words. I want you to conceptualize my personality using these results, research accurate Love Languages result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "physical_touch",
+          "result_title": "Physical Touch",
+          "result_summary": "Values appropriate physical connection",
+          "result_description": "Those with Physical Touch as their love language feel loved through appropriate physical affection, hugs, and touch as expressions of care.",
+          "result_Gpt_context": "My Results from the Love Languages personality test are: Physical Touch: 'Primary Love Language', general info: summary: Values appropriate physical connection, description: Those with Physical Touch as their love language feel loved through appropriate physical affection, hugs, and touch as expressions of care. I want you to conceptualize my personality using these results, research accurate Love Languages result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        },
+        {
+          "result_name": "receiving_gifts",
+          "result_title": "Receiving Gifts",
+          "result_summary": "Appreciates thoughtful tokens of affection",
+          "result_description": "People with Receiving Gifts as their love language value thoughtful presents and tokens that show they were remembered and cared for.",
+          "result_Gpt_context": "My Results from the Love Languages personality test are: Receiving Gifts: 'Primary Love Language', general info: summary: Appreciates thoughtful tokens of affection, description: People with Receiving Gifts as their love language value thoughtful presents and tokens that show they were remembered and cared for. I want you to conceptualize my personality using these results, research accurate Love Languages result information to understand me more precisely: and provide me information that could be useful based on my current experience, which I will provide you below:"
+        }
+      ]
+    },
+    "Ui_information": {
+      "card_color": "#DC2626",
+      "card_icon": "gift",
+      "result_display_format": "Your Results: Primary - {primary_language}, Secondary - {secondary_language}",
+      "no_results_text": "No results currently"
+    },
+    "add_results_page": {
+      "input_method": "percentage_sliders",
+      "instruction_text": "Distribute 100% across the five love languages based on your preferences",
+      "slider_options": [
+        "Quality Time",
+        "Words of Affirmation",
+        "Acts of Service",
+        "Physical Touch",
+        "Receiving Gifts"
+      ],
+      "validation": "total_must_equal_100"
+    },
+    "gpt_context": "User's Love Languages reveal how they prefer to give and receive love. Use this to understand their relationship patterns and suggest ways to improve connections with others that align with their natural preferences."
   }
 }

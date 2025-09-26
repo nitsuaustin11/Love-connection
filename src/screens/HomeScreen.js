@@ -7,6 +7,7 @@ import {
   Alert
 } from 'react-native';
 import useAuthStore from '../store/authStore';
+import DebugConsole from '../components/DebugConsole';
 
 const HomeScreen = () => {
   const { user, signOutUser } = useAuthStore();
@@ -34,6 +35,7 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
+      <DebugConsole />
       <Text style={styles.title}>Welcome to LoveConnect!</Text>
       <Text style={styles.subtitle}>
         Hello, {user?.name || user?.email}!

@@ -4,10 +4,12 @@ import {
   Text,
   StyleSheet,
 } from 'react-native';
+import DebugConsole from '../components/DebugConsole';
 
 const MessagesScreen = () => {
   return (
     <View style={styles.container}>
+      <DebugConsole />
       <Text style={styles.title}>Messages Page</Text>
       <Text style={styles.description}>
         This is where AI therapist conversations will be displayed
