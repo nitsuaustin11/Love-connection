@@ -1,15 +1,69 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { Ionicons, FontAwesome, Feather, Octicons } from '@expo/vector-icons';
 
 import useAuthStore from './src/store/authStore';
 import LoginScreen from './src/screens/LoginScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import PersonalityTestScreen from './src/screens/PersonalityTestScreen';
+import CheckInScreen from './src/screens/CheckInScreen';
+import MessagesScreen from './src/screens/MessagesScreen';
 
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+function TabNavigator() {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          if (route.name === 'Home') {
+            const iconName = focused ? 'home' : 'home-outline';
+            return <Ionicons name={iconName} size={size} color={color} />;
+          } else if (route.name === 'PersonalityTest') {
+            // Using pencil icon from icons.txt as placeholder for personality test
+            return <Octicons name="pencil" size={size} color={color} />;
+          } else if (route.name === 'CheckIn') {
+            // Using send icon from icons.txt for check-in
+            return <Feather name="send" size={size} color={color} />;
+          } else if (route.name === 'Messages') {
+            const iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
+            return <Ionicons name={iconName} size={size} color={color} />;
+          }
+        },
+        tabBarActiveTintColor: '#e91e63',
+        tabBarInactiveTintColor: 'gray',
+        headerShown: false,
+      })}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ tabBarLabel: 'Home' }}
+      />
+      <Tab.Screen
+        name="PersonalityTest"
+        component={PersonalityTestScreen}
+        options={{ tabBarLabel: 'Personality' }}
+      />
+      <Tab.Screen
+        name="CheckIn"
+        component={CheckInScreen}
+        options={{ tabBarLabel: 'Check-in' }}
+      />
+      <Tab.Screen
+        name="Messages"
+        component={MessagesScreen}
+        options={{ tabBarLabel: 'Messages' }}
+      />
+    </Tab.Navigator>
+  );
+}
 
 export default function App() {
   const { user, loading, initializeAuth } = useAuthStore();
@@ -36,7 +90,7 @@ export default function App() {
       <StatusBar style="auto" />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="MainTabs" component={TabNavigator} />
         ) : (
           <>
             <Stack.Screen name="Login" component={LoginScreen} />

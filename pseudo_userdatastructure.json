@@ -34,48 +34,55 @@
     }
   },
 
-  "personalityTypes": {
-    "type1": {
-      "name": "Analytical Thinker",
-      "description": "Processes emotions through logic and reasoning",
-      "strength": 8,
-      "isActive": true,
-      "lastModified": "2024-09-20T10:00:00.000Z"
+  "personalityTests": {
+    "mbti": {
+      "completed": true,
+      "selectedType": "INTJ",
+      "completedAt": "2024-09-20T10:00:00.000Z",
+      "results": {
+        "typeCode": "INTJ",
+        "title": "INTJ — The Strategist",
+        "display": "Independent, systems thinker, long-range planner.",
+        "summary": "Strategic and future-oriented, INTJs enjoy building models to solve complex problems. They value competence, autonomy, and clarity of purpose.",
+        "firstPerson": "Based on my MBTI results, I'm an INTJ. I'm a systems thinker who enjoys turning complexity into strategy. I have high standards for competence and I prefer independence and efficiency. I value clear logic and long‑term planning, and I'm motivated by solving challenging problems. I can come across as reserved, but I'm deeply committed to ideas that make a difference. I thrive when I'm building and optimizing frameworks that last."
+      }
     },
-    "type2": {
-      "name": "Empathetic Connector",
-      "description": "Deeply feels and connects with others' emotions",
-      "strength": 9,
-      "isActive": true,
-      "lastModified": "2024-09-15T14:30:00.000Z"
+
+    "sixHumanNeeds": {
+      "completed": true,
+      "completedAt": "2024-09-18T14:30:00.000Z",
+      "results": {
+        "primaryNeed": "growth",
+        "secondaryNeed": "love_connection",
+        "weights": {
+          "growth": 28,
+          "love_connection": 24,
+          "contribution": 18,
+          "certainty": 12,
+          "variety": 10,
+          "significance": 8
+        },
+        "display": "Primary needs: Growth & Love & Connection",
+        "firstPerson": "My top need is Growth. I'm driven to improve. Learning new skills and stretching my capabilities give me momentum and purpose. When this need isn't met, I tend to feel stagnant, frustrated, disengaged. My secondary need is Love & Connection. I thrive on closeness and belonging. Warm relationships, empathy, and shared moments help me feel grounded and seen. Together, these shape my decisions and habits. Growth 28% · Love & Connection 24% · Contribution 18% · Certainty 12% · Variety 10% · Significance 8%"
+      }
     },
-    "type3": {
-      "name": "Creative Expresser",
-      "description": "Uses creativity to process and express emotions",
-      "strength": 6,
-      "isActive": false,
-      "lastModified": "2024-09-10T09:15:00.000Z"
-    },
-    "type4": {
-      "name": "Practical Problem-Solver",
-      "description": "Focuses on actionable solutions to emotional challenges",
-      "strength": 7,
-      "isActive": true,
-      "lastModified": "2024-09-18T16:20:00.000Z"
-    },
-    "type5": {
-      "name": "Spiritual Seeker",
-      "description": "Finds meaning through spiritual or philosophical perspectives",
-      "strength": 4,
-      "isActive": false,
-      "lastModified": "2024-09-05T11:45:00.000Z"
-    },
-    "type6": {
-      "name": "Social Collaborator",
-      "description": "Processes emotions through social interaction and community",
-      "strength": 8,
-      "isActive": true,
-      "lastModified": "2024-09-22T13:10:00.000Z"
+
+    "loveLanguages": {
+      "completed": true,
+      "completedAt": "2024-09-15T16:00:00.000Z",
+      "results": {
+        "primaryLanguage": "quality_time",
+        "secondaryLanguage": "words_of_affirmation",
+        "weights": {
+          "quality_time": 35,
+          "words_of_affirmation": 28,
+          "acts_of_service": 15,
+          "physical_touch": 12,
+          "receiving_gifts": 10
+        },
+        "display": "Primary: Quality Time • Secondary: Words of Affirmation",
+        "firstPerson": "My primary love language is Quality Time. I feel most loved when we share focused time—unhurried conversations, eye contact, and being fully present together. My secondary love language is Words of Affirmation. I feel most loved when appreciation is spoken or written—specific encouragement, thoughtful notes, and genuine verbal support. Quality Time 35% · Words of Affirmation 28% · Acts of Service 15% · Physical Touch 12% · Receiving Gifts 10%"
+      }
     }
   },
 
@@ -300,9 +307,21 @@
   "gptMessageContext": {
     "lastUpdated": "2024-09-25T18:00:00.000Z",
     "personalityContext": {
-      "activeTypes": ["Analytical Thinker", "Empathetic Connector", "Practical Problem-Solver", "Social Collaborator"],
-      "strengths": [8, 9, 7, 8],
-      "summary": "User combines analytical thinking with deep empathy, prefers practical solutions, and processes emotions through social connection"
+      "mbti": {
+        "type": "INTJ",
+        "description": "Based on my MBTI results, I'm an INTJ. I'm a systems thinker who enjoys turning complexity into strategy. I have high standards for competence and I prefer independence and efficiency. I value clear logic and long‑term planning, and I'm motivated by solving challenging problems. I can come across as reserved, but I'm deeply committed to ideas that make a difference. I thrive when I'm building and optimizing frameworks that last."
+      },
+      "sixHumanNeeds": {
+        "primary": "Growth",
+        "secondary": "Love & Connection",
+        "description": "My top need is Growth. I'm driven to improve. Learning new skills and stretching my capabilities give me momentum and purpose. When this need isn't met, I tend to feel stagnant, frustrated, disengaged. My secondary need is Love & Connection. I thrive on closeness and belonging. Warm relationships, empathy, and shared moments help me feel grounded and seen. Together, these shape my decisions and habits."
+      },
+      "loveLanguages": {
+        "primary": "Quality Time",
+        "secondary": "Words of Affirmation",
+        "description": "My primary love language is Quality Time. I feel most loved when we share focused time—unhurried conversations, eye contact, and being fully present together. My secondary love language is Words of Affirmation. I feel most loved when appreciation is spoken or written—specific encouragement, thoughtful notes, and genuine verbal support."
+      },
+      "summary": "User is an INTJ who values systems thinking and independence, driven by growth and connection needs, and feels loved through quality time and verbal affirmation"
     },
     "currentEmotionalContext": {
       "primaryEmotion": "Frustration",

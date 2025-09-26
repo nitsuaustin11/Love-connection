@@ -41,20 +41,18 @@ const HomeScreen = () => {
 
       <View style={styles.content}>
         <Text style={styles.description}>
-          Your dating app is ready to go. Start connecting with people around you!
+          Your self-help and emotional wellness journey starts here. Use the tabs below to explore your personality, check in with your emotions, and get support from our AI therapist.
         </Text>
 
-        <TouchableOpacity style={styles.button} onPress={() => {}}>
-          <Text style={styles.buttonText}>Start Matching</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.button} onPress={() => {}}>
-          <Text style={styles.buttonText}>View Profile</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.button} onPress={() => {}}>
-          <Text style={styles.buttonText}>Messages</Text>
-        </TouchableOpacity>
+        <Text style={styles.instructionText}>
+          • Tap "Personality" to take personality assessments
+        </Text>
+        <Text style={styles.instructionText}>
+          • Tap "Check-in" to log your emotions
+        </Text>
+        <Text style={styles.instructionText}>
+          • Tap "Messages" to chat with your AI therapist
+        </Text>
       </View>
 
       <TouchableOpacity
@@ -95,20 +93,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
-    marginBottom: 40,
+    marginBottom: 30,
     lineHeight: 24,
   },
-  button: {
-    backgroundColor: '#e91e63',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+  instructionText: {
+    fontSize: 14,
+    color: '#888',
+    textAlign: 'left',
+    marginBottom: 8,
+    paddingHorizontal: 20,
   },
   signOutButton: {
     backgroundColor: '#fff',

@@ -1,0 +1,27 @@
+icon for profile
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+<FontAwesome name="user" size={24} color="black" />
+
+icon for checkin
+import Feather from '@expo/vector-icons/Feather';
+<Feather name="send" size={24} color="black" />
+
+icon for test
+import Octicons from '@expo/vector-icons/Octicons';
+<Octicons name="pencil" size={24} color="black" />
+
+import AntDesign from '@expo/vector-icons/AntDesign';
+<AntDesign name="plus" size={24} color="black" />
+
+npm i react-native-bouncy-checkbox
+import BouncyCheckbox from "react-native-bouncy-checkbox";
+<BouncyCheckbox
+  size={25}
+  fillColor="red"
+  unFillColor="#FFFFFF"
+  text="Custom Checkbox"
+  iconStyle={{ borderColor: "red" }}
+  innerIconStyle={{ borderWidth: 2 }}
+  textStyle={{ fontFamily: "JosefinSans-Regular" }}
+  onPress={(isChecked: boolean) => {console.log(isChecked)}}
+/>
