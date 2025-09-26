@@ -14,9 +14,29 @@ import HomeScreen from './src/screens/HomeScreen';
 import PersonalityTestScreen from './src/screens/PersonalityTestScreen';
 import CheckInScreen from './src/screens/CheckInScreen';
 import MessagesScreen from './src/screens/MessagesScreen';
+import MBTIDetailScreen from './src/screens/MBTIDetailScreen';
+import SixHumanNeedsDetailScreen from './src/screens/SixHumanNeedsDetailScreen';
+import LoveLanguagesDetailScreen from './src/screens/LoveLanguagesDetailScreen';
+import AddSixNeedsResults from './src/screens/AddSixNeedsResults';
+import AddMBTIResults from './src/screens/AddMBTIResults';
+import AddLoveLanguagesResults from './src/screens/AddLoveLanguagesResults';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+function PersonalityStackNavigator() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="PersonalityTestMain" component={PersonalityTestScreen} />
+      <Stack.Screen name="MbtiDetail" component={MBTIDetailScreen} />
+      <Stack.Screen name="SixHumanNeedsDetail" component={SixHumanNeedsDetailScreen} />
+      <Stack.Screen name="LoveLanguagesDetail" component={LoveLanguagesDetailScreen} />
+      <Stack.Screen name="AddSixNeedsResults" component={AddSixNeedsResults} />
+      <Stack.Screen name="AddMBTIResults" component={AddMBTIResults} />
+      <Stack.Screen name="AddLoveLanguagesResults" component={AddLoveLanguagesResults} />
+    </Stack.Navigator>
+  );
+}
 
 function TabNavigator() {
   return (
@@ -49,7 +69,7 @@ function TabNavigator() {
       />
       <Tab.Screen
         name="PersonalityTest"
-        component={PersonalityTestScreen}
+        component={PersonalityStackNavigator}
         options={{ tabBarLabel: 'Personality' }}
       />
       <Tab.Screen

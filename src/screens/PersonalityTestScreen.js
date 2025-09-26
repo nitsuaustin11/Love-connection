@@ -53,6 +53,11 @@ const PersonalityTestScreen = ({ navigation }) => {
   };
 
 
+  const handleCardPress = (testKey) => {
+    const screenName = `${testKey.charAt(0).toUpperCase() + testKey.slice(1)}Detail`;
+    navigation.navigate(screenName, { testKey, testData: personalityData[testKey] });
+  };
+
   const renderPersonalityCard = (testKey, testData, userResults, formatFunction) => {
     if (!testData?.Test_information) return null;
 
@@ -61,7 +66,12 @@ const PersonalityTestScreen = ({ navigation }) => {
     const resultText = formatFunction(userResults, testData);
 
     return (
-      <View key={testKey} style={[styles.card, { borderLeftColor: uiInfo.card_color || '#e91e63' }]}>
+      <TouchableOpacity
+        key={testKey}
+        style={[styles.card, { borderLeftColor: uiInfo.card_color || '#e91e63' }]}
+        onPress={() => handleCardPress(testKey)}
+        activeOpacity={0.7}
+      >
         <View style={styles.cardHeader}>
           <Text style={styles.cardTitle}>{testInfo.test_name}</Text>
           <View style={[styles.statusIndicator, {
@@ -75,22 +85,7 @@ const PersonalityTestScreen = ({ navigation }) => {
         <View style={styles.resultContainer}>
           <Text style={styles.resultText}>{resultText}</Text>
         </View>
-
-        <View style={styles.cardActions}>
-          <TouchableOpacity
-            style={styles.takeTestButton}
-            onPress={() => handleExternalLink(testInfo.test_link.url)}
-          >
-            <Text style={styles.takeTestButtonText}>{testInfo.test_link.button_text}</Text>
-          </TouchableOpacity>
-
-          {userResults?.completed && (
-            <TouchableOpacity style={styles.updateButton}>
-              <Text style={styles.updateButtonText}>Update Results</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -229,38 +224,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#333',
     textAlign: 'center',
-  },
-  cardActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  takeTestButton: {
-    backgroundColor: '#e91e63',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    flex: 1,
-    marginRight: 8,
-  },
-  takeTestButtonText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  updateButton: {
-    backgroundColor: '#f0f0f0',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  updateButtonText: {
-    color: '#666',
-    fontSize: 14,
-    fontWeight: '600',
   },
   loadingContainer: {
     flex: 1,

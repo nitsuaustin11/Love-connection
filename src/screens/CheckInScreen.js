@@ -20,6 +20,21 @@ const CheckInScreen = ({ navigation }) => {
     navigation.navigate('PersonalityTest');
   };
 
+  const handleDebugGPTContext = () => {
+    console.log('=== USER GPT CONTEXT DEBUG ===');
+    console.log('Full GPT Context Object:', JSON.stringify(user?.gptMessageContext, null, 2));
+    console.log('Personality Context:', user?.gptMessageContext?.personalityContext);
+    console.log('Current Emotional Context:', user?.gptMessageContext?.currentEmotionalContext);
+    console.log('Communication Preferences:', user?.gptMessageContext?.communicationPreferences);
+    console.log('==============================');
+
+    Alert.alert(
+      'GPT Context Logged',
+      'Check the console/logs for the full GPT context object',
+      [{ text: 'OK' }]
+    );
+  };
+
   if (!hasPersonalityType) {
     return (
       <ScrollView style={styles.container}>
@@ -35,6 +50,13 @@ const CheckInScreen = ({ navigation }) => {
             onPress={handlePersonalityRedirect}
           >
             <Text style={styles.personalityButtonText}>→ Personality Page</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.debugButton}
+            onPress={handleDebugGPTContext}
+          >
+            <Text style={styles.debugButtonText}>🐛 Debug GPT Context</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -54,6 +76,13 @@ const CheckInScreen = ({ navigation }) => {
         <View style={styles.placeholder}>
           <Text style={styles.placeholderText}>Check-in features coming soon...</Text>
         </View>
+
+        <TouchableOpacity
+          style={styles.debugButton}
+          onPress={handleDebugGPTContext}
+        >
+          <Text style={styles.debugButtonText}>🐛 Debug GPT Context</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -102,6 +131,20 @@ const styles = StyleSheet.create({
   personalityButtonText: {
     color: 'white',
     fontSize: 16,
+    fontWeight: '600',
+  },
+  debugButton: {
+    backgroundColor: '#059669',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 20,
+    borderWidth: 2,
+    borderColor: '#047857',
+  },
+  debugButtonText: {
+    color: 'white',
+    fontSize: 14,
     fontWeight: '600',
   },
   placeholder: {
