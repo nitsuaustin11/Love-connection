@@ -15,6 +15,7 @@ import DebugConsole from '../components/DebugConsole';
 const CheckInScreen = ({ navigation }) => {
   const { user } = useAuthStore();
   const [selectedEmotion, setSelectedEmotion] = useState(null);
+  const [showFollowUp, setShowFollowUp] = useState(false);
 
   // Check if user has completed personality tests
   const hasPersonalityType = user?.personalityTests?.mbti?.completed || false;
@@ -37,8 +38,8 @@ const CheckInScreen = ({ navigation }) => {
 
   const handleEmotionSelect = (emotion) => {
     setSelectedEmotion(emotion);
+    setShowFollowUp(true);
     console.log('Selected emotion:', emotion);
-    // TODO: Navigate to emotion detail screen or show emotion input
   };
 
   const handleAddCustomEmotion = () => {
@@ -52,6 +53,7 @@ const CheckInScreen = ({ navigation }) => {
           onPress: (customEmotion) => {
             if (customEmotion && customEmotion.trim()) {
               setSelectedEmotion(customEmotion.trim());
+              setShowFollowUp(true);
               console.log('Custom emotion added:', customEmotion.trim());
               // TODO: Save custom emotion to user's available emotions
             }
@@ -79,6 +81,31 @@ const CheckInScreen = ({ navigation }) => {
         {emotion}
       </Text>
     </TouchableOpacity>
+  );
+
+  const renderFollowUpCard = () => (
+    <View style={styles.followUpOverlay}>
+      <View style={styles.followUpCard}>
+        <View style={styles.followUpHeader}>
+          <Text style={styles.followUpTitle}>Tell us more about {selectedEmotion}</Text>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setShowFollowUp(false)}
+          >
+            <Text style={styles.closeButtonText}>✕</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={styles.followUpDescription}>
+          Share what's contributing to this feeling and how we can help you work through it.
+        </Text>
+
+        {/* TODO: Add follow-up content here */}
+        <View style={styles.followUpContent}>
+          <Text style={styles.placeholderText}>Follow-up content will go here</Text>
+        </View>
+      </View>
+    </View>
   );
 
   const handleDebugGPTContext = async () => {
@@ -169,52 +196,36 @@ const CheckInScreen = ({ navigation }) => {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <DebugConsole />
+    <>
+      <ScrollView style={styles.container}>
+        <DebugConsole />
 
-      <View style={styles.header}>
         <Text style={styles.title}>Check-in</Text>
-        <Text style={styles.description}>
-          How are you feeling today? Select the emotion that best describes your current state.
-        </Text>
-      </View>
 
-      <View style={styles.emotionsContainer}>
-        <Text style={styles.sectionTitle}>Choose Your Emotion</Text>
+        <View style={styles.emotionsContainer}>
+          <View style={styles.emotionsGrid}>
+            {availableEmotions.map(emotion => renderEmotionButton(emotion))}
+          </View>
 
-        <View style={styles.emotionsGrid}>
-          {availableEmotions.map(emotion => renderEmotionButton(emotion))}
+          <TouchableOpacity
+            style={styles.addEmotionButton}
+            onPress={handleAddCustomEmotion}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.addEmotionButtonText}>+ ADD emotion</Text>
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity
-          style={styles.addEmotionButton}
-          onPress={handleAddCustomEmotion}
-          activeOpacity={0.7}
+          style={styles.debugButton}
+          onPress={handleDebugGPTContext}
         >
-          <Text style={styles.addEmotionButtonText}>+ ADD emotion</Text>
+          <Text style={styles.debugButtonText}>🐛 Debug GPT Context</Text>
         </TouchableOpacity>
+      </ScrollView>
 
-        {selectedEmotion && (
-          <View style={styles.selectedEmotionContainer}>
-            <Text style={styles.selectedEmotionLabel}>You selected:</Text>
-            <Text style={styles.selectedEmotionText}>{selectedEmotion}</Text>
-            <Text style={styles.selectedEmotionNote}>
-              Tap continue to share more about this feeling
-            </Text>
-            <TouchableOpacity style={styles.continueButton}>
-              <Text style={styles.continueButtonText}>Continue</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </View>
-
-      <TouchableOpacity
-        style={styles.debugButton}
-        onPress={handleDebugGPTContext}
-      >
-        <Text style={styles.debugButtonText}>🐛 Debug GPT Context</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      {showFollowUp && renderFollowUpCard()}
+    </>
   );
 };
 
@@ -236,6 +247,7 @@ const styles = StyleSheet.create({
     color: '#e91e63',
     textAlign: 'center',
     marginBottom: 20,
+    marginTop: 40,
   },
   description: {
     fontSize: 16,
@@ -285,6 +297,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 15,
     marginBottom: 20,
+    marginTop: 30,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -377,6 +390,73 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
+  },
+  followUpOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  followUpCard: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 25,
+    margin: 20,
+    maxHeight: '80%',
+    width: '90%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 10,
+  },
+  followUpHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  followUpTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    flex: 1,
+  },
+  closeButton: {
+    backgroundColor: '#f8f9fa',
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  closeButtonText: {
+    fontSize: 18,
+    color: '#666',
+    fontWeight: 'bold',
+  },
+  followUpDescription: {
+    fontSize: 16,
+    color: '#666',
+    lineHeight: 24,
+    marginBottom: 20,
+  },
+  followUpContent: {
+    backgroundColor: '#f8f9fa',
+    padding: 20,
+    borderRadius: 15,
+    alignItems: 'center',
+  },
+  placeholderText: {
+    fontSize: 16,
+    color: '#999',
+    fontStyle: 'italic',
   },
 });
 
