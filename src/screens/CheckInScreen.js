@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
+  FlatList,
 } from 'react-native';
 import useAuthStore from '../store/authStore';
 import { getTherapistDebugInfo, generateTherapistPrompt, verifyTherapistData } from '../services/gptContextService';
@@ -13,13 +14,72 @@ import DebugConsole from '../components/DebugConsole';
 
 const CheckInScreen = ({ navigation }) => {
   const { user } = useAuthStore();
+  const [selectedEmotion, setSelectedEmotion] = useState(null);
 
   // Check if user has completed personality tests
   const hasPersonalityType = user?.personalityTests?.mbti?.completed || false;
 
+  // Get available emotions from user profile
+  const availableEmotions = user?.availableEmotions || [
+    "Anger",
+    "Loneliness",
+    "Frustration",
+    "Shame",
+    "Fear",
+    "Sadness/Grief",
+    "Guilt",
+    "Hopeless"
+  ];
+
   const handlePersonalityRedirect = () => {
     navigation.navigate('PersonalityTest');
   };
+
+  const handleEmotionSelect = (emotion) => {
+    setSelectedEmotion(emotion);
+    console.log('Selected emotion:', emotion);
+    // TODO: Navigate to emotion detail screen or show emotion input
+  };
+
+  const handleAddCustomEmotion = () => {
+    Alert.prompt(
+      'Add Custom Emotion',
+      'What emotion are you feeling that\'s not listed?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Add',
+          onPress: (customEmotion) => {
+            if (customEmotion && customEmotion.trim()) {
+              setSelectedEmotion(customEmotion.trim());
+              console.log('Custom emotion added:', customEmotion.trim());
+              // TODO: Save custom emotion to user's available emotions
+            }
+          }
+        }
+      ],
+      'plain-text'
+    );
+  };
+
+  const renderEmotionButton = (emotion) => (
+    <TouchableOpacity
+      key={emotion}
+      style={[
+        styles.emotionButton,
+        selectedEmotion === emotion && styles.emotionButtonSelected
+      ]}
+      onPress={() => handleEmotionSelect(emotion)}
+      activeOpacity={0.7}
+    >
+      <Text style={[
+        styles.emotionButtonText,
+        selectedEmotion === emotion && styles.emotionButtonTextSelected
+      ]}>
+        {emotion}
+      </Text>
+    </TouchableOpacity>
+  );
 
   const handleDebugGPTContext = async () => {
     try {
@@ -111,24 +171,49 @@ const CheckInScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <DebugConsole />
-      <View style={styles.centeredContent}>
+
+      <View style={styles.header}>
         <Text style={styles.title}>Check-in</Text>
         <Text style={styles.description}>
-          Welcome to your emotion check-in! This is where you can track your daily emotions and wellness.
+          How are you feeling today? Select the emotion that best describes your current state.
         </Text>
+      </View>
 
-        {/* Future check-in functionality will go here */}
-        <View style={styles.placeholder}>
-          <Text style={styles.placeholderText}>Check-in features coming soon...</Text>
+      <View style={styles.emotionsContainer}>
+        <Text style={styles.sectionTitle}>Choose Your Emotion</Text>
+
+        <View style={styles.emotionsGrid}>
+          {availableEmotions.map(emotion => renderEmotionButton(emotion))}
         </View>
 
         <TouchableOpacity
-          style={styles.debugButton}
-          onPress={handleDebugGPTContext}
+          style={styles.addEmotionButton}
+          onPress={handleAddCustomEmotion}
+          activeOpacity={0.7}
         >
-          <Text style={styles.debugButtonText}>🐛 Debug GPT Context</Text>
+          <Text style={styles.addEmotionButtonText}>+ ADD emotion</Text>
         </TouchableOpacity>
+
+        {selectedEmotion && (
+          <View style={styles.selectedEmotionContainer}>
+            <Text style={styles.selectedEmotionLabel}>You selected:</Text>
+            <Text style={styles.selectedEmotionText}>{selectedEmotion}</Text>
+            <Text style={styles.selectedEmotionNote}>
+              Tap continue to share more about this feeling
+            </Text>
+            <TouchableOpacity style={styles.continueButton}>
+              <Text style={styles.continueButtonText}>Continue</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
+
+      <TouchableOpacity
+        style={styles.debugButton}
+        onPress={handleDebugGPTContext}
+      >
+        <Text style={styles.debugButtonText}>🐛 Debug GPT Context</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -192,22 +277,106 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
-  placeholder: {
+  header: {
+    marginBottom: 30,
+  },
+  emotionsContainer: {
     backgroundColor: 'white',
     padding: 20,
-    borderRadius: 10,
-    marginTop: 20,
+    borderRadius: 15,
+    marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
   },
-  placeholderText: {
-    fontSize: 16,
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  emotionsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  emotionButton: {
+    backgroundColor: '#f8f9fa',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 25,
+    marginBottom: 10,
+    borderWidth: 2,
+    borderColor: '#e9ecef',
+    width: '48%',
+    alignItems: 'center',
+  },
+  emotionButtonSelected: {
+    backgroundColor: '#e91e63',
+    borderColor: '#e91e63',
+  },
+  emotionButtonText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#333',
+    textAlign: 'center',
+  },
+  emotionButtonTextSelected: {
+    color: 'white',
+  },
+  addEmotionButton: {
+    backgroundColor: '#6c757d',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  addEmotionButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  selectedEmotionContainer: {
+    backgroundColor: '#f8f9fa',
+    padding: 20,
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: '#e91e63',
+    alignItems: 'center',
+  },
+  selectedEmotionLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+  },
+  selectedEmotionText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#e91e63',
+    marginBottom: 8,
+  },
+  selectedEmotionNote: {
+    fontSize: 14,
     color: '#666',
     textAlign: 'center',
-    fontStyle: 'italic',
+    marginBottom: 15,
+    lineHeight: 20,
+  },
+  continueButton: {
+    backgroundColor: '#e91e63',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+  },
+  continueButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 
