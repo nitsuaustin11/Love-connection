@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import useAuthStore from '../store/authStore';
+import { getTherapistDebugInfo, generateTherapistPrompt } from '../services/gptContextService';
 import DebugConsole from '../components/DebugConsole';
 
 const CheckInScreen = ({ navigation }) => {
@@ -20,19 +21,58 @@ const CheckInScreen = ({ navigation }) => {
     navigation.navigate('PersonalityTest');
   };
 
-  const handleDebugGPTContext = () => {
-    console.log('=== USER GPT CONTEXT DEBUG ===');
-    console.log('Full GPT Context Object:', JSON.stringify(user?.gptMessageContext, null, 2));
-    console.log('Personality Context:', user?.gptMessageContext?.personalityContext);
-    console.log('Current Emotional Context:', user?.gptMessageContext?.currentEmotionalContext);
-    console.log('Communication Preferences:', user?.gptMessageContext?.communicationPreferences);
-    console.log('==============================');
+  const handleDebugGPTContext = async () => {
+    try {
+      console.log('=== GPT CONTEXT & THERAPIST DEBUG ===');
 
-    Alert.alert(
-      'GPT Context Logged',
-      'Check the console/logs for the full GPT context object',
-      [{ text: 'OK' }]
-    );
+      // Get therapist debug info
+      const therapistInfo = await getTherapistDebugInfo(user);
+      console.log('THERAPIST CONFIGURATION:');
+      console.log(JSON.stringify(therapistInfo, null, 2));
+      console.log('---');
+
+      console.log('GPT MESSAGE CONTEXT:');
+      console.log('Last Updated:', user?.gptMessageContext?.lastUpdated);
+      console.log('---');
+      console.log('PERSONALITY CONTEXT:');
+      console.log('MBTI Context:', user?.gptMessageContext?.personalityContext?.mbti || 'Not set');
+      console.log('Six Human Needs Context:', user?.gptMessageContext?.personalityContext?.sixHumanNeeds || 'Not set');
+      console.log('Love Languages Context:', user?.gptMessageContext?.personalityContext?.loveLanguages || 'Not set');
+      console.log('---');
+      console.log('CURRENT EMOTIONAL CONTEXT:');
+      console.log('Primary Emotion:', user?.gptMessageContext?.currentEmotionalContext?.primaryEmotion || 'Not set');
+      console.log('User Context:', user?.gptMessageContext?.currentEmotionalContext?.userContext || 'Not set');
+      console.log('Wellness Goal:', user?.gptMessageContext?.currentEmotionalContext?.wellnessGoal || 'Not set');
+      console.log('---');
+
+      // Generate a sample therapist prompt
+      console.log('SAMPLE THERAPIST PROMPT (Check-in format):');
+      const samplePrompt = await generateTherapistPrompt(
+        user,
+        therapistInfo.settings,
+        'check_in',
+        'I\'ve been feeling really anxious lately about work and my relationships.'
+      );
+      console.log(samplePrompt || 'Could not generate prompt');
+      console.log('============================================');
+
+      const personalityContexts = [
+        user?.gptMessageContext?.personalityContext?.mbti,
+        user?.gptMessageContext?.personalityContext?.sixHumanNeeds,
+        user?.gptMessageContext?.personalityContext?.loveLanguages
+      ].filter(Boolean);
+
+      const hasTherapist = !!therapistInfo?.therapistName;
+
+      Alert.alert(
+        'GPT Context & Therapist Debug',
+        `Therapist: ${hasTherapist ? therapistInfo.therapistName : 'Not found'}\nPersonality Contexts: ${personalityContexts.length}/3\nEmotional Context: ${user?.gptMessageContext?.currentEmotionalContext?.primaryEmotion ? 'Set' : 'Not set'}\n\nCheck console for full therapist prompt and configuration`,
+        [{ text: 'OK' }]
+      );
+    } catch (error) {
+      console.error('Error in GPT context debug:', error);
+      Alert.alert('Debug Error', 'Failed to generate debug information. Check console for details.');
+    }
   };
 
   if (!hasPersonalityType) {

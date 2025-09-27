@@ -81,11 +81,29 @@ export const createDefaultUserProfile = (user, additionalData = {}) => ({
   messageThreads: [],
   contacts: [
     {
-      id: "ai_therapist",
-      name: "AI Therapist",
+      id: "general_therapist",
+      name: "General Therapist",
       type: "ai_therapist",
       isActive: true,
       canReceiveEmotionUpdates: true,
+      gptSettings: {
+        responseStyle: "analytical_yet_empathetic",
+        conversationDepth: "moderate",
+        responseFrequency: "standard",
+        emotionalValidationLevel: "balanced",
+        personalityAnalysisLevel: "moderate",
+        summaryStyle: "empathetic",
+        adviceDepth: "standard",
+        questionFocus: "emotional_processing",
+        wantsActionableAdvice: true,
+        openToVulnerability: true,
+        checkInFormatting: {
+          includeSummary: true,
+          includePersonalityAnalysis: true,
+          includeFeedback: true,
+          personalityDepth: "moderate"
+        }
+      },
       addedAt: new Date().toISOString()
     }
   ],
@@ -261,6 +279,57 @@ export const mergeWithDefaultProfile = (existingProfile, user) => {
 };
 
 /**
+ * Ensures user has General Therapist contact
+ * @param {Object} existingProfile - Current user profile
+ * @returns {Object} Updated profile with General Therapist
+ */
+const ensureGeneralTherapist = (existingProfile) => {
+  const hasGeneralTherapist = existingProfile?.contacts?.some(contact => contact.id === 'general_therapist');
+
+  if (!hasGeneralTherapist) {
+    const generalTherapist = {
+      id: "general_therapist",
+      name: "General Therapist",
+      type: "ai_therapist",
+      isActive: true,
+      canReceiveEmotionUpdates: true,
+      gptSettings: {
+        responseStyle: "analytical_yet_empathetic",
+        conversationDepth: "moderate",
+        responseFrequency: "standard",
+        emotionalValidationLevel: "balanced",
+        personalityAnalysisLevel: "moderate",
+        summaryStyle: "empathetic",
+        adviceDepth: "standard",
+        questionFocus: "emotional_processing",
+        wantsActionableAdvice: true,
+        openToVulnerability: true,
+        checkInFormatting: {
+          includeSummary: true,
+          includePersonalityAnalysis: true,
+          includeFeedback: true,
+          personalityDepth: "moderate"
+        }
+      },
+      addedAt: new Date().toISOString()
+    };
+
+    const updatedProfile = { ...existingProfile };
+    updatedProfile.contacts = updatedProfile.contacts || [];
+
+    // Remove old AI Therapist if it exists
+    updatedProfile.contacts = updatedProfile.contacts.filter(contact => contact.id !== 'ai_therapist');
+
+    // Add General Therapist
+    updatedProfile.contacts.push(generalTherapist);
+
+    return updatedProfile;
+  }
+
+  return existingProfile;
+};
+
+/**
  * Initializes or updates a user profile to ensure completeness
  * @param {Object} user - Firebase user object
  * @param {Object} existingProfile - Current profile data (if any)
@@ -279,10 +348,21 @@ export const initializeUserProfile = async (user, existingProfile = null, additi
       // Existing user - check completeness and merge if needed
       const { isComplete } = checkProfileCompleteness(existingProfile);
 
+      // Always ensure General Therapist exists for existing users
+      let updatedProfile = ensureGeneralTherapist(existingProfile);
+      let needsUpdate = updatedProfile !== existingProfile;
+
       if (!isComplete) {
         // Profile is incomplete, merge with defaults
-        profileData = mergeWithDefaultProfile(existingProfile, user);
+        profileData = mergeWithDefaultProfile(updatedProfile, user);
         await updateUserProfile(user.uid, profileData);
+      } else if (needsUpdate) {
+        // Profile is complete but needs General Therapist
+        profileData = updatedProfile;
+        await updateUserProfile(user.uid, {
+          contacts: profileData.contacts,
+          'accountStatus.lastActiveAt': new Date().toISOString()
+        });
       } else {
         // Profile is complete, just update last active
         profileData = existingProfile;
