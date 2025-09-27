@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import useAuthStore from '../store/authStore';
-import { getTherapistDebugInfo, generateTherapistPrompt } from '../services/gptContextService';
+import { getTherapistDebugInfo, generateTherapistPrompt, verifyTherapistData } from '../services/gptContextService';
 import DebugConsole from '../components/DebugConsole';
 
 const CheckInScreen = ({ navigation }) => {
@@ -24,6 +24,11 @@ const CheckInScreen = ({ navigation }) => {
   const handleDebugGPTContext = async () => {
     try {
       console.log('=== GPT CONTEXT & THERAPIST DEBUG ===');
+
+      // Verify therapist data first
+      const verificationResult = verifyTherapistData(user);
+      console.log('THERAPIST VERIFICATION RESULT:', verificationResult);
+      console.log('---');
 
       // Get therapist debug info
       const therapistInfo = await getTherapistDebugInfo(user);
@@ -66,7 +71,7 @@ const CheckInScreen = ({ navigation }) => {
 
       Alert.alert(
         'GPT Context & Therapist Debug',
-        `Therapist: ${hasTherapist ? therapistInfo.therapistName : 'Not found'}\nPersonality Contexts: ${personalityContexts.length}/3\nEmotional Context: ${user?.gptMessageContext?.currentEmotionalContext?.primaryEmotion ? 'Set' : 'Not set'}\n\nCheck console for full therapist prompt and configuration`,
+        `Therapist Found: ${verificationResult.hasGeneralTherapist ? 'Yes' : 'No'}\nGPT Settings: ${verificationResult.hasGptSettings ? 'Yes' : 'No'}\nTotal Contacts: ${verificationResult.contactCount}\nPersonality Contexts: ${personalityContexts.length}/3\n\nCheck console for detailed verification and configuration`,
         [{ text: 'OK' }]
       );
     } catch (error) {

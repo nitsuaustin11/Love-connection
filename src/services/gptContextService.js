@@ -304,3 +304,62 @@ export const getTherapistDebugInfo = async (user, therapistId = 'general_therapi
     lastUpdated: user?.gptMessageContext?.lastUpdated
   };
 };
+
+/**
+ * Comprehensive therapist data verification for debugging
+ */
+export const verifyTherapistData = (user) => {
+  console.log('🔍 THERAPIST VERIFICATION: Starting comprehensive check...');
+
+  // Check if user has contacts
+  const contacts = user?.contacts;
+  console.log('User contacts array:', contacts?.length ? `${contacts.length} contacts found` : 'No contacts array');
+
+  if (contacts && contacts.length > 0) {
+    console.log('All user contacts:');
+    contacts.forEach((contact, index) => {
+      console.log(`  ${index + 1}. ID: ${contact.id}, Name: ${contact.name}, Type: ${contact.type}`);
+      if (contact.gptSettings) {
+        console.log(`     GPT Settings: ✅ Present (${Object.keys(contact.gptSettings).length} properties)`);
+      } else {
+        console.log('     GPT Settings: ❌ Missing');
+      }
+    });
+  }
+
+  // Specifically check for General Therapist
+  const generalTherapist = contacts?.find(contact => contact.id === 'general_therapist');
+
+  if (generalTherapist) {
+    console.log('✅ GENERAL THERAPIST FOUND:');
+    console.log('   Name:', generalTherapist.name);
+    console.log('   Type:', generalTherapist.type);
+    console.log('   Active:', generalTherapist.isActive);
+    console.log('   Added At:', generalTherapist.addedAt);
+
+    if (generalTherapist.gptSettings) {
+      console.log('   GPT Settings:');
+      Object.entries(generalTherapist.gptSettings).forEach(([key, value]) => {
+        console.log(`     ${key}:`, typeof value === 'object' ? JSON.stringify(value) : value);
+      });
+    } else {
+      console.log('   ❌ Missing GPT Settings');
+    }
+  } else {
+    console.log('❌ GENERAL THERAPIST NOT FOUND');
+    console.log('Available contact IDs:', contacts?.map(c => c.id) || []);
+  }
+
+  // Check Firebase sync status
+  const profileLastUpdated = user?.accountStatus?.lastActiveAt;
+  console.log('Profile last updated:', profileLastUpdated);
+
+  return {
+    hasContacts: !!contacts?.length,
+    contactCount: contacts?.length || 0,
+    hasGeneralTherapist: !!generalTherapist,
+    hasGptSettings: !!generalTherapist?.gptSettings,
+    allContactIds: contacts?.map(c => c.id) || [],
+    generalTherapistData: generalTherapist || null
+  };
+};

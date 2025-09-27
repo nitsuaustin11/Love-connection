@@ -147,10 +147,15 @@ const DebugConsole = () => {
     try {
       const { updateUserProfile } = require('../services/userProfileService');
 
+      console.log('🚀 MANUAL THERAPIST CREATION: Starting...');
+      console.log('Current user contacts:', user?.contacts?.map(c => ({ id: c.id, name: c.name })) || 'No contacts');
+
       // Check if user already has general therapist
       const hasGeneralTherapist = user?.contacts?.some(contact => contact.id === 'general_therapist');
+      console.log('Has General Therapist?', hasGeneralTherapist);
 
       if (hasGeneralTherapist) {
+        console.log('⚠️ MANUAL THERAPIST CREATION: General Therapist already exists');
         Alert.alert('Debug', 'User already has General Therapist contact');
         return;
       }
@@ -187,11 +192,19 @@ const DebugConsole = () => {
       const currentContacts = user?.contacts || [];
       const updatedContacts = [...currentContacts, generalTherapist];
 
+      console.log('✨ MANUAL THERAPIST CREATION: Creating therapist...');
+      console.log('General Therapist object:', generalTherapist);
+      console.log('Updated contacts array:', updatedContacts.map(c => ({ id: c.id, name: c.name })));
+
+      console.log('💾 MANUAL THERAPIST CREATION: Saving to Firebase...');
       await updateUserProfile(user.uid, {
         contacts: updatedContacts
       });
 
+      console.log('🔄 MANUAL THERAPIST CREATION: Refreshing user profile...');
       await refreshUserProfile();
+
+      console.log('✅ MANUAL THERAPIST CREATION: Successfully completed!');
       Alert.alert('Debug', 'General Therapist contact created successfully!');
     } catch (error) {
       Alert.alert('Debug Error', 'Failed to create General Therapist contact');

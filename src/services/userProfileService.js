@@ -284,9 +284,14 @@ export const mergeWithDefaultProfile = (existingProfile, user) => {
  * @returns {Object} Updated profile with General Therapist
  */
 const ensureGeneralTherapist = (existingProfile) => {
+  console.log('🔍 THERAPIST MIGRATION: Checking for General Therapist...');
+  console.log('Current contacts:', existingProfile?.contacts?.map(c => ({ id: c.id, name: c.name })) || 'No contacts');
+
   const hasGeneralTherapist = existingProfile?.contacts?.some(contact => contact.id === 'general_therapist');
+  console.log('Has General Therapist?', hasGeneralTherapist);
 
   if (!hasGeneralTherapist) {
+    console.log('✨ THERAPIST MIGRATION: Adding General Therapist to profile...');
     const generalTherapist = {
       id: "general_therapist",
       name: "General Therapist",
@@ -318,14 +323,23 @@ const ensureGeneralTherapist = (existingProfile) => {
     updatedProfile.contacts = updatedProfile.contacts || [];
 
     // Remove old AI Therapist if it exists
+    const oldAITherapist = updatedProfile.contacts.find(contact => contact.id === 'ai_therapist');
+    if (oldAITherapist) {
+      console.log('🗑️ THERAPIST MIGRATION: Removing old AI Therapist');
+    }
     updatedProfile.contacts = updatedProfile.contacts.filter(contact => contact.id !== 'ai_therapist');
 
     // Add General Therapist
     updatedProfile.contacts.push(generalTherapist);
 
+    console.log('✅ THERAPIST MIGRATION: General Therapist added successfully');
+    console.log('Updated contacts:', updatedProfile.contacts.map(c => ({ id: c.id, name: c.name })));
+    console.log('General Therapist settings:', generalTherapist.gptSettings);
+
     return updatedProfile;
   }
 
+  console.log('✅ THERAPIST MIGRATION: General Therapist already exists, no changes needed');
   return existingProfile;
 };
 
@@ -358,11 +372,13 @@ export const initializeUserProfile = async (user, existingProfile = null, additi
         await updateUserProfile(user.uid, profileData);
       } else if (needsUpdate) {
         // Profile is complete but needs General Therapist
+        console.log('💾 THERAPIST MIGRATION: Saving General Therapist to Firebase...');
         profileData = updatedProfile;
         await updateUserProfile(user.uid, {
           contacts: profileData.contacts,
           'accountStatus.lastActiveAt': new Date().toISOString()
         });
+        console.log('✅ THERAPIST MIGRATION: Successfully saved to Firebase');
       } else {
         // Profile is complete, just update last active
         profileData = existingProfile;
