@@ -1,0 +1,94 @@
+{
+  "checkInFields": {
+    "basic": {
+      "when": {
+        "question": "When did you start feeling this emotion?",
+        "options": ["10 minutes ago", "last hour", "2-6 hours ago", "yesterday", "2 days ago", "more than 3 days"],
+        "formType": "checkbox",
+        "selectionType": "single",
+        "required": true,
+        "gptContext": "I began feeling {emotion} {when}"
+      },
+      "intensity": {
+        "question": "How strongly is this emotion affecting you?",
+        "options": 10,
+        "formType": "slider",
+        "selectionType": "value",
+        "required": true,
+        "gptContext": "The intensity of this {emotion} is {intensity} out of 10"
+      },
+      "effects": {
+        "question": "How has this experience affected you?",
+        "options": [
+          "Lack of sleep",
+          "Feeling drained/exhausted",
+          "Not motivated",
+          "Difficulty concentrating",
+          "Loss of appetite",
+          "Increased appetite",
+          "Avoiding people/isolation",
+          "Physical tension/headaches"
+        ],
+        "formType": "checkbox",
+        "selectionType": "multiple",
+        "required": false,
+        "gptContext": "This experience has affected me in the following ways: {effects}"
+      },
+      "whatHappened": {
+        "question": "What happened from your perspective?",
+        "options": "",
+        "formType": "textInput",
+        "selectionType": "userInput",
+        "required": true,
+        "placeholder": "Describe the situation or events that led to this feeling...",
+        "gptContext": "Here's what happened from my perspective: {whatHappened}"
+      }
+    },
+    "advanced": {
+      "externalFactors": {
+        "question": "What external factors contributed to this emotion?",
+        "options": "",
+        "formType": "textInput",
+        "selectionType": "userInput",
+        "required": false,
+        "placeholder": "Things outside your control (other people's actions, circumstances, events, etc.)",
+        "gptContext": "External factors that contributed to this feeling include: {externalFactors}"
+      },
+      "personalStory": {
+        "question": "What story are you telling yourself about this experience?",
+        "options": "",
+        "formType": "textInput",
+        "selectionType": "userInput",
+        "required": false,
+        "placeholder": "What meaning are you making of this situation? What thoughts or beliefs are coming up?",
+        "gptContext": "The story I'm telling myself about this experience is: {personalStory}"
+      },
+      "patterns": {
+        "question": "Have you experienced this emotion in similar situations before?",
+        "options": ["Yes, frequently", "Yes, occasionally", "Rarely", "This is the first time", "I'm not sure"],
+        "formType": "checkbox",
+        "selectionType": "single",
+        "required": false,
+        "gptContext": "Regarding patterns, {patterns} I have experienced this emotion in similar situations"
+      },
+      "triggers": {
+        "question": "What specific triggers led to this feeling?",
+        "options": [
+          "Conflict with someone",
+          "Work/school stress",
+          "Financial concerns",
+          "Health issues",
+          "Relationship problems",
+          "Family dynamics",
+          "Social situations",
+          "Personal expectations",
+          "Other"
+        ],
+        "formType": "checkbox",
+        "selectionType": "multiple",
+        "required": false,
+        "gptContext": "The specific triggers that led to this feeling were: {triggers}"
+      }
+    }
+  }
+}

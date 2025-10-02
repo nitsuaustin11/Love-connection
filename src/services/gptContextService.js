@@ -62,15 +62,6 @@ export const generateTherapistPrompt = async (user, therapistSettings, messageTy
     // 5. Response Formatting Instructions
     prompt += buildResponseFormatting(messageType, therapistSettings, gptContext);
 
-    // 6. Wellness Goal Alignment
-    prompt += buildWellnessGoalContext(user, gptContext);
-
-    // 7. Safeguards
-    prompt += buildSafeguards(gptContext);
-
-    // 8. User Message Context
-    prompt += buildUserMessageContext(messageType, userMessage, user);
-
     return prompt;
   } catch (error) {
     console.error('Error generating therapist prompt:', error);
@@ -133,27 +124,21 @@ const buildPersonalityContext = (user, gptContext) => {
 const buildEmotionalContext = (user, gptContext) => {
   let prompt = 'EMOTIONAL CONTEXT:\n';
 
+  // Add general context explanation
+  prompt += 'The user has provided responses about their current experience by filling out a survey of questions. The user has provided comprehensive information about their immediate experience. This is the information which we are as therapist aiming to provide productive value as an AI Therapist. Use the provided context about their personality, and as a professional therapist to give a response directed at their current experience/emotion. The emotion and the response fields are of the most important as far as immediate feedback for the user.\n\n';
+
   const emotionalContext = user?.gptMessageContext?.currentEmotionalContext;
-  const emotionalHandling = gptContext.emotionalContextHandling;
 
   if (emotionalContext?.primaryEmotion) {
-    const emotion = emotionalContext.primaryEmotion.toLowerCase();
-    const approach = emotionalHandling.currentEmotion.responseApproaches[emotion];
-
     prompt += `Current Emotion: ${emotionalContext.primaryEmotion}\n`;
-    prompt += `${emotionalHandling.currentEmotion.instruction.replace('{primary_emotion}', emotionalContext.primaryEmotion)}\n`;
-
-    if (approach) {
-      prompt += `Approach: ${approach}\n`;
-    }
   }
 
-  if (emotionalContext?.userContext) {
-    prompt += `User Context: ${emotionalContext.userContext}\n`;
+  if (emotionalContext?.checkInContext) {
+    prompt += `${emotionalContext.checkInContext}\n`;
   }
 
-  if (emotionalContext?.wellnessGoal) {
-    prompt += `Wellness Goal: ${emotionalContext.wellnessGoal}\n`;
+  if (emotionalContext?.desiredEmotion) {
+    prompt += `Desired Emotion: ${emotionalContext.desiredEmotion}\n`;
   }
 
   prompt += '\n';

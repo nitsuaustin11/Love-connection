@@ -118,8 +118,7 @@ export const createDefaultUserProfile = (user, additionalData = {}) => ({
     },
     currentEmotionalContext: {
       primaryEmotion: additionalData.currentEmotion || null,
-      userContext: additionalData.whatBringsYouHere || null,
-      wellnessGoal: additionalData.primaryWellnessGoal || null
+      desiredEmotion: additionalData.desiredEmotion || null
     },
     recentEmotionalPatterns: [],
     communicationPreferences: {
@@ -143,6 +142,9 @@ export const createDefaultUserProfile = (user, additionalData = {}) => ({
     ui: {
       theme: "light",
       language: "en"
+    },
+    checkIn: {
+      mode: "basic"
     }
   },
 
