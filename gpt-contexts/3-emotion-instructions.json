@@ -31,5 +31,42 @@
 
   "intensityConsideration": "Pay attention to the intensity level of their emotion (1-10 scale). Higher intensity (7-10) calls for more immediate emotional support and grounding. Lower intensity (1-4) allows for more analytical exploration and pattern analysis.",
 
-  "timeframeRelevance": "Consider when this emotion started affecting them. Recent onset may need immediate coping strategies. Long-standing emotions may benefit from pattern analysis and deeper exploration."
+  "timeframeRelevance": "Consider when this emotion started affecting them. Recent onset may need immediate coping strategies. Long-standing emotions may benefit from pattern analysis and deeper exploration.",
+
+  "settings": {
+    "_comment": "Available settings for emotion handling customization",
+    "emotionalValidationLevel": {
+      "type": "select",
+      "options": ["minimal", "balanced", "extensive"],
+      "default": "balanced",
+      "label": "Emotional Validation Level",
+      "description": "How much to prioritize validation vs solutions"
+    },
+    "solutionType": {
+      "type": "select",
+      "options": ["validation", "actions", "direction", "balanced"],
+      "default": "balanced",
+      "label": "Solution Type",
+      "description": "What kind of response to provide"
+    },
+    "patternAnalysisEnabled": {
+      "type": "boolean",
+      "default": true,
+      "label": "Pattern Analysis",
+      "description": "Point out emotional patterns and recurring themes"
+    },
+    "intensityResponseMode": {
+      "type": "select",
+      "options": ["adaptive", "always_supportive", "always_analytical"],
+      "default": "adaptive",
+      "label": "Intensity Response Mode",
+      "description": "How to respond to different emotion intensities"
+    },
+    "crisisDetection": {
+      "type": "boolean",
+      "default": true,
+      "label": "Crisis Detection",
+      "description": "Identify and respond appropriately to crisis situations"
+    }
+  }
 }

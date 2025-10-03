@@ -25,5 +25,40 @@
 
   "recentMessagesUsage": "The recent messages (typically last 10) provide immediate context for the current conversation. These are the most relevant for understanding what you're currently discussing. Earlier messages may be summarized or not included, but themes from them should be in the conversation summary.",
 
-  "memoryAndRecall": "Remember key details the user has shared: names of important people, recurring challenges, coping strategies that have worked, goals they're working toward. Reference these naturally in conversation to show continuity and care."
+  "memoryAndRecall": "Remember key details the user has shared: names of important people, recurring challenges, coping strategies that have worked, goals they're working toward. Reference these naturally in conversation to show continuity and care.",
+
+  "settings": {
+    "_comment": "Available settings for message history usage",
+    "trackProgress": {
+      "type": "boolean",
+      "default": true,
+      "label": "Track Progress",
+      "description": "Notice and acknowledge user's growth and progress"
+    },
+    "referencePreviousMessages": {
+      "type": "boolean",
+      "default": true,
+      "label": "Reference Previous Messages",
+      "description": "Reference specific things shared in earlier messages"
+    },
+    "summaryUsage": {
+      "type": "select",
+      "options": ["minimal", "moderate", "extensive"],
+      "default": "moderate",
+      "label": "Summary Usage",
+      "description": "How much to rely on conversation summaries"
+    },
+    "followUpOnStrategies": {
+      "type": "boolean",
+      "default": true,
+      "label": "Follow Up on Strategies",
+      "description": "Ask about previously suggested coping strategies"
+    },
+    "rememberKeyDetails": {
+      "type": "boolean",
+      "default": true,
+      "label": "Remember Key Details",
+      "description": "Recall names, goals, and important life details"
+    }
+  }
 }

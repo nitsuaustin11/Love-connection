@@ -86,5 +86,53 @@
     "brief": "Keep response under 150 words. Be concise and focused.",
     "standard": "150-300 words. This is the default. Provides thorough but digestible responses.",
     "detailed": "300-500 words. Provide comprehensive analysis and extensive guidance when user wants deep engagement."
+  },
+
+  "settings": {
+    "_comment": "Available settings for response format customization",
+    "defaultResponseFormat": {
+      "type": "select",
+      "options": ["checkIn", "general", "firstContact", "followUp"],
+      "default": "general",
+      "label": "Default Response Format",
+      "description": "Primary format structure to use"
+    },
+    "responseLength": {
+      "type": "select",
+      "options": ["brief", "standard", "detailed"],
+      "default": "standard",
+      "label": "Response Length",
+      "description": "How long responses should be"
+    },
+    "useStructuredSections": {
+      "type": "boolean",
+      "default": true,
+      "label": "Use Structured Sections",
+      "description": "Organize responses into clear sections"
+    },
+    "includeSummary": {
+      "type": "boolean",
+      "default": true,
+      "label": "Include Summary",
+      "description": "Start with summary of user's situation"
+    },
+    "includePersonalityAnalysis": {
+      "type": "boolean",
+      "default": true,
+      "label": "Include Personality Analysis",
+      "description": "Add personality-based insights section"
+    },
+    "includeReflectionQuestions": {
+      "type": "boolean",
+      "default": true,
+      "label": "Include Reflection Questions",
+      "description": "Ask questions to prompt deeper thinking"
+    },
+    "includeActionableAdvice": {
+      "type": "boolean",
+      "default": true,
+      "label": "Include Actionable Advice",
+      "description": "Provide concrete steps to take"
+    }
   }
 }

@@ -61,5 +61,49 @@
     "minimal": "Acknowledge emotions but focus more on solutions",
     "balanced": "Provide equal validation and guidance",
     "extensive": "Prioritize emotional validation and processing"
+  },
+
+  "settings": {
+    "_comment": "Available settings that can be customized per therapist",
+    "responseStyle": {
+      "type": "select",
+      "options": ["analytical_yet_empathetic", "warm_and_supportive", "direct_and_practical", "exploratory_and_reflective"],
+      "default": "analytical_yet_empathetic",
+      "label": "Response Style",
+      "description": "How the AI therapist communicates"
+    },
+    "conversationDepth": {
+      "type": "select",
+      "options": ["surface", "moderate", "deep"],
+      "default": "moderate",
+      "label": "Conversation Depth",
+      "description": "How deep the therapeutic exploration goes"
+    },
+    "responseLength": {
+      "type": "select",
+      "options": ["brief", "standard", "detailed"],
+      "default": "standard",
+      "label": "Response Length",
+      "description": "How long responses should be"
+    },
+    "emotionalValidationLevel": {
+      "type": "select",
+      "options": ["minimal", "balanced", "extensive"],
+      "default": "balanced",
+      "label": "Emotional Validation Level",
+      "description": "How much emotional validation to provide"
+    },
+    "wantsActionableAdvice": {
+      "type": "boolean",
+      "default": true,
+      "label": "Include Actionable Advice",
+      "description": "Always include specific steps the user can take"
+    },
+    "openToVulnerability": {
+      "type": "boolean",
+      "default": true,
+      "label": "Encourage Vulnerability",
+      "description": "Encourage deeper emotional exploration"
+    }
   }
 }

@@ -6,8 +6,11 @@ import {
   FlatList,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { doc, deleteDoc } from 'firebase/firestore';
+import { db } from '../../Firebaseconfig';
 import useAuthStore from '../store/authStore';
 import { getUserMessageThreads } from '../services/messageThreadService';
 import DebugConsole from '../components/DebugConsole';
@@ -51,6 +54,38 @@ const MessagesScreen = ({ navigation }) => {
     });
   };
 
+  const handleDeleteThread = async (thread) => {
+    Alert.alert(
+      'Delete Therapy Session?',
+      'This will permanently delete this conversation. This cannot be undone.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              // Delete from Firebase
+              const threadRef = doc(db, 'messageThreads', thread.threadId);
+              await deleteDoc(threadRef);
+
+              // Refresh threads list
+              await loadThreads();
+
+              console.log('Thread deleted:', thread.threadId);
+            } catch (error) {
+              console.error('Error deleting thread:', error);
+              Alert.alert('Error', 'Failed to delete conversation. Please try again.');
+            }
+          },
+        },
+      ]
+    );
+  };
+
   const renderThread = ({ item }) => {
     const lastMessage = item.messages?.[item.messages.length - 1];
     const lastMessagePreview = lastMessage?.content || 'No messages yet';
@@ -62,6 +97,7 @@ const MessagesScreen = ({ navigation }) => {
       <TouchableOpacity
         style={styles.threadItem}
         onPress={() => handleThreadPress(item)}
+        onLongPress={() => handleDeleteThread(item)}
       >
         <View style={styles.threadAvatar}>
           <Feather name="heart" size={24} color="#e91e63" />

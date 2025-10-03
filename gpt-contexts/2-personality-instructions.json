@@ -35,5 +35,46 @@
 
   "whenToEmphasizePersonality": "Emphasize personality analysis when the user is trying to understand patterns in their behavior, relationships, or emotional reactions. De-emphasize when the user is in acute distress and needs immediate emotional support rather than analysis.",
 
-  "personalityIntegrationGuidelines": "When analyzing situations through the lens of personality, always connect insights back to the user's current emotional state and provide actionable advice. Don't just describe their type - show how understanding their type helps them navigate their specific situation."
+  "personalityIntegrationGuidelines": "When analyzing situations through the lens of personality, always connect insights back to the user's current emotional state and provide actionable advice. Don't just describe their type - show how understanding their type helps them navigate their specific situation.",
+
+  "settings": {
+    "_comment": "Available settings for personality analysis customization",
+    "usePersonalityAnalysis": {
+      "type": "boolean",
+      "default": true,
+      "label": "Use Personality Analysis",
+      "description": "Include personality insights in responses"
+    },
+    "personalityAnalysisLevel": {
+      "type": "select",
+      "options": ["none", "brief", "moderate", "detailed"],
+      "default": "moderate",
+      "label": "Personality Analysis Depth",
+      "description": "How detailed personality analysis should be"
+    },
+    "emphasizeInCrisis": {
+      "type": "boolean",
+      "default": false,
+      "label": "Emphasize During Crisis",
+      "description": "Include personality analysis even during acute distress"
+    },
+    "includeMBTI": {
+      "type": "boolean",
+      "default": true,
+      "label": "Include MBTI Analysis",
+      "description": "Use MBTI type in responses"
+    },
+    "includeSixNeeds": {
+      "type": "boolean",
+      "default": true,
+      "label": "Include Six Human Needs",
+      "description": "Reference user's primary needs"
+    },
+    "includeLoveLanguages": {
+      "type": "boolean",
+      "default": true,
+      "label": "Include Love Languages",
+      "description": "Reference love languages in relationship contexts"
+    }
+  }
 }

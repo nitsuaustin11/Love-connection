@@ -15,6 +15,8 @@ import PersonalityTestScreen from './src/screens/PersonalityTestScreen';
 import CheckInScreen from './src/screens/CheckInScreen';
 import MessagesScreen from './src/screens/MessagesScreen';
 import MessageThreadScreen from './src/screens/MessageThreadScreen';
+import ContactsScreen from './src/screens/ContactsScreen';
+import AddAITherapistScreen from './src/screens/AddAITherapistScreen';
 import MBTIDetailScreen from './src/screens/MBTIDetailScreen';
 import SixHumanNeedsDetailScreen from './src/screens/SixHumanNeedsDetailScreen';
 import LoveLanguagesDetailScreen from './src/screens/LoveLanguagesDetailScreen';
@@ -39,6 +41,16 @@ function PersonalityStackNavigator() {
   );
 }
 
+function ProfileStackNavigator() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="ProfileMain" component={HomeScreen} />
+      <Stack.Screen name="Contacts" component={ContactsScreen} />
+      <Stack.Screen name="AddAITherapist" component={AddAITherapistScreen} />
+    </Stack.Navigator>
+  );
+}
+
 function MessagesStackNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -53,10 +65,7 @@ function TabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          if (route.name === 'Home') {
-            const iconName = focused ? 'home' : 'home-outline';
-            return <Ionicons name={iconName} size={size} color={color} />;
-          } else if (route.name === 'PersonalityTest') {
+          if (route.name === 'PersonalityTest') {
             // Using pencil icon from icons.txt as placeholder for personality test
             return <Octicons name="pencil" size={size} color={color} />;
           } else if (route.name === 'CheckIn') {
@@ -65,6 +74,9 @@ function TabNavigator() {
           } else if (route.name === 'Messages') {
             const iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
             return <Ionicons name={iconName} size={size} color={color} />;
+          } else if (route.name === 'Profile') {
+            const iconName = focused ? 'person' : 'person-outline';
+            return <Ionicons name={iconName} size={size} color={color} />;
           }
         },
         tabBarActiveTintColor: '#e91e63',
@@ -72,11 +84,6 @@ function TabNavigator() {
         headerShown: false,
       })}
     >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ tabBarLabel: 'Home' }}
-      />
       <Tab.Screen
         name="PersonalityTest"
         component={PersonalityStackNavigator}
@@ -91,6 +98,11 @@ function TabNavigator() {
         name="Messages"
         component={MessagesStackNavigator}
         options={{ tabBarLabel: 'Messages' }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileStackNavigator}
+        options={{ tabBarLabel: 'Profile' }}
       />
     </Tab.Navigator>
   );

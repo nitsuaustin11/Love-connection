@@ -158,60 +158,75 @@ const buildPersonalitySection = (contexts, user, therapistSettings) => {
   const { personalityInstructions } = contexts;
   if (!personalityInstructions) return '';
 
+  // Check if user wants personality analysis
+  const useAnalysis = therapistSettings.usePersonalityAnalysis !== false;
+  if (!useAnalysis) {
+    return `PERSONALITY CONTEXT:\nNote: Personality analysis is disabled for this therapist. Focus on general emotional support.\n\n`;
+  }
+
   let section = `PERSONALITY CONTEXT:\n`;
   section += `${personalityInstructions.personalityContextOverview}\n\n`;
 
-  // Check if user wants personality analysis
-  const personalitySettings = therapistSettings.personalitySettings || {};
-  if (personalitySettings.usePersonalityAnalysis === false) {
-    section += `Note: User has disabled personality analysis. Focus on general emotional support.\n\n`;
-    return section;
+  // Add analysis level instruction
+  const analysisLevel = therapistSettings.personalityAnalysisLevel || 'moderate';
+  if (analysisLevel !== 'none') {
+    section += `PERSONALITY ANALYSIS DEPTH: ${personalityInstructions.personalityAnalysisLevels[analysisLevel]}\n\n`;
   }
 
-  // Add analysis level instruction
-  const analysisLevel = personalitySettings.personalityDepth || 'moderate';
-  section += `PERSONALITY ANALYSIS DEPTH: ${personalityInstructions.personalityAnalysisLevels[analysisLevel]}\n\n`;
-
-  // Add each personality type
+  // Add each personality type based on settings
   const types = personalityInstructions.personalityTypes;
 
-  // MBTI
-  section += `--- MBTI (${types.mbti.name}) ---\n`;
-  section += `${types.mbti.howToUse}\n`;
-  section += `${types.mbti.adaptationNotes}\n`;
-  const mbtiContext = user?.gptMessageContext?.personalityContext?.mbti;
-  if (mbtiContext) {
-    section += `\nUser's MBTI Context:\n${mbtiContext}\n\n`;
-  } else {
-    section += `\nUser has not completed MBTI test.\n\n`;
+  // MBTI (if enabled)
+  const includeMBTI = therapistSettings.includeMBTI !== false;
+  if (includeMBTI) {
+    section += `--- MBTI (${types.mbti.name}) ---\n`;
+    section += `${types.mbti.howToUse}\n`;
+    section += `${types.mbti.adaptationNotes}\n`;
+    const mbtiContext = user?.gptMessageContext?.personalityContext?.mbti;
+    if (mbtiContext) {
+      section += `\nUser's MBTI Context:\n${mbtiContext}\n\n`;
+    } else {
+      section += `\nUser has not completed MBTI test.\n\n`;
+    }
   }
 
-  // Six Human Needs
-  section += `--- SIX HUMAN NEEDS (${types.sixHumanNeeds.name}) ---\n`;
-  section += `${types.sixHumanNeeds.howToUse}\n`;
-  section += `${types.sixHumanNeeds.adaptationNotes}\n`;
-  const needsContext = user?.gptMessageContext?.personalityContext?.sixHumanNeeds;
-  if (needsContext) {
-    section += `\nUser's Six Human Needs Context:\n${needsContext}\n\n`;
-  } else {
-    section += `\nUser has not completed Six Human Needs test.\n\n`;
+  // Six Human Needs (if enabled)
+  const includeSixNeeds = therapistSettings.includeSixNeeds !== false;
+  if (includeSixNeeds) {
+    section += `--- SIX HUMAN NEEDS (${types.sixHumanNeeds.name}) ---\n`;
+    section += `${types.sixHumanNeeds.howToUse}\n`;
+    section += `${types.sixHumanNeeds.adaptationNotes}\n`;
+    const needsContext = user?.gptMessageContext?.personalityContext?.sixHumanNeeds;
+    if (needsContext) {
+      section += `\nUser's Six Human Needs Context:\n${needsContext}\n\n`;
+    } else {
+      section += `\nUser has not completed Six Human Needs test.\n\n`;
+    }
   }
 
-  // Love Languages
-  section += `--- LOVE LANGUAGES (${types.loveLanguages.name}) ---\n`;
-  section += `${types.loveLanguages.howToUse}\n`;
-  section += `${types.loveLanguages.adaptationNotes}\n`;
-  const loveContext = user?.gptMessageContext?.personalityContext?.loveLanguages;
-  if (loveContext) {
-    section += `\nUser's Love Languages Context:\n${loveContext}\n\n`;
-  } else {
-    section += `\nUser has not completed Love Languages test.\n\n`;
+  // Love Languages (if enabled)
+  const includeLoveLanguages = therapistSettings.includeLoveLanguages !== false;
+  if (includeLoveLanguages) {
+    section += `--- LOVE LANGUAGES (${types.loveLanguages.name}) ---\n`;
+    section += `${types.loveLanguages.howToUse}\n`;
+    section += `${types.loveLanguages.adaptationNotes}\n`;
+    const loveContext = user?.gptMessageContext?.personalityContext?.loveLanguages;
+    if (loveContext) {
+      section += `\nUser's Love Languages Context:\n${loveContext}\n\n`;
+    } else {
+      section += `\nUser has not completed Love Languages test.\n\n`;
+    }
   }
 
   // Add integration guidelines
   section += `PERSONALITY INTEGRATION:\n`;
   section += `${personalityInstructions.personalityIntegrationGuidelines}\n\n`;
-  section += `${personalityInstructions.whenToEmphasizePersonality}\n\n`;
+
+  // Only add crisis handling if enabled
+  const emphasizeInCrisis = therapistSettings.emphasizeInCrisis === true;
+  if (!emphasizeInCrisis) {
+    section += `${personalityInstructions.whenToEmphasizePersonality}\n\n`;
+  }
 
   return section;
 };
@@ -247,8 +262,15 @@ const buildEmotionalSection = (contexts, user, therapistSettings) => {
     section += `CHECK-IN CONTEXT:\n${checkInContext}\n\n`;
   }
 
-  // Add intensity consideration
-  section += `${emotionInstructions.intensityConsideration}\n`;
+  // Add intensity consideration based on settings
+  const intensityMode = therapistSettings.intensityResponseMode || 'adaptive';
+  if (intensityMode === 'adaptive') {
+    section += `${emotionInstructions.intensityConsideration}\n`;
+  } else if (intensityMode === 'always_supportive') {
+    section += `Always prioritize emotional support regardless of intensity level.\n`;
+  } else if (intensityMode === 'always_analytical') {
+    section += `Provide analytical exploration regardless of intensity level.\n`;
+  }
   section += `${emotionInstructions.timeframeRelevance}\n\n`;
 
   // Add solution type preference
@@ -258,8 +280,17 @@ const buildEmotionalSection = (contexts, user, therapistSettings) => {
     section += `SOLUTION APPROACH: ${solutionGuidance}\n\n`;
   }
 
-  // Add pattern analysis
-  section += `${emotionInstructions.emotionalPatternAnalysis}\n\n`;
+  // Add pattern analysis if enabled
+  const patternAnalysis = therapistSettings.patternAnalysisEnabled !== false;
+  if (patternAnalysis) {
+    section += `${emotionInstructions.emotionalPatternAnalysis}\n\n`;
+  }
+
+  // Add crisis detection note if enabled
+  const crisisDetection = therapistSettings.crisisDetection !== false;
+  if (crisisDetection) {
+    section += `Note: Monitor for crisis situations and respond with appropriate urgency and professional referrals.\n\n`;
+  }
 
   return section;
 };
@@ -267,23 +298,30 @@ const buildEmotionalSection = (contexts, user, therapistSettings) => {
 /**
  * Build message history section
  */
-const buildMessageHistorySection = (contexts, messages, conversationSummary) => {
+const buildMessageHistorySection = (contexts, messages, conversationSummary, therapistSettings) => {
   const { messageHistoryInstructions } = contexts;
   if (!messageHistoryInstructions) return '';
 
   let section = `CONVERSATION HISTORY:\n`;
   section += `${messageHistoryInstructions.messageHistoryPurpose}\n\n`;
 
-  // Add how to use history
-  section += `HOW TO USE HISTORY:\n`;
-  Object.entries(messageHistoryInstructions.howToUseHistory).forEach(([key, value]) => {
-    section += `- ${value}\n`;
-  });
-  section += `\n`;
+  // Add how to use history based on settings
+  const referencePrevious = therapistSettings.referencePreviousMessages !== false;
+  if (referencePrevious) {
+    section += `HOW TO USE HISTORY:\n`;
+    Object.entries(messageHistoryInstructions.howToUseHistory).forEach(([key, value]) => {
+      section += `- ${value}\n`;
+    });
+    section += `\n`;
+  }
 
-  // Add conversation summary if available
-  if (conversationSummary) {
+  // Add conversation summary if available and enabled
+  const summaryUsage = therapistSettings.summaryUsage || 'moderate';
+  if (conversationSummary && summaryUsage !== 'minimal') {
     section += `CONVERSATION SUMMARY:\n${conversationSummary}\n\n`;
+    if (summaryUsage === 'extensive') {
+      section += `${messageHistoryInstructions.summaryGuidance}\n\n`;
+    }
   }
 
   // Add recent messages
@@ -301,6 +339,24 @@ const buildMessageHistorySection = (contexts, messages, conversationSummary) => 
   const continuityContext = messages?.length === 0 ? 'firstMessage' : 'ongoingConversation';
   section += `${messageHistoryInstructions.contextualContinuityRules[continuityContext]}\n\n`;
 
+  // Add progress tracking note if enabled
+  const trackProgress = therapistSettings.trackProgress !== false;
+  if (trackProgress && messages?.length > 0) {
+    section += `Remember to notice and acknowledge any progress or growth the user has shown.\n\n`;
+  }
+
+  // Add strategy follow-up note if enabled
+  const followUpStrategies = therapistSettings.followUpOnStrategies !== false;
+  if (followUpStrategies && messages?.length > 0) {
+    section += `If you previously suggested coping strategies, check in on how they worked.\n\n`;
+  }
+
+  // Add memory recall note if enabled
+  const rememberDetails = therapistSettings.rememberKeyDetails !== false;
+  if (rememberDetails) {
+    section += `${messageHistoryInstructions.memoryAndRecall}\n\n`;
+  }
+
   return section;
 };
 
@@ -313,26 +369,31 @@ const buildResponseFormatSection = (contexts, messageType, therapistSettings) =>
 
   let section = `RESPONSE FORMAT:\n`;
 
-  // Get the appropriate format for message type
-  const formatKey = messageType + 'ResponseFormat';
-  const format = responseFormats[formatKey];
+  // Use default format from settings if available
+  const defaultFormat = therapistSettings.defaultResponseFormat || messageType;
+  const formatKey = defaultFormat + 'ResponseFormat';
+  const format = responseFormats[formatKey] || responseFormats.generalMessageFormat;
 
-  if (!format) {
-    // Default to general format
-    const generalFormat = responseFormats.generalMessageFormat;
-    section += `Use ${generalFormat.name}:\n`;
-    section += `${generalFormat.when}\n\n`;
-    Object.entries(generalFormat.structure).forEach(([key, value]) => {
-      section += `${key}: ${value}\n`;
-    });
-    section += `\n`;
-  } else {
+  if (format) {
     section += `Use ${format.name}:\n`;
     section += `${format.when}\n\n`;
 
-    // Add structure details
-    if (format.structure) {
+    // Check if structured sections are enabled
+    const useStructured = therapistSettings.useStructuredSections !== false;
+
+    if (useStructured && format.structure) {
+      section += `STRUCTURE:\n`;
+
+      // Add structure details based on enabled settings
       Object.entries(format.structure).forEach(([key, value]) => {
+        // Check specific section settings for checkIn format
+        if (key === '1_summary' && therapistSettings.includeSummary === false) {
+          return; // Skip summary section
+        }
+        if (key === '2_personalityAnalysis' && therapistSettings.includePersonalityAnalysis === false) {
+          return; // Skip personality section
+        }
+
         if (typeof value === 'string') {
           section += `${key}: ${value}\n`;
         } else if (typeof value === 'object') {
@@ -340,13 +401,23 @@ const buildResponseFormatSection = (contexts, messageType, therapistSettings) =>
           if (value.instruction) section += `  ${value.instruction}\n`;
           if (value.components) {
             Object.entries(value.components).forEach(([compKey, compValue]) => {
+              // Check if reflection questions are enabled
+              if (compKey === 'reflectionQuestions' && therapistSettings.includeReflectionQuestions === false) {
+                return;
+              }
+              // Check if actionable advice is enabled
+              if (compKey === 'actionableAdvice' && therapistSettings.includeActionableAdvice === false) {
+                return;
+              }
               section += `  - ${compValue}\n`;
             });
           }
         }
       });
+      section += `\n`;
+    } else {
+      section += `Use a natural, conversational format without strict structure.\n\n`;
     }
-    section += `\n`;
   }
 
   // Add length guidance
@@ -383,7 +454,7 @@ export const assembleCompletePrompt = async (
     const generalSystemSection = buildGeneralSystemSection(contexts, therapistSettings);
     const personalitySection = buildPersonalitySection(contexts, user, therapistSettings);
     const emotionalSection = buildEmotionalSection(contexts, user, therapistSettings);
-    const messageHistorySection = buildMessageHistorySection(contexts, recentMessages, conversationSummary);
+    const messageHistorySection = buildMessageHistorySection(contexts, recentMessages, conversationSummary, therapistSettings);
     const responseFormatSection = buildResponseFormatSection(contexts, messageType, therapistSettings);
 
     // Assemble final prompt
