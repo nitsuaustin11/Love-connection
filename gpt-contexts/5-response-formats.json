@@ -1,0 +1,90 @@
+{
+  "_comment": "RESPONSE FORMAT INSTRUCTIONS - Defines how to structure responses for different message types",
+  "_usage": "Different types of interactions need different response structures. Use the appropriate format based on the context.",
+
+  "checkInResponseFormat": {
+    "_comment": "Used when responding to an emotional check-in",
+    "name": "Check-in Response Format",
+    "when": "Use this format when the user has just completed an emotional check-in and is seeking your response to their current emotional state.",
+
+    "structure": {
+      "1_summary": {
+        "instruction": "Provide a clear, empathetic summary of the user's current emotional state and situation",
+        "wordCount": "50-100 words",
+        "tone": "validating and understanding",
+        "example": "It sounds like you're experiencing frustration that's been building over several hours, triggered by technical problems at work right before an important deadline. This has left you feeling drained, tense, and overwhelmed."
+      },
+      "2_personalityAnalysis": {
+        "instruction": "Analyze how each of the user's personality types might be influencing their current experience. ONLY include if user's personalitySettings call for it.",
+        "includeIf": "user.personalitySettings.usePersonalityAnalysis === true",
+        "depth": "Based on user's personalitySettings.personalityDepth",
+        "sections": {
+          "mbti_influence": "Explain how their MBTI type might be affecting their response to the situation, including cognitive preferences and stress patterns",
+          "needs_analysis": "Identify which of their primary human needs might be unmet or driving their current emotional state",
+          "love_language_impact": "Consider how their love languages might relate to relationship or connection aspects of their situation"
+        }
+      },
+      "3_feedbackAndGuidance": {
+        "instruction": "Provide reflection questions, insights, and actionable advice",
+        "components": {
+          "reflectionQuestions": "Ask 2-3 thoughtful questions that help the user explore their emotions and situation more deeply",
+          "personalitySpecificQuestions": "Include 1-2 questions specifically tailored to their personality type (if personality analysis is enabled)",
+          "actionableAdvice": "Provide 2-4 concrete steps they can take, considering their personality preferences and current emotional state. Adjust based on user's solutionType preference.",
+          "criticalInsights": "Offer important observations or gentle challenges that might help them gain new perspective"
+        }
+      }
+    },
+
+    "customizationNotes": "Adjust depth and focus based on user's feedback preferences and therapist settings"
+  },
+
+  "generalMessageFormat": {
+    "_comment": "Used for ongoing conversation messages",
+    "name": "General Conversation Format",
+    "when": "Use this for regular back-and-forth conversation after the initial check-in.",
+
+    "structure": {
+      "acknowledgment": "Start by acknowledging what the user has shared. Reflect back key points to show understanding.",
+      "analysis": "Provide insights based on their personality context and emotional state. Connect to previous conversations if relevant.",
+      "guidance": "Offer relevant advice or next steps based on their preferences (validation, actions, direction, or balanced).",
+      "engagement": "End with a question or invitation for further sharing to keep the conversation flowing naturally."
+    },
+
+    "adaptationRules": "Adjust formality, depth, and focus based on user's communication preferences (responseStyle) and current emotional state. Match their energy level - if they're in crisis, be more directive and supportive. If they're reflecting, be more exploratory."
+  },
+
+  "firstContactFormat": {
+    "_comment": "Used for the very first interaction with a new user or new conversation thread",
+    "name": "First Contact Format",
+    "when": "Use when there's no conversation history and this is the user's first message to you.",
+
+    "structure": {
+      "warmWelcome": "Provide a warm, inviting greeting that establishes the therapeutic relationship.",
+      "understandCurrentSituation": "Ask clarifying questions to understand what brought them here today and what they're experiencing.",
+      "establishExpectations": "Briefly explain how you can help while acknowledging your limitations as an AI.",
+      "createSafety": "Create a sense of psychological safety by being non-judgmental and empathetic.",
+      "inviteSharing": "Invite them to share as much or as little as they're comfortable with."
+    }
+  },
+
+  "followUpAfterAdviceFormat": {
+    "_comment": "Used when checking in after giving advice or suggestions",
+    "name": "Follow-up Format",
+    "when": "Use when the user returns after you've given them strategies or advice to try.",
+
+    "structure": {
+      "checkIn": "Ask how they've been since you last spoke. Did they try any of the strategies discussed?",
+      "celebrate": "Acknowledge any positive steps they took, no matter how small.",
+      "troubleshoot": "If strategies didn't work, explore what got in the way without judgment.",
+      "adjust": "Based on what worked and didn't, adjust recommendations or explore new approaches.",
+      "encourage": "Provide encouragement for continued growth and experimentation."
+    }
+  },
+
+  "lengthGuidance": {
+    "_comment": "Overall response length based on user preferences",
+    "brief": "Keep response under 150 words. Be concise and focused.",
+    "standard": "150-300 words. This is the default. Provides thorough but digestible responses.",
+    "detailed": "300-500 words. Provide comprehensive analysis and extensive guidance when user wants deep engagement."
+  }
+}

@@ -14,6 +14,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import PersonalityTestScreen from './src/screens/PersonalityTestScreen';
 import CheckInScreen from './src/screens/CheckInScreen';
 import MessagesScreen from './src/screens/MessagesScreen';
+import MessageThreadScreen from './src/screens/MessageThreadScreen';
 import MBTIDetailScreen from './src/screens/MBTIDetailScreen';
 import SixHumanNeedsDetailScreen from './src/screens/SixHumanNeedsDetailScreen';
 import LoveLanguagesDetailScreen from './src/screens/LoveLanguagesDetailScreen';
@@ -34,6 +35,15 @@ function PersonalityStackNavigator() {
       <Stack.Screen name="AddSixNeedsResults" component={AddSixNeedsResults} />
       <Stack.Screen name="AddMBTIResults" component={AddMBTIResults} />
       <Stack.Screen name="AddLoveLanguagesResults" component={AddLoveLanguagesResults} />
+    </Stack.Navigator>
+  );
+}
+
+function MessagesStackNavigator() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="MessagesList" component={MessagesScreen} />
+      <Stack.Screen name="MessageThread" component={MessageThreadScreen} />
     </Stack.Navigator>
   );
 }
@@ -79,7 +89,7 @@ function TabNavigator() {
       />
       <Tab.Screen
         name="Messages"
-        component={MessagesScreen}
+        component={MessagesStackNavigator}
         options={{ tabBarLabel: 'Messages' }}
       />
     </Tab.Navigator>

@@ -14,6 +14,8 @@ import { Feather } from '@expo/vector-icons';
 import useAuthStore from '../store/authStore';
 import { getTherapistDebugInfo, generateTherapistPrompt, verifyTherapistData } from '../services/gptContextService';
 import { getFieldsForMode, generateCheckInContext } from '../services/checkInFieldsService';
+import { assembleCompletePrompt, debugAssembledPrompt } from '../services/contextAssembler';
+import { createMessageThread, addMessageToThread, createCheckInSummaryMessage } from '../services/messageThreadService';
 import DebugConsole from '../components/DebugConsole';
 
 const CheckInScreen = ({ navigation }) => {
@@ -304,50 +306,71 @@ const CheckInScreen = ({ navigation }) => {
       console.log('Selected Contacts:', selectedContacts.map(c => `${c.name} (${c.type})`));
       console.log('');
 
-      for (const contact of selectedContacts) {
-        console.log(`FOR CONTACT: ${contact.name} (${contact.type})`);
+      // For now, handle only the first AI therapist contact
+      const aiTherapist = selectedContacts.find(c => c.type === 'ai_therapist');
 
-        if (contact.type === 'ai_therapist' && contact.gptSettings) {
-          // Create updated user context with check-in data
-          const checkInContext = await generateCheckInContext(responses, selectedEmotion);
-          const updatedUser = {
-            ...user,
-            gptMessageContext: {
-              ...user?.gptMessageContext,
-              currentEmotionalContext: {
-                ...user?.gptMessageContext?.currentEmotionalContext,
-                primaryEmotion: selectedEmotion,
-                checkInContext: checkInContext,
-                checkInResponses: responses,
-                lastCheckInAt: new Date().toISOString()
-              },
-              lastUpdated: new Date().toISOString()
-            }
-          };
+      if (aiTherapist && aiTherapist.gptSettings) {
+        // 1. Create updated user context with check-in data
+        const checkInContext = await generateCheckInContext(responses, selectedEmotion);
+        const updatedUser = {
+          ...user,
+          gptMessageContext: {
+            ...user?.gptMessageContext,
+            currentEmotionalContext: {
+              ...user?.gptMessageContext?.currentEmotionalContext,
+              primaryEmotion: selectedEmotion,
+              checkInContext: checkInContext,
+              checkInResponses: responses,
+              lastCheckInAt: new Date().toISOString()
+            },
+            lastUpdated: new Date().toISOString()
+          }
+        };
 
-          // Generate complete GPT context for AI therapist
-          const fullPrompt = await generateTherapistPrompt(updatedUser, contact.gptSettings, 'check_in', '');
-          console.log('THERAPIST SETTINGS:', JSON.stringify(contact.gptSettings, null, 2));
-          console.log('COMPLETE GPT CONTEXT:');
-          console.log(fullPrompt);
-        } else {
-          // For personal contacts, show simplified context
-          console.log('CONTACT TYPE: Personal Contact');
-          console.log('SIMPLIFIED CONTEXT: This is a personal contact - would receive user-friendly summary');
-        }
-        console.log('===');
-        console.log('');
+        // 2. Create new message thread
+        const thread = await createMessageThread(
+          user.uid,
+          aiTherapist.id,
+          aiTherapist.name,
+          aiTherapist.type
+        );
+
+        console.log('Created thread:', thread.threadId);
+
+        // 3. Create check-in summary message (user's message)
+        const checkInSummary = createCheckInSummaryMessage(selectedEmotion, checkInContext);
+
+        await addMessageToThread(thread.threadId, {
+          sender: 'user',
+          content: checkInSummary,
+        });
+
+        // 4. Generate AI response (demo for now)
+        await addMessageToThread(thread.threadId, {
+          sender: 'ai',
+          content: 'Demo of chat GPT response',
+        });
+
+        console.log('Added initial messages to thread');
+
+        // 5. Clear check-in state
+        setShowContactSelection(false);
+        setShowFollowUp(false);
+        setSelectedEmotion(null);
+        setResponses({});
+        setSelectedContacts([]);
+        setCheckInCompleted(false);
+
+        // 6. Navigate to message thread
+        navigation.navigate('Messages', {
+          screen: 'MessageThread',
+          params: {
+            threadId: thread.threadId,
+            contactName: aiTherapist.name,
+          }
+        });
       }
 
-      console.log('=== END CONTACT SHARING ===');
-
-      Alert.alert('Sent Successfully', `Check-in sent to ${selectedContacts.length} contact(s)!`);
-      setShowContactSelection(false);
-      setShowFollowUp(false);
-      setSelectedEmotion(null);
-      setResponses({});
-      setSelectedContacts([]);
-      setCheckInCompleted(false);
     } catch (error) {
       console.error('Error sending to contacts:', error);
       Alert.alert('Send Error', 'Failed to send check-in to contacts.');
@@ -598,7 +621,25 @@ const CheckInScreen = ({ navigation }) => {
           style={styles.debugButton}
           onPress={handleDebugGPTContext}
         >
-          <Text style={styles.debugButtonText}>🐛 Debug GPT Context</Text>
+          <Text style={styles.debugButtonText}>🐛 Debug Old Context</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.debugButton, { backgroundColor: '#0891b2', borderColor: '#0e7490' }]}
+          onPress={async () => {
+            try {
+              const prompt = await debugAssembledPrompt(user);
+              Alert.alert(
+                'Context Assembled!',
+                `Successfully assembled ${prompt.length} characters. Check console for full prompt.`,
+                [{ text: 'OK' }]
+              );
+            } catch (error) {
+              Alert.alert('Error', `Failed to assemble context: ${error.message}`);
+            }
+          }}
+        >
+          <Text style={styles.debugButtonText}>🎯 Test NEW Context Assembler</Text>
         </TouchableOpacity>
       </ScrollView>
 

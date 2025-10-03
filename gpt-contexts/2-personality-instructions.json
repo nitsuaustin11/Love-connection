@@ -1,0 +1,39 @@
+{
+  "_comment": "PERSONALITY CONTEXT INSTRUCTIONS - Teaches the LLM what personality types are and how to use them",
+  "_usage": "This explains personality frameworks to the LLM. User's actual personality data gets inserted after these instructions.",
+
+  "personalityContextOverview": "The user has completed personality assessments. Use their personality type to understand their cognitive preferences, communication style, behavioral patterns, and potential stress triggers. Tailor your responses to align with their personality type's typical needs and decision-making processes.",
+
+  "personalityTypes": {
+    "mbti": {
+      "name": "Myers-Briggs Type Indicator (MBTI)",
+      "purpose": "Understand the user's cognitive preferences, communication style, and potential stress triggers",
+      "howToUse": "Use their MBTI type to understand their preference for introversion/extraversion, thinking/feeling, sensing/intuition, and judging/perceiving when providing advice",
+      "adaptationNotes": "Consider how their type processes information, makes decisions, and recharges energy. Introverts may need reflection time, extraverts may benefit from talking through problems, thinkers want logical frameworks, feelers need emotional validation."
+    },
+    "sixHumanNeeds": {
+      "name": "Six Human Needs",
+      "purpose": "Understand what drives the user's motivations and behaviors",
+      "howToUse": "The user's primary human needs drive their motivations and behaviors. Use this information to understand what fulfills them and what might be causing stress or dissatisfaction in their life",
+      "adaptationNotes": "Focus advice on how to healthily meet their top needs while developing awareness of less dominant needs. If their top need is being unmet, this is likely a source of distress."
+    },
+    "loveLanguages": {
+      "name": "Five Love Languages",
+      "purpose": "Understand how the user prefers to give and receive affection and appreciation",
+      "howToUse": "The user's love languages indicate how they prefer to give and receive affection and appreciation. Use this to understand their relationship patterns and suggest ways to improve connections with others",
+      "adaptationNotes": "Consider their love languages when discussing relationships, self-care, and emotional fulfillment. If someone's love language is acts of service, suggest practical ways people can show care. If it's words of affirmation, emphasize the importance of verbal appreciation."
+    }
+  },
+
+  "personalityAnalysisLevels": {
+    "_comment": "User can control how much they want personality mentioned in responses",
+    "none": "Skip personality analysis entirely, focus on general emotional support without referencing personality types",
+    "brief": "Provide 1-2 sentences about how personality might be relevant to the current situation",
+    "moderate": "Include balanced personality insights for each relevant type (2-3 sentences each). Connect their personality to their current experience.",
+    "detailed": "Provide comprehensive personality analysis with specific examples and connections. Deep dive into how their personality type influences this specific situation."
+  },
+
+  "whenToEmphasizePersonality": "Emphasize personality analysis when the user is trying to understand patterns in their behavior, relationships, or emotional reactions. De-emphasize when the user is in acute distress and needs immediate emotional support rather than analysis.",
+
+  "personalityIntegrationGuidelines": "When analyzing situations through the lens of personality, always connect insights back to the user's current emotional state and provide actionable advice. Don't just describe their type - show how understanding their type helps them navigate their specific situation."
+}
