@@ -9,6 +9,9 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  Modal,
+  Switch,
+  ScrollView,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import useAuthStore from '../store/authStore';
@@ -28,6 +31,17 @@ const MessageThreadScreen = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const flatListRef = useRef(null);
+
+  // Modal states
+  const [showAIToolbar, setShowAIToolbar] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+
+  // AI Toolbar modifier states (placeholders)
+  const [modifiers, setModifiers] = useState({
+    fullAnalysis: false,
+    actionResponse: false,
+    thoughtProvoking: false,
+  });
 
   // Load thread on mount
   useEffect(() => {
@@ -146,6 +160,20 @@ const MessageThreadScreen = ({ route, navigation }) => {
           <Text style={styles.headerTitle}>{contactName}</Text>
           <Text style={styles.headerSubtitle}>AI Therapist</Text>
         </View>
+        <View style={styles.headerButtons}>
+          <TouchableOpacity
+            style={styles.headerButton}
+            onPress={() => setShowAIToolbar(true)}
+          >
+            <Feather name="sliders" size={22} color="#333" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.headerButton}
+            onPress={() => setShowInviteModal(true)}
+          >
+            <Feather name="user-plus" size={22} color="#333" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Messages List */}
@@ -190,6 +218,153 @@ const MessageThreadScreen = ({ route, navigation }) => {
           </Text>
         </View>
       )}
+
+      {/* AI Toolbar Modal */}
+      <Modal
+        visible={showAIToolbar}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowAIToolbar(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>AI Response Modifiers</Text>
+              <TouchableOpacity onPress={() => setShowAIToolbar(false)}>
+                <Feather name="x" size={24} color="#333" />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView style={styles.modalBody}>
+              <Text style={styles.modalDescription}>
+                Customize how the AI responds to your messages (Coming Soon)
+              </Text>
+
+              <View style={styles.modifierItem}>
+                <View style={styles.modifierInfo}>
+                  <Text style={styles.modifierTitle}>Get Full Analysis</Text>
+                  <Text style={styles.modifierDescription}>
+                    Receive comprehensive psychological analysis
+                  </Text>
+                </View>
+                <Switch
+                  value={modifiers.fullAnalysis}
+                  onValueChange={(value) => setModifiers({...modifiers, fullAnalysis: value})}
+                  trackColor={{ false: '#ddd', true: '#e91e63' }}
+                  thumbColor="#fff"
+                />
+              </View>
+
+              <View style={styles.modifierItem}>
+                <View style={styles.modifierInfo}>
+                  <Text style={styles.modifierTitle}>Give Action Response</Text>
+                  <Text style={styles.modifierDescription}>
+                    Focus on actionable steps and solutions
+                  </Text>
+                </View>
+                <Switch
+                  value={modifiers.actionResponse}
+                  onValueChange={(value) => setModifiers({...modifiers, actionResponse: value})}
+                  trackColor={{ false: '#ddd', true: '#e91e63' }}
+                  thumbColor="#fff"
+                />
+              </View>
+
+              <View style={styles.modifierItem}>
+                <View style={styles.modifierInfo}>
+                  <Text style={styles.modifierTitle}>Thought-Provoking Questions</Text>
+                  <Text style={styles.modifierDescription}>
+                    Encourage deeper self-reflection through questions
+                  </Text>
+                </View>
+                <Switch
+                  value={modifiers.thoughtProvoking}
+                  onValueChange={(value) => setModifiers({...modifiers, thoughtProvoking: value})}
+                  trackColor={{ false: '#ddd', true: '#e91e63' }}
+                  thumbColor="#fff"
+                />
+              </View>
+            </ScrollView>
+
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={() => setShowAIToolbar(false)}
+            >
+              <Text style={styles.modalCloseButtonText}>Done</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Invite Modal */}
+      <Modal
+        visible={showInviteModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowInviteModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Invite to Conversation</Text>
+              <TouchableOpacity onPress={() => setShowInviteModal(false)}>
+                <Feather name="x" size={24} color="#333" />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView style={styles.modalBody}>
+              <Text style={styles.modalDescription}>
+                Choose how to invite someone to this therapy session (Coming Soon)
+              </Text>
+
+              <TouchableOpacity
+                style={styles.inviteOption}
+                onPress={() => {
+                  console.log('Assistant mode selected');
+                  // TODO: Open contact selector for assistant mode
+                }}
+              >
+                <View style={styles.inviteOptionIcon}>
+                  <Feather name="life-buoy" size={32} color="#0891b2" />
+                </View>
+                <View style={styles.inviteOptionContent}>
+                  <Text style={styles.inviteOptionTitle}>Request Assistance</Text>
+                  <Text style={styles.inviteOptionDescription}>
+                    Invite someone to observe and provide support. No check-in required.
+                  </Text>
+                </View>
+                <Feather name="chevron-right" size={20} color="#ccc" />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.inviteOption}
+                onPress={() => {
+                  console.log('Participant mode selected');
+                  // TODO: Open contact selector for participant mode
+                }}
+              >
+                <View style={styles.inviteOptionIcon}>
+                  <Feather name="users" size={32} color="#e91e63" />
+                </View>
+                <View style={styles.inviteOptionContent}>
+                  <Text style={styles.inviteOptionTitle}>Participate in Session</Text>
+                  <Text style={styles.inviteOptionDescription}>
+                    Invite someone to join as an active participant. They'll complete their own check-in.
+                  </Text>
+                </View>
+                <Feather name="chevron-right" size={20} color="#ccc" />
+              </TouchableOpacity>
+            </ScrollView>
+
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={() => setShowInviteModal(false)}
+            >
+              <Text style={styles.modalCloseButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 };
@@ -231,6 +406,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666',
     marginTop: 2,
+  },
+  headerButtons: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  headerButton: {
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: '#f8f9fa',
   },
   messagesList: {
     padding: 15,
@@ -324,6 +508,105 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 11,
     fontWeight: '600',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: '80%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e9ecef',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  modalBody: {
+    padding: 20,
+  },
+  modalDescription: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modifierItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#f8f9fa',
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  modifierInfo: {
+    flex: 1,
+    marginRight: 15,
+  },
+  modifierTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 4,
+  },
+  modifierDescription: {
+    fontSize: 13,
+    color: '#666',
+  },
+  modalCloseButton: {
+    backgroundColor: '#e91e63',
+    margin: 20,
+    padding: 15,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  modalCloseButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  inviteOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f8f9fa',
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  inviteOptionIcon: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  inviteOptionContent: {
+    flex: 1,
+  },
+  inviteOptionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 4,
+  },
+  inviteOptionDescription: {
+    fontSize: 13,
+    color: '#666',
+    lineHeight: 18,
   },
 });
 

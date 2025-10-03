@@ -31,8 +31,8 @@ export const getCheckInFields = async () => {
 
 /**
  * Gets fields for a specific mode (basic or advanced)
- * @param {string} mode - "basic" or "advanced"
- * @returns {Object} Fields for the specified mode
+ * @param {string} mode - "basic" or "advanced" (deprecated - always returns both)
+ * @returns {Object} Fields with both basic and advanced sections
  */
 export const getFieldsForMode = async (mode = 'basic') => {
   try {
@@ -42,18 +42,14 @@ export const getFieldsForMode = async (mode = 'basic') => {
     }
 
     const basicFields = checkInFields.checkInFields.basic || {};
+    const advancedFields = checkInFields.checkInFields.advanced || {};
 
-    if (mode === 'basic') {
-      return { basic: basicFields };
-    } else if (mode === 'advanced') {
-      const advancedFields = checkInFields.checkInFields.advanced || {};
-      return {
-        basic: basicFields,
-        advanced: advancedFields
-      };
-    }
-
-    return {};
+    // Always return both basic and advanced fields
+    // The UI toggle controls which ones are displayed
+    return {
+      basic: basicFields,
+      advanced: advancedFields
+    };
   } catch (error) {
     console.error('Error getting fields for mode:', error);
     return {};
@@ -68,48 +64,78 @@ export const getFieldsForMode = async (mode = 'basic') => {
  */
 export const generateCheckInContext = async (responses, emotion) => {
   try {
-    // Extract key responses
-    const whatHappened = responses.whatHappened || '';
-    const intensity = responses.intensity || '';
-    const when = responses.when || '';
-    const effects = responses.effects || [];
-
-    // Build the context in the specified format
+    // Build the context in natural language format
     let context = `The emotion and experience I'm having right now is ${emotion}.`;
 
-    if (whatHappened) {
-      context += ` Here is what happened from my perspective: ${whatHappened}.`;
+    // BASIC QUESTIONS
+
+    // When (order 1)
+    if (responses.when) {
+      context += ` I've been feeling this for about ${responses.when}.`;
     }
 
-    if (intensity) {
-      context += ` On a scale from 1-10, the intensity of this emotion is ${intensity} out of 10.`;
+    // How much / Intensity (order 2)
+    if (responses.howMuch) {
+      context += ` On a scale from 1-10, the intensity of this emotion is ${responses.howMuch} out of 10.`;
     }
 
-    if (when) {
-      context += ` I've been feeling this for about ${when}.`;
+    // Symptoms / Effects (order 3)
+    if (Array.isArray(responses.symptoms) && responses.symptoms.length > 0) {
+      context += ` This has been affecting me in the following ways: ${responses.symptoms.join(', ')}.`;
     }
 
-    if (Array.isArray(effects) && effects.length > 0) {
-      context += ` This has been affecting me in the following ways: ${effects.join(', ')}.`;
+    // Perspective / What happened (order 4)
+    if (responses.perspective) {
+      context += ` Here is what happened from my perspective: ${responses.perspective}.`;
     }
 
-    // Add advanced fields if present
+    // Physical Response (order 5)
+    if (Array.isArray(responses.physicalResponse) && responses.physicalResponse.length > 0) {
+      const filtered = responses.physicalResponse.filter(r => r !== 'None');
+      if (filtered.length > 0) {
+        context += ` Physically, I'm experiencing: ${filtered.join(', ')}.`;
+      }
+    }
+
+    // Trigger Event (order 6)
+    if (responses.triggerEvent) {
+      context += ` The specific trigger was: ${responses.triggerEvent}.`;
+    }
+
+    // Coping Attempts (order 7)
+    if (Array.isArray(responses.copingAttempts) && responses.copingAttempts.length > 0) {
+      const filtered = responses.copingAttempts.filter(r => r !== 'Nothing yet');
+      if (filtered.length > 0) {
+        context += ` I've already tried to help myself by: ${filtered.join(', ')}.`;
+      }
+    }
+
+    // ADVANCED QUESTIONS (deeper reflection)
     const advancedParts = [];
 
-    if (responses.externalFactors) {
-      advancedParts.push(`External factors contributing to this include: ${responses.externalFactors}`);
+    // Underlying Needs (order 1)
+    if (responses.underlyingNeeds) {
+      advancedParts.push(`The need that isn't being met is: ${responses.underlyingNeeds}`);
     }
 
-    if (responses.personalStory) {
-      advancedParts.push(`The story I'm telling myself about this experience is: ${responses.personalStory}`);
+    // Past Patterns (order 2)
+    if (responses.pastPatterns) {
+      advancedParts.push(`Similar past experiences: ${responses.pastPatterns}`);
     }
 
-    if (responses.patterns) {
-      advancedParts.push(`Regarding patterns, ${responses.patterns} I have experienced this emotion in similar situations`);
+    // Fear or Worry (order 3)
+    if (responses.fearOrWorry) {
+      advancedParts.push(`What I'm most afraid of: ${responses.fearOrWorry}`);
     }
 
-    if (responses.triggers && Array.isArray(responses.triggers) && responses.triggers.length > 0) {
-      advancedParts.push(`The specific triggers that led to this feeling were: ${responses.triggers.join(', ')}`);
+    // Desired Outcome (order 4)
+    if (responses.desiredOutcome) {
+      advancedParts.push(`What I hope for: ${responses.desiredOutcome}`);
+    }
+
+    // Self Compassion (order 5)
+    if (responses.selfCompassion) {
+      advancedParts.push(`My level of self-compassion right now is ${responses.selfCompassion} out of 10`);
     }
 
     if (advancedParts.length > 0) {

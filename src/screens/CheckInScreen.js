@@ -28,6 +28,7 @@ const CheckInScreen = ({ navigation }) => {
   const [showContactSelection, setShowContactSelection] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState([]);
   const [checkInCompleted, setCheckInCompleted] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   // Check if user has completed personality tests
   const hasPersonalityType = user?.personalityTests?.mbti?.completed || false;
@@ -458,8 +459,22 @@ const CheckInScreen = ({ navigation }) => {
   };
 
   const renderFollowUpCard = () => {
-    const allFields = { ...checkInFields.basic, ...checkInFields.advanced };
-    const fieldKeys = Object.keys(allFields);
+    // Separate basic and advanced fields
+    const basicFields = checkInFields.basic || {};
+    const advancedFields = checkInFields.advanced || {};
+
+    // Sort each set by order property
+    const basicFieldKeys = Object.keys(basicFields).sort((a, b) => {
+      const orderA = basicFields[a]?.order || 999;
+      const orderB = basicFields[b]?.order || 999;
+      return orderA - orderB;
+    });
+
+    const advancedFieldKeys = Object.keys(advancedFields).sort((a, b) => {
+      const orderA = advancedFields[a]?.order || 999;
+      const orderB = advancedFields[b]?.order || 999;
+      return orderA - orderB;
+    });
 
     return (
       <View style={styles.followUpOverlay}>
@@ -475,6 +490,7 @@ const CheckInScreen = ({ navigation }) => {
                 setCheckInCompleted(false);
                 setShowContactSelection(false);
                 setSelectedContacts([]);
+                setShowAdvanced(false);
               }}
             >
               <Text style={styles.closeButtonText}>✕</Text>
@@ -491,7 +507,26 @@ const CheckInScreen = ({ navigation }) => {
             </View>
           ) : (
             <View style={styles.fieldsContainer}>
-              {fieldKeys.map(fieldKey => renderField(fieldKey, allFields[fieldKey]))}
+              {/* Render basic questions */}
+              {basicFieldKeys.map(fieldKey => renderField(fieldKey, basicFields[fieldKey]))}
+
+              {/* Show Advanced Check-in toggle button */}
+              <TouchableOpacity
+                style={styles.advancedToggleButton}
+                onPress={() => setShowAdvanced(!showAdvanced)}
+              >
+                <Text style={styles.advancedToggleText}>
+                  {showAdvanced ? '▼' : '▶'} Show Advanced Check-in
+                </Text>
+              </TouchableOpacity>
+
+              {/* Render advanced questions if toggled */}
+              {showAdvanced && (
+                <View style={styles.advancedSection}>
+                  <Text style={styles.advancedSectionTitle}>Deep Reflection Questions</Text>
+                  {advancedFieldKeys.map(fieldKey => renderField(fieldKey, advancedFields[fieldKey]))}
+                </View>
+              )}
 
               <TouchableOpacity
                 style={styles.sendToButton}
@@ -1071,6 +1106,35 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
+  },
+  advancedToggleButton: {
+    backgroundColor: '#f8f9fa',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 20,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#0891b2',
+    alignItems: 'center',
+  },
+  advancedToggleText: {
+    color: '#0891b2',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  advancedSection: {
+    marginTop: 10,
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#e9ecef',
+  },
+  advancedSectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#0891b2',
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });
 

@@ -1,0 +1,118 @@
+{
+  "_comment": "Check-in survey fields configuration. This defines all questions shown during emotional check-ins.",
+  "checkInFields": {
+    "basic": {
+      "when": {
+        "question": "When did you start feeling this way?",
+        "formType": "checkbox",
+        "selectionType": "single",
+        "options": [
+          "Just now",
+          "Within the last hour",
+          "Today",
+          "This week",
+          "Longer than a week"
+        ],
+        "order": 1
+      },
+      "howMuch": {
+        "question": "How intense is this feeling right now?",
+        "formType": "slider",
+        "options": 10,
+        "order": 2
+      },
+      "symptoms": {
+        "question": "How is this affecting you?",
+        "formType": "checkbox",
+        "selectionType": "multiple",
+        "options": [
+          "Sleep issues",
+          "Appetite changes",
+          "Concentration problems",
+          "Energy levels",
+          "Social withdrawal",
+          "Physical tension"
+        ],
+        "order": 3
+      },
+      "perspective": {
+        "question": "What happened from your perspective?",
+        "formType": "textInput",
+        "placeholder": "Share what you're experiencing and what led to this feeling...",
+        "order": 4
+      },
+      "physicalResponse": {
+        "question": "What physical sensations are you noticing?",
+        "formType": "checkbox",
+        "selectionType": "multiple",
+        "options": [
+          "Tightness in chest",
+          "Headache",
+          "Stomach discomfort",
+          "Muscle tension",
+          "Rapid heartbeat",
+          "Shallow breathing",
+          "None"
+        ],
+        "order": 5
+      },
+      "triggerEvent": {
+        "question": "What specific event or situation triggered this?",
+        "formType": "textInput",
+        "placeholder": "Describe what happened right before you started feeling this way...",
+        "order": 6
+      },
+      "copingAttempts": {
+        "question": "What have you already tried to help yourself?",
+        "formType": "checkbox",
+        "selectionType": "multiple",
+        "options": [
+          "Talked to someone",
+          "Deep breathing",
+          "Exercise or movement",
+          "Distraction activities",
+          "Rest or sleep",
+          "Journaling",
+          "Nothing yet"
+        ],
+        "order": 7
+      }
+    },
+    "advanced": {
+      "underlyingNeeds": {
+        "question": "What need of yours isn't being met right now?",
+        "formType": "textInput",
+        "placeholder": "Think about what you're truly needing... connection? safety? validation? autonomy?",
+        "order": 1
+      },
+      "pastPatterns": {
+        "question": "Have you experienced similar feelings in the past? What was that like?",
+        "formType": "textInput",
+        "placeholder": "Reflect on similar situations and how they unfolded...",
+        "order": 2
+      },
+      "fearOrWorry": {
+        "question": "What are you most afraid of or worried about in this situation?",
+        "formType": "textInput",
+        "placeholder": "What's the worst-case scenario that comes to mind?",
+        "order": 3
+      },
+      "desiredOutcome": {
+        "question": "What would you want to happen ideally? How would you like to feel?",
+        "formType": "textInput",
+        "placeholder": "Describe the outcome or emotional state you're hoping for...",
+        "order": 4
+      },
+      "selfCompassion": {
+        "question": "How compassionate are you being toward yourself right now?",
+        "formType": "slider",
+        "options": 10,
+        "sliderLabels": {
+          "min": "Very critical",
+          "max": "Very kind"
+        },
+        "order": 5
+      }
+    }
+  }
+}
