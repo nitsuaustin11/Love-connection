@@ -9,8 +9,10 @@ import { Ionicons, FontAwesome, Feather, Octicons } from '@expo/vector-icons';
 import useAuthStore from './src/store/authStore';
 import LoginScreen from './src/screens/LoginScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
+import TermsAndConditionsScreen from './src/screens/TermsAndConditionsScreen';
 import CreateProfileScreen from './src/screens/CreateProfileScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 import PersonalityTestScreen from './src/screens/PersonalityTestScreen';
 import CheckInScreen from './src/screens/CheckInScreen';
 import MessagesScreen from './src/screens/MessagesScreen';
@@ -45,6 +47,8 @@ function ProfileStackNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="ProfileMain" component={HomeScreen} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="CreateProfile" component={CreateProfileScreen} />
       <Stack.Screen name="Contacts" component={ContactsScreen} />
       <Stack.Screen name="AddAITherapist" component={AddAITherapistScreen} />
     </Stack.Navigator>
@@ -128,19 +132,19 @@ export default function App() {
     );
   }
 
-  // Check if user needs to complete profile
-  const needsProfileCompletion = user && (!user.profileCompleted && !user.firstName);
+  // Check if user needs to accept terms
+  const needsTermsAcceptance = user && !user.termsAccepted;
 
   return (
     <NavigationContainer>
       <StatusBar style="auto" />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
-          needsProfileCompletion ? (
-            // User is logged in but needs to complete profile
-            <Stack.Screen name="CreateProfile" component={CreateProfileScreen} />
+          needsTermsAcceptance ? (
+            // User just signed up and needs to accept terms
+            <Stack.Screen name="TermsAndConditions" component={TermsAndConditionsScreen} />
           ) : (
-            // User is logged in and has completed profile
+            // User has accepted terms - go to main app
             <Stack.Screen name="MainTabs" component={TabNavigator} />
           )
         ) : (

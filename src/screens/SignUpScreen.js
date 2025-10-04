@@ -12,13 +12,15 @@ import {
 import useAuthStore from '../store/authStore';
 
 const SignUpScreen = ({ navigation }) => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { signUp, loading, error } = useAuthStore();
 
   const handleSignUp = async () => {
-    if (!email || !password || !confirmPassword) {
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
@@ -34,8 +36,8 @@ const SignUpScreen = ({ navigation }) => {
     }
 
     try {
-      await signUp(email, password);
-      // Navigation to profile creation will be handled by auth flow
+      await signUp(email, password, firstName, lastName);
+      // Navigation to terms and conditions will be handled by auth flow
     } catch (error) {
       Alert.alert('Sign Up Error', error.message);
     }
@@ -51,6 +53,22 @@ const SignUpScreen = ({ navigation }) => {
         <Text style={styles.subtitle}>
           Start your wellness journey with LoveConnect
         </Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="First Name"
+          value={firstName}
+          onChangeText={setFirstName}
+          autoCapitalize="words"
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Last Name"
+          value={lastName}
+          onChangeText={setLastName}
+          autoCapitalize="words"
+        />
 
         <TextInput
           style={styles.input}

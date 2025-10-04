@@ -73,6 +73,12 @@ const HomeScreen = ({ navigation }) => {
     ? formatLoveLanguagesResult(loveLanguagesResults, testData.loveLanguages)
     : 'Loading...';
 
+  // Check if profile is incomplete (any key fields missing)
+  const isProfileIncomplete = !user?.profile?.ageRange ||
+                              !user?.profile?.gender ||
+                              !user?.profile?.description ||
+                              !user?.profile?.fiveWords?.length;
+
   return (
     <ScrollView style={styles.container}>
       <DebugConsole />
@@ -83,10 +89,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.card}>
         <TouchableOpacity
           style={styles.settingsButton}
-          onPress={() => {
-            console.log('Settings pressed');
-            // TODO: Navigate to settings screen
-          }}
+          onPress={() => navigation.navigate('Settings')}
         >
           <Feather name="settings" size={24} color="#666" />
         </TouchableOpacity>
@@ -96,39 +99,49 @@ const HomeScreen = ({ navigation }) => {
             <Feather name="user" size={40} color="#e91e63" />
           </View>
           <View style={styles.nameSection}>
-            <Text style={styles.name}>{user?.firstName || 'User'} {user?.lastName || ''}</Text>
-            {user?.age && <Text style={styles.age}>{user.age} years old</Text>}
+            <Text style={styles.name}>
+              {user?.profile?.firstName || 'User'} {user?.profile?.lastName || ''}
+            </Text>
+            {isProfileIncomplete && (
+              <TouchableOpacity
+                style={styles.completeProfileButton}
+                onPress={() => navigation.navigate('CreateProfile')}
+              >
+                <Feather name="edit-3" size={14} color="#e91e63" />
+                <Text style={styles.completeProfileText}>Complete Profile</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 
         {/* Gender and Age Range */}
-        {(user?.gender || user?.ageRange) && (
+        {(user?.profile?.gender || user?.profile?.ageRange) && (
           <View style={styles.section}>
             <View style={styles.inlineInfoContainer}>
-              {user?.gender && (
+              {user?.profile?.gender && (
                 <View style={styles.inlineInfoItem}>
                   <Text style={styles.inlineLabel}>GENDER:</Text>
-                  <Text style={styles.inlineValue}>{user.gender}</Text>
+                  <Text style={styles.inlineValue}>{user.profile.gender}</Text>
                 </View>
               )}
-              {user?.ageRange && (
+              {user?.profile?.ageRange && (
                 <View style={styles.inlineInfoItem}>
                   <Text style={styles.inlineLabel}>AGE RANGE:</Text>
-                  <Text style={styles.inlineValue}>{user.ageRange}</Text>
+                  <Text style={styles.inlineValue}>{user.profile.ageRange}</Text>
                 </View>
               )}
             </View>
           </View>
         )}
 
-        {/* Interest */}
-        {user?.interests && (
+        {/* Interests */}
+        {user?.profile?.interests && user.profile.interests.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Interest</Text>
+            <Text style={styles.sectionTitle}>Interests</Text>
             <View style={styles.wordsContainer}>
-              {user.interests.map((word, index) => (
+              {user.profile.interests.map((interest, index) => (
                 <View key={index} style={styles.wordBadge}>
-                  <Text style={styles.wordText}>{word}</Text>
+                  <Text style={styles.wordText}>{interest}</Text>
                 </View>
               ))}
             </View>
@@ -136,11 +149,11 @@ const HomeScreen = ({ navigation }) => {
         )}
 
         {/* Top 5 Words */}
-        {user?.fiveWords && user.fiveWords.length > 0 && (
+        {user?.profile?.fiveWords && user.profile.fiveWords.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Top 5 Words</Text>
             <View style={styles.wordsContainer}>
-              {user.fiveWords.map((word, index) => (
+              {user.profile.fiveWords.map((word, index) => (
                 <View key={index} style={styles.wordBadge}>
                   <Text style={styles.wordText}>{word}</Text>
                 </View>
@@ -150,10 +163,10 @@ const HomeScreen = ({ navigation }) => {
         )}
 
         {/* Description */}
-        {user?.description && (
+        {user?.profile?.description && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>About Me</Text>
-            <Text style={styles.description}>{user.description}</Text>
+            <Text style={styles.description}>{user.profile.description}</Text>
           </View>
         )}
       </View>
@@ -273,6 +286,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 5,
+  },
+  completeProfileButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fce7f3',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 15,
+    alignSelf: 'flex-start',
+    gap: 5,
+  },
+  completeProfileText: {
+    fontSize: 13,
+    color: '#e91e63',
+    fontWeight: '600',
   },
   age: {
     fontSize: 16,

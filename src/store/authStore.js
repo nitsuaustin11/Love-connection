@@ -67,17 +67,21 @@ const useAuthStore = create((set, get) => ({
     }
   },
 
-  signUp: async (email, password) => {
+  signUp: async (email, password, firstName = '', lastName = '') => {
     try {
       set({ loading: true, error: null });
       const { user } = await createUserWithEmailAndPassword(auth, email, password);
 
-      // Create basic user profile - detailed profile will be completed
-      // in CreateProfileScreen after successful signup
-      await initializeUserProfile(user, null, { profileCompleted: false });
+      // Create user profile with name and mark as incomplete (needs to accept terms)
+      await initializeUserProfile(user, null, {
+        profileCompleted: false,
+        termsAccepted: false,
+        firstName: firstName,
+        lastName: lastName,
+      });
 
       // Note: The auth state change listener will automatically
-      // load the profile and route to CreateProfileScreen for completion
+      // load the profile and route to TermsAndConditionsScreen
 
     } catch (error) {
       set({ error: error.message, loading: false });

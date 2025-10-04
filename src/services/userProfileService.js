@@ -129,6 +129,13 @@ export const createDefaultUserProfile = (user, additionalData = {}) => ({
   },
 
   appPreferences: {
+    gptContext: {
+      includeAboutInfo: true,
+      includePersonalityTests: true,
+      includeCheckInHistory: true,
+      includeDemographics: true,
+      historyLength: 10
+    },
     notifications: {
       dailyCheckinReminders: true,
       messageResponses: true,
@@ -141,6 +148,7 @@ export const createDefaultUserProfile = (user, additionalData = {}) => ({
     },
     ui: {
       theme: "light",
+      fontSize: "medium",
       language: "en"
     },
     checkIn: {
