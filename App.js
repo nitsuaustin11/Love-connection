@@ -29,6 +29,7 @@ import AddSixNeedsResults from './src/screens/AddSixNeedsResults';
 import AddMBTIResults from './src/screens/AddMBTIResults';
 import AddLoveLanguagesResults from './src/screens/AddLoveLanguagesResults';
 import ContactDetailScreen from './src/screens/ContactDetailScreen';
+import SessionInvitesScreen from './src/screens/SessionInvitesScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -68,6 +69,7 @@ function MessagesStackNavigator() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="MessagesList" component={MessagesScreen} />
       <Stack.Screen name="MessageThread" component={MessageThreadScreen} />
+      <Stack.Screen name="SessionInvites" component={SessionInvitesScreen} />
     </Stack.Navigator>
   );
 }

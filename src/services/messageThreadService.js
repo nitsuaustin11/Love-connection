@@ -14,22 +14,60 @@ import { db } from '../../Firebaseconfig';
 
 /**
  * Create a new message thread
+ * @param {string} userId - Creator's user ID
+ * @param {string} contactId - Contact ID (AI therapist or user)
+ * @param {string} contactName - Contact name
+ * @param {string} contactType - Type of contact ('ai_therapist' or 'user')
+ * @param {Object} checkInData - Creator's check-in data (optional)
  */
-export const createMessageThread = async (userId, contactId, contactName, contactType) => {
+export const createMessageThread = async (userId, contactId, contactName, contactType, checkInData = null) => {
   try {
+    console.log('=== CREATE MESSAGE THREAD DEBUG ===');
+    console.log('CheckInData received:', JSON.stringify(checkInData, null, 2));
+    console.log('CheckInData.responses:', checkInData?.responses);
+    console.log('Intensity value (howMuch):', checkInData?.responses?.howMuch);
+
     const threadId = `${userId}_${contactId}_${Date.now()}`;
     const threadData = {
       threadId,
-      userId,
-      contactId,
-      contactName,
-      contactType,
+      userId, // Legacy field - keeping for backwards compatibility
+      contactId, // Legacy field - keeping for backwards compatibility
+      contactName, // Legacy field - keeping for backwards compatibility
+      contactType, // Legacy field - keeping for backwards compatibility
+
+      // Check-in metadata for display in thread headers
+      checkInMetadata: {
+        name: checkInData?.name || null,
+        emotion: checkInData?.emotion || null,
+        intensity: checkInData?.responses?.howMuch || null,
+        timestamp: checkInData?.timestamp || null,
+      },
+
+      // New participant-based structure
+      participants: [
+        {
+          userId: userId,
+          role: 'creator',
+          status: 'active',
+          checkInData: checkInData,
+          joinedAt: new Date().toISOString(),
+        }
+      ],
+      // Set sessionType based on contact type
+      // 'private' = solo with AI therapist
+      // 'public' = multi-user session with other users
+      sessionType: (contactType === 'ai_therapist' || contactType === 'ai') ? 'private' : 'public',
+      pendingInvites: [],
+
       messages: [],
       conversationSummary: null,
       messageCount: 0,
       lastMessageAt: new Date().toISOString(),
       createdAt: new Date().toISOString(),
     };
+
+    console.log('CheckInMetadata being saved:', threadData.checkInMetadata);
+    console.log('=== END CREATE MESSAGE THREAD DEBUG ===');
 
     const threadRef = doc(db, 'messageThreads', threadId);
     await setDoc(threadRef, threadData);
@@ -44,16 +82,40 @@ export const createMessageThread = async (userId, contactId, contactName, contac
 
 /**
  * Get all message threads for a user
+ * Includes threads where user is creator OR participant
  */
 export const getUserMessageThreads = async (userId) => {
   try {
     const threadsRef = collection(db, 'messageThreads');
-    const q = query(threadsRef, where('userId', '==', userId));
-    const snapshot = await getDocs(q);
+
+    // Query for threads where user is the creator (legacy)
+    const creatorQuery = query(threadsRef, where('userId', '==', userId));
+    const creatorSnapshot = await getDocs(creatorQuery);
 
     const threads = [];
-    snapshot.forEach((doc) => {
+    const threadIds = new Set();
+
+    // Add creator threads
+    creatorSnapshot.forEach((doc) => {
       threads.push(doc.data());
+      threadIds.add(doc.data().threadId);
+    });
+
+    // Get all threads and filter for ones where user is a participant
+    // Note: Firestore doesn't support querying inside arrays of objects efficiently,
+    // so we fetch all and filter client-side for now
+    // TODO: Consider restructuring for better query performance with large datasets
+    const allThreadsSnapshot = await getDocs(threadsRef);
+    allThreadsSnapshot.forEach((doc) => {
+      const threadData = doc.data();
+      if (threadIds.has(threadData.threadId)) return; // Already added
+
+      // Check if user is in participants array
+      const isParticipant = threadData.participants?.some(p => p.userId === userId);
+      if (isParticipant) {
+        threads.push(threadData);
+        threadIds.add(threadData.threadId);
+      }
     });
 
     // Sort by most recent message
@@ -207,9 +269,21 @@ export const getRecentMessagesForContext = (thread) => {
 
 /**
  * Create initial check-in message (summary of user's emotional state)
+ * This will call the summaryAssembler to generate an LLM-created summary
+ *
+ * @param {string} emotion - Selected emotion from check-in
+ * @param {string} checkInContext - Generated context from check-in responses
+ * @param {Object} personalityContext - User's personality data (MBTI, Six Needs, Love Languages)
+ * @param {Object} user - Full user object for additional context
+ * @returns {Promise<string>} Summary message (under 150 words)
  */
-export const createCheckInSummaryMessage = (emotion, checkInContext) => {
-  // This creates the "user message" summarizing their check-in
-  const summary = `I'm experiencing ${emotion}. ${checkInContext}`;
+export const createCheckInSummaryMessage = async (emotion, checkInContext, personalityContext, user) => {
+  // Import summaryAssembler dynamically to avoid circular dependencies
+  const { summaryAssembler } = require('./contextAssembler');
+
+  // For now, return placeholder while LLM integration is being built
+  // TODO: Implement actual LLM call in summaryAssembler
+  const summary = await summaryAssembler(emotion, checkInContext, personalityContext, user);
+
   return summary;
 };

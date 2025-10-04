@@ -6,11 +6,21 @@
  * 2. User-specific data (personality, emotions, history)
  * 3. User therapist settings (preferences)
  *
+ * Routes to appropriate assembler based on session type:
+ * - Private sessions: Single user context
+ * - Public sessions: Multi-user context (participant or assistant mode)
+ *
  * The result is a complete prompt ready to send to an LLM
  */
 
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../Firebaseconfig';
+import {
+  determineContextType,
+  assemblePublicParticipantContext,
+  assemblePublicAssistantContext,
+  getActiveParticipants
+} from './multiUserContextAssembler';
 
 // Cache for context files (avoid fetching every time)
 let contextCache = {
@@ -434,21 +444,72 @@ const buildResponseFormatSection = (contexts, messageType, therapistSettings) =>
  * @param {Array} recentMessages - Recent message history
  * @param {string} conversationSummary - LLM-generated summary (optional)
  * @param {string} messageType - Type of message: 'checkIn', 'general', 'firstContact', etc.
+ * @param {Object} thread - Thread data (optional, for multi-user sessions)
  * @returns {string} Complete assembled prompt
  */
 export const assembleCompletePrompt = async (
   user,
   recentMessages = [],
   conversationSummary = null,
-  messageType = 'general'
+  messageType = 'general',
+  thread = null
 ) => {
   try {
-    // Load all contexts from Firebase
-    const contexts = await loadAllContexts();
+    // Determine context type based on thread
+    const contextType = thread ? determineContextType(thread) : 'private';
+
+    console.log('=== CONTEXT ASSEMBLY ===');
+    console.log('Context Type:', contextType);
+    console.log('Session Type:', thread?.sessionType || 'private');
 
     // Get therapist settings
-    const therapist = user?.contacts?.find(c => c.id === 'general_therapist');
+    const therapist = user?.contacts?.find(c => c.id === 'general_therapist' || c.type === 'ai_therapist');
     const therapistSettings = therapist?.gptSettings || {};
+
+    // Route to appropriate assembler based on context type
+    if (contextType === 'public_participant') {
+      // Multi-participant session
+      const activeParticipants = getActiveParticipants(thread);
+      console.log('Active Participants:', activeParticipants.length);
+
+      const prompt = await assemblePublicParticipantContext(
+        activeParticipants,
+        therapistSettings,
+        recentMessages
+      );
+
+      console.log('=== PUBLIC PARTICIPANT CONTEXT ASSEMBLED ===');
+      return prompt;
+
+    } else if (contextType === 'public_assistant') {
+      // Assistant/Observer session
+      const activeParticipants = getActiveParticipants(thread);
+      const creator = activeParticipants.find(p => p.role === 'creator');
+      const assistant = activeParticipants.find(p => p.role === 'assistant');
+
+      if (!creator || !assistant) {
+        console.warn('Missing creator or assistant, falling back to private context');
+        // Fall through to private context
+      } else {
+        console.log('Creator & Assistant found');
+
+        const prompt = await assemblePublicAssistantContext(
+          creator,
+          assistant,
+          therapistSettings,
+          recentMessages
+        );
+
+        console.log('=== PUBLIC ASSISTANT CONTEXT ASSEMBLED ===');
+        return prompt;
+      }
+    }
+
+    // Private session (default) - use existing logic
+    console.log('=== ASSEMBLING PRIVATE CONTEXT ===');
+
+    // Load all contexts from Firebase
+    const contexts = await loadAllContexts();
 
     // Build each section
     const generalSystemSection = buildGeneralSystemSection(contexts, therapistSettings);
@@ -468,6 +529,7 @@ ${responseFormatSection}
 You are now ready to respond. Use all the context above to provide a thoughtful, personalized response.
 `.trim();
 
+    console.log('=== PRIVATE CONTEXT ASSEMBLED ===');
     return finalPrompt;
 
   } catch (error) {
@@ -477,14 +539,61 @@ You are now ready to respond. Use all the context above to provide a thoughtful,
 };
 
 /**
+ * SUMMARY ASSEMBLER
+ *
+ * Creates a concise summary of the user's check-in experience
+ * Uses LLM to generate a < 150 word summary that includes:
+ * - User's emotional state
+ * - Check-in context
+ * - Relevant personality insights
+ * - Neat formatting for display in message threads
+ *
+ * @param {string} emotion - Selected emotion from check-in
+ * @param {string} checkInContext - Generated context from check-in responses
+ * @param {Object} personalityContext - User's personality data
+ * @param {Object} user - Full user object
+ * @returns {Promise<string>} Summary message (under 150 words)
+ */
+export const summaryAssembler = async (emotion, checkInContext, personalityContext, user) => {
+  try {
+    console.log('=== SUMMARY ASSEMBLER CALLED ===');
+    console.log('Emotion:', emotion);
+    console.log('Check-in Context:', checkInContext?.substring(0, 100) + '...');
+    console.log('Has Personality Context:', !!personalityContext);
+
+    // For now, return placeholder message
+    // TODO: Implement full LLM integration with:
+    // 1. Load general GPT contexts for summary instructions
+    // 2. Build summary-specific prompt including:
+    //    - Emotion and check-in context
+    //    - Personality context (MBTI, Six Needs, Love Languages)
+    //    - Instructions to create < 150 word summary
+    //    - Instructions to format neatly for display
+    // 3. Call LLM API
+    // 4. Return formatted summary
+
+    const placeholder = "This message was made by the create summary assembler";
+
+    console.log('=== SUMMARY ASSEMBLER COMPLETE (PLACEHOLDER) ===');
+    return placeholder;
+
+  } catch (error) {
+    console.error('Error in summaryAssembler:', error);
+    // Return fallback summary if assembler fails
+    return `I'm experiencing ${emotion}. ${checkInContext}`;
+  }
+};
+
+/**
  * Debug function to see what the assembled prompt looks like
  */
-export const debugAssembledPrompt = async (user) => {
+export const debugAssembledPrompt = async (user, thread = null) => {
   const prompt = await assembleCompletePrompt(
     user,
     [],
     null,
-    'general'
+    'general',
+    thread
   );
 
   console.log('=== ASSEMBLED PROMPT DEBUG ===');

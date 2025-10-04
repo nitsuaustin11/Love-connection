@@ -10,7 +10,6 @@ import {
   Platform,
   ActivityIndicator,
   Modal,
-  Switch,
   ScrollView,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
@@ -20,34 +19,44 @@ import {
   addMessageToThread,
   checkAndUpdateSummary,
 } from '../services/messageThreadService';
-import { assembleCompletePrompt } from '../services/contextAssembler';
+import { getUserProfile } from '../services/userProfileService';
+import CheckInPromptCard from '../components/CheckInPromptCard';
 
-const MessageThreadScreen = ({ route, navigation }) => {
+const MessageThread = ({ route, navigation }) => {
   const { threadId, contactName } = route.params;
   const { user } = useAuthStore();
+
+  // Thread and message state
   const [thread, setThread] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+
+  // User profiles cache - maps userId to user profile data
+  const [userProfiles, setUserProfiles] = useState({});
+  const [loadingProfiles, setLoadingProfiles] = useState(true);
+
+  // Participants dropdown state
+  const [showParticipantsDropdown, setShowParticipantsDropdown] = useState(false);
+
   const flatListRef = useRef(null);
+  const [inputText, setInputText] = useState('');
 
-  // Modal states
-  const [showAIToolbar, setShowAIToolbar] = useState(false);
-  const [showInviteModal, setShowInviteModal] = useState(false);
-
-  // AI Toolbar modifier states (placeholders)
-  const [modifiers, setModifiers] = useState({
-    fullAnalysis: false,
-    actionResponse: false,
-    thoughtProvoking: false,
-  });
-
-  // Load thread on mount
+  // Load thread data on mount
   useEffect(() => {
     loadThread();
   }, [threadId]);
 
+  // Load user profiles when thread participants or invites change
+  useEffect(() => {
+    if (thread?.participants || thread?.pendingInvites) {
+      loadParticipantProfiles();
+    }
+  }, [thread?.participants, thread?.pendingInvites]);
+
+  /**
+   * Load thread data from Firebase
+   */
   const loadThread = async () => {
     try {
       setLoading(true);
@@ -55,6 +64,12 @@ const MessageThreadScreen = ({ route, navigation }) => {
       if (threadData) {
         setThread(threadData);
         setMessages(threadData.messages || []);
+        console.log('Thread loaded:', {
+          threadId: threadData.threadId,
+          sessionType: threadData.sessionType,
+          participantCount: threadData.participants?.length || 0,
+          messageCount: threadData.messages?.length || 0,
+        });
       }
     } catch (error) {
       console.error('Error loading thread:', error);
@@ -63,6 +78,76 @@ const MessageThreadScreen = ({ route, navigation }) => {
     }
   };
 
+  /**
+   * Load user profiles for all participants and invited users in the thread
+   * This ensures we have display names and other user data
+   */
+  const loadParticipantProfiles = async () => {
+    try {
+      setLoadingProfiles(true);
+      const participants = thread.participants || [];
+      const pendingInvites = thread.pendingInvites || [];
+      const profilesCache = {};
+
+      // Collect all unique user IDs from both participants and invites
+      const participantUserIds = participants.map(p => p.userId);
+      const invitedUserIds = pendingInvites.map(inv => inv.targetUserId);
+      const uniqueUserIds = [...new Set([...participantUserIds, ...invitedUserIds])];
+
+      console.log('Loading profiles for participants and invited users:', uniqueUserIds);
+
+      for (const userId of uniqueUserIds) {
+        try {
+          const profile = await getUserProfile(userId);
+          if (profile) {
+            profilesCache[userId] = profile;
+            console.log(`Loaded profile for ${userId}:`, {
+              firstName: profile.firstName,
+              lastName: profile.lastName,
+              displayName: profile.displayName,
+            });
+          }
+        } catch (error) {
+          console.error(`Error loading profile for user ${userId}:`, error);
+          // Add placeholder if profile fails to load
+          profilesCache[userId] = {
+            firstName: 'User',
+            lastName: userId.substring(0, 6),
+            displayName: `User ${userId.substring(0, 6)}`,
+          };
+        }
+      }
+
+      setUserProfiles(profilesCache);
+      console.log('All participant profiles loaded:', Object.keys(profilesCache));
+    } catch (error) {
+      console.error('Error loading participant profiles:', error);
+    } finally {
+      setLoadingProfiles(false);
+    }
+  };
+
+  /**
+   * Check if current user needs to complete check-in
+   */
+  const userParticipant = thread?.participants?.find(p => p.userId === user?.uid);
+  const isPendingCheckin = userParticipant?.status === 'pending_checkin';
+  const userPendingInvite = thread?.pendingInvites?.find(
+    inv => inv.targetUserId === user?.uid && inv.status === 'pending' && inv.role === 'participant'
+  );
+  const needsCheckin = isPendingCheckin || userPendingInvite;
+
+  /**
+   * Handle check-in completion - reload thread data
+   */
+  const handleCheckInComplete = () => {
+    loadThread();
+  };
+
+  /**
+   * Send a message to the thread
+   * Message inherits sender's userId for proper identification
+   */
   const handleSendMessage = async () => {
     if (!inputText.trim()) return;
 
@@ -71,33 +156,49 @@ const MessageThreadScreen = ({ route, navigation }) => {
     setSending(true);
 
     try {
-      // 1. Add user message to thread
+      // Add user message with proper sender userId
       const userMessage = await addMessageToThread(threadId, {
-        sender: 'user',
+        sender: user.uid, // Critical: Use actual user ID, not 'user' string
         content: userMessageContent,
       });
 
-      // Update local state
+      console.log('Message sent:', {
+        sender: userMessage.sender,
+        content: userMessage.content.substring(0, 50),
+        timestamp: userMessage.timestamp,
+      });
+
+      // Update local state immediately for responsiveness
       setMessages(prev => [...prev, userMessage]);
 
-      // 2. Generate AI response (demo for now)
-      // TODO: Replace with actual GPT API call
+      // Add loading message placeholder
+      const loadingMessageId = `loading_${Date.now()}`;
+      const loadingMessage = {
+        id: loadingMessageId,
+        sender: 'ai',
+        content: 'Loading GPT Response...',
+        timestamp: new Date().toISOString(),
+        isLoading: true, // Flag to identify loading messages
+      };
+
+      setMessages(prev => [...prev, loadingMessage]);
+      setSending(false);
+
+      // TODO: Generate AI response (placeholder for now)
       setTimeout(async () => {
         const aiMessage = await addMessageToThread(threadId, {
           sender: 'ai',
-          content: 'Demo of chat GPT response',
+          content: 'This is a demo AI response. Integration with GPT coming soon.',
         });
 
-        setMessages(prev => [...prev, aiMessage]);
+        // Replace loading message with actual AI response
+        setMessages(prev => prev.map(msg =>
+          msg.id === loadingMessageId ? aiMessage : msg
+        ));
 
-        // 3. Check if we need to generate summary (every 5 messages)
+        // Check if summary needs updating (every 5 messages)
         await checkAndUpdateSummary(threadId);
-
-        // 4. Reload thread to get updated data (including potential summary update)
-        await loadThread();
-
-        setSending(false);
-      }, 1000);
+      }, 2000);
 
     } catch (error) {
       console.error('Error sending message:', error);
@@ -105,39 +206,245 @@ const MessageThreadScreen = ({ route, navigation }) => {
     }
   };
 
+  /**
+   * Get display name for a user
+   * Returns formatted name from profile data, or falls back to userId
+   */
+  const getUserDisplayName = (userId) => {
+    // Handle current user
+    if (userId === user?.uid) {
+      return 'You';
+    }
+
+    // Get from profiles cache
+    const profile = userProfiles[userId];
+    if (profile) {
+      // Try displayName first, then firstName, then fallback
+      return profile.displayName || profile.firstName || `User ${userId.substring(0, 6)}`;
+    }
+
+    // Fallback if profile not loaded
+    return `User ${userId.substring(0, 6)}`;
+  };
+
+  /**
+   * Render individual message with proper styling and sender info
+   */
   const renderMessage = ({ item }) => {
-    const isUser = item.sender === 'user';
+    const isAI = item.sender === 'ai';
+    const isCurrentUser = item.sender === user?.uid;
+
+    // Check if this is a multi-participant thread
+    const hasMultipleParticipants = (thread?.participants?.length || 0) >= 2;
+    const isMultiParticipantThread = thread?.sessionType === 'public' || hasMultipleParticipants;
+
+    // Get sender information
+    let senderName = null;
+    let senderProfile = null;
+
+    if (!isAI) {
+      senderName = getUserDisplayName(item.sender);
+      senderProfile = userProfiles[item.sender];
+
+      console.log('Rendering message:', {
+        sender: item.sender,
+        senderName,
+        hasProfile: !!senderProfile,
+        isCurrentUser,
+        isMultiParticipantThread,
+      });
+    }
+
+    // Determine message styling based on sender
+    const isOwnMessage = isCurrentUser;
 
     return (
       <View style={[
         styles.messageContainer,
-        isUser ? styles.userMessageContainer : styles.aiMessageContainer
+        isOwnMessage
+          ? styles.userMessageContainer
+          : (isMultiParticipantThread && !isAI
+              ? styles.otherUserMessageContainer
+              : styles.aiMessageContainer)
       ]}>
+        {/* Show sender name for human messages in multi-participant threads */}
+        {isMultiParticipantThread && !isAI && senderName && (
+          <Text style={[
+            styles.senderName,
+            isOwnMessage ? styles.senderNameRight : styles.senderNameLeft
+          ]}>
+            {senderName}
+          </Text>
+        )}
+
+        {/* Message bubble */}
         <View style={[
           styles.messageBubble,
-          isUser ? styles.userMessageBubble : styles.aiMessageBubble
+          isOwnMessage
+            ? styles.userMessageBubble
+            : (isMultiParticipantThread && !isAI
+                ? styles.otherUserMessageBubble
+                : styles.aiMessageBubble),
+          item.isLoading && styles.loadingMessageBubble
         ]}>
+          {item.isLoading && (
+            <ActivityIndicator
+              size="small"
+              color="#e91e63"
+              style={styles.loadingIndicator}
+            />
+          )}
+
           <Text style={[
             styles.messageText,
-            isUser ? styles.userMessageText : styles.aiMessageText
+            isOwnMessage
+              ? styles.userMessageText
+              : (isMultiParticipantThread && !isAI
+                  ? styles.otherUserMessageText
+                  : styles.aiMessageText),
+            item.isLoading && styles.loadingMessageText
           ]}>
             {item.content}
           </Text>
+
           <Text style={[
             styles.timestamp,
-            isUser ? styles.userTimestamp : styles.aiTimestamp
+            isOwnMessage ? styles.userTimestamp : styles.aiTimestamp
           ]}>
-            {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            {new Date(item.timestamp).toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
           </Text>
         </View>
       </View>
     );
   };
 
-  if (loading) {
+  /**
+   * Render participants modal for multi-user sessions
+   */
+  const renderParticipantsModal = () => {
+    if (!thread?.participants || thread.participants.length === 0) {
+      return null;
+    }
+
+    const participants = thread.participants || [];
+    const pendingInvites = thread.pendingInvites || [];
+
+    // Calculate counts
+    const activeCount = participants.filter(p => p.status === 'active').length;
+    const pendingCheckinCount = participants.filter(p => p.status === 'pending_checkin').length;
+    const invitedCount = pendingInvites.filter(inv => inv.status === 'pending').length;
+    const totalPendingCount = pendingCheckinCount + invitedCount;
+
+    // Combine participants and pending invites for display
+    const displayList = [
+      // Active participants
+      ...participants.map(p => ({ type: 'participant', data: p })),
+      // Pending invites
+      ...pendingInvites
+        .filter(inv => inv.status === 'pending')
+        .map(inv => ({ type: 'invite', data: inv }))
+    ];
+
+    return (
+      <Modal
+        visible={showParticipantsDropdown}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowParticipantsDropdown(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            {/* Modal Header */}
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Participants</Text>
+              <TouchableOpacity
+                style={styles.modalCloseButton}
+                onPress={() => setShowParticipantsDropdown(false)}
+              >
+                <Feather name="x" size={24} color="#666" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Participant Count */}
+            <Text style={styles.participantCount}>
+              {activeCount} active • {totalPendingCount} pending
+            </Text>
+
+            {/* Participants List */}
+            <ScrollView style={styles.participantsList}>
+              {displayList.map((item, index) => {
+                if (item.type === 'participant') {
+                  // Existing participant
+                  const participant = item.data;
+                  const profile = userProfiles[participant.userId];
+                  const displayName = participant.userId === user?.uid
+                    ? 'You'
+                    : (profile?.displayName || profile?.firstName || `User ${participant.userId.substring(0, 6)}`);
+
+                  const role = participant.role === 'creator'
+                    ? 'Creator'
+                    : participant.role === 'assistant'
+                    ? 'Assistant'
+                    : 'Participant';
+
+                  const isActive = participant.status === 'active';
+
+                  return (
+                    <View key={`participant-${index}`} style={styles.participantItem}>
+                      <View style={styles.participantInfo}>
+                        <Text style={styles.participantName}>{displayName}</Text>
+                        <Text style={styles.participantRole}> - {role}</Text>
+                      </View>
+                      <View style={[
+                        styles.statusDot,
+                        isActive ? styles.statusDotActive : styles.statusDotPending
+                      ]} />
+                    </View>
+                  );
+                } else {
+                  // Pending invite
+                  const invite = item.data;
+                  const profile = userProfiles[invite.targetUserId];
+                  const displayName = invite.targetUserId === user?.uid
+                    ? 'You'
+                    : (profile?.displayName || profile?.firstName || `User ${invite.targetUserId.substring(0, 6)}`);
+
+                  const role = invite.role === 'assistant'
+                    ? 'Assistant'
+                    : 'Participant';
+
+                  return (
+                    <View key={`invite-${index}`} style={styles.participantItem}>
+                      <View style={styles.participantInfo}>
+                        <Text style={styles.participantName}>{displayName}</Text>
+                        <Text style={styles.participantRole}> - {role} (Invited)</Text>
+                      </View>
+                      <View style={[
+                        styles.statusDot,
+                        styles.statusDotInvited
+                      ]} />
+                    </View>
+                  );
+                }
+              })}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+
+  // Loading state
+  if (loading || loadingProfiles) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#e91e63" />
+        <Text style={styles.loadingText}>
+          {loading ? 'Loading conversation...' : 'Loading participants...'}
+        </Text>
       </View>
     );
   }
@@ -156,61 +463,97 @@ const MessageThreadScreen = ({ route, navigation }) => {
         >
           <Feather name="arrow-left" size={24} color="#333" />
         </TouchableOpacity>
+
         <View style={styles.headerInfo}>
-          <Text style={styles.headerTitle}>{contactName}</Text>
-          <Text style={styles.headerSubtitle}>AI Therapist</Text>
-        </View>
-        <View style={styles.headerButtons}>
-          <TouchableOpacity
-            style={styles.headerButton}
-            onPress={() => setShowAIToolbar(true)}
-          >
-            <Feather name="sliders" size={22} color="#333" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.headerButton}
-            onPress={() => setShowInviteModal(true)}
-          >
-            <Feather name="user-plus" size={22} color="#333" />
-          </TouchableOpacity>
-        </View>
-      </View>
+          {/* Display check-in name or fallback to contactName */}
+          <Text style={styles.headerTitle}>
+            {thread?.checkInMetadata?.name || contactName}
+          </Text>
 
-      {/* Messages List */}
-      <FlatList
-        ref={flatListRef}
-        data={messages}
-        renderItem={renderMessage}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.messagesList}
-        onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
-        onLayout={() => flatListRef.current?.scrollToEnd({ animated: false })}
-      />
-
-      {/* Input Area */}
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          value={inputText}
-          onChangeText={setInputText}
-          placeholder="Type a message..."
-          multiline
-          maxLength={500}
-        />
-        <TouchableOpacity
-          style={[styles.sendButton, (!inputText.trim() || sending) && styles.sendButtonDisabled]}
-          onPress={handleSendMessage}
-          disabled={!inputText.trim() || sending}
-        >
-          {sending ? (
-            <ActivityIndicator size="small" color="white" />
-          ) : (
-            <Feather name="send" size={20} color="white" />
+          {/* Display emotion and intensity if available */}
+          {thread?.checkInMetadata?.emotion && (
+            <View style={styles.emotionRow}>
+              <Feather name="heart" size={14} color="#e91e63" />
+              <Text style={styles.emotionText}>
+                {thread.checkInMetadata.emotion}
+                {thread.checkInMetadata.intensity &&
+                  ` • Intensity: ${thread.checkInMetadata.intensity}/10`
+                }
+              </Text>
+              {console.log('Rendering thread header - checkInMetadata:', thread.checkInMetadata)}
+            </View>
           )}
-        </TouchableOpacity>
+
+          {/* Participant status - only show simple text for AI therapist */}
+          {thread?.sessionType !== 'public' && (
+            <Text style={styles.headerSubtitle}>AI Therapist</Text>
+          )}
+        </View>
+
+        {/* Participants Button - always show */}
+        {thread?.participants && (
+          <TouchableOpacity
+            style={styles.participantsButton}
+            onPress={() => setShowParticipantsDropdown(true)}
+          >
+            <Feather name="users" size={20} color="#e91e63" />
+          </TouchableOpacity>
+        )}
       </View>
 
-      {/* Debug info */}
+      {/* Participants Modal */}
+      {renderParticipantsModal()}
+
+      {/* Messages or Check-In Prompt */}
+      {needsCheckin ? (
+        <CheckInPromptCard
+          inviteId={userPendingInvite?.inviteId}
+          threadId={threadId}
+          userId={user?.uid}
+          onComplete={handleCheckInComplete}
+        />
+      ) : (
+        <>
+          {/* Messages List */}
+          <FlatList
+            ref={flatListRef}
+            data={messages}
+            renderItem={renderMessage}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.messagesList}
+            onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+            onLayout={() => flatListRef.current?.scrollToEnd({ animated: false })}
+          />
+
+          {/* Input Area */}
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={inputText}
+              onChangeText={setInputText}
+              placeholder="Type a message..."
+              multiline
+              maxLength={500}
+            />
+            <TouchableOpacity
+              style={[
+                styles.sendButton,
+                (!inputText.trim() || sending) && styles.sendButtonDisabled
+              ]}
+              onPress={handleSendMessage}
+              disabled={!inputText.trim() || sending}
+            >
+              {sending ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Feather name="send" size={20} color="white" />
+              )}
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
+
+      {/* Debug Info */}
       {thread?.conversationSummary && (
         <View style={styles.debugInfo}>
           <Text style={styles.debugText}>
@@ -218,153 +561,6 @@ const MessageThreadScreen = ({ route, navigation }) => {
           </Text>
         </View>
       )}
-
-      {/* AI Toolbar Modal */}
-      <Modal
-        visible={showAIToolbar}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setShowAIToolbar(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>AI Response Modifiers</Text>
-              <TouchableOpacity onPress={() => setShowAIToolbar(false)}>
-                <Feather name="x" size={24} color="#333" />
-              </TouchableOpacity>
-            </View>
-
-            <ScrollView style={styles.modalBody}>
-              <Text style={styles.modalDescription}>
-                Customize how the AI responds to your messages (Coming Soon)
-              </Text>
-
-              <View style={styles.modifierItem}>
-                <View style={styles.modifierInfo}>
-                  <Text style={styles.modifierTitle}>Get Full Analysis</Text>
-                  <Text style={styles.modifierDescription}>
-                    Receive comprehensive psychological analysis
-                  </Text>
-                </View>
-                <Switch
-                  value={modifiers.fullAnalysis}
-                  onValueChange={(value) => setModifiers({...modifiers, fullAnalysis: value})}
-                  trackColor={{ false: '#ddd', true: '#e91e63' }}
-                  thumbColor="#fff"
-                />
-              </View>
-
-              <View style={styles.modifierItem}>
-                <View style={styles.modifierInfo}>
-                  <Text style={styles.modifierTitle}>Give Action Response</Text>
-                  <Text style={styles.modifierDescription}>
-                    Focus on actionable steps and solutions
-                  </Text>
-                </View>
-                <Switch
-                  value={modifiers.actionResponse}
-                  onValueChange={(value) => setModifiers({...modifiers, actionResponse: value})}
-                  trackColor={{ false: '#ddd', true: '#e91e63' }}
-                  thumbColor="#fff"
-                />
-              </View>
-
-              <View style={styles.modifierItem}>
-                <View style={styles.modifierInfo}>
-                  <Text style={styles.modifierTitle}>Thought-Provoking Questions</Text>
-                  <Text style={styles.modifierDescription}>
-                    Encourage deeper self-reflection through questions
-                  </Text>
-                </View>
-                <Switch
-                  value={modifiers.thoughtProvoking}
-                  onValueChange={(value) => setModifiers({...modifiers, thoughtProvoking: value})}
-                  trackColor={{ false: '#ddd', true: '#e91e63' }}
-                  thumbColor="#fff"
-                />
-              </View>
-            </ScrollView>
-
-            <TouchableOpacity
-              style={styles.modalCloseButton}
-              onPress={() => setShowAIToolbar(false)}
-            >
-              <Text style={styles.modalCloseButtonText}>Done</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Invite Modal */}
-      <Modal
-        visible={showInviteModal}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setShowInviteModal(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Invite to Conversation</Text>
-              <TouchableOpacity onPress={() => setShowInviteModal(false)}>
-                <Feather name="x" size={24} color="#333" />
-              </TouchableOpacity>
-            </View>
-
-            <ScrollView style={styles.modalBody}>
-              <Text style={styles.modalDescription}>
-                Choose how to invite someone to this therapy session (Coming Soon)
-              </Text>
-
-              <TouchableOpacity
-                style={styles.inviteOption}
-                onPress={() => {
-                  console.log('Assistant mode selected');
-                  // TODO: Open contact selector for assistant mode
-                }}
-              >
-                <View style={styles.inviteOptionIcon}>
-                  <Feather name="life-buoy" size={32} color="#0891b2" />
-                </View>
-                <View style={styles.inviteOptionContent}>
-                  <Text style={styles.inviteOptionTitle}>Request Assistance</Text>
-                  <Text style={styles.inviteOptionDescription}>
-                    Invite someone to observe and provide support. No check-in required.
-                  </Text>
-                </View>
-                <Feather name="chevron-right" size={20} color="#ccc" />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.inviteOption}
-                onPress={() => {
-                  console.log('Participant mode selected');
-                  // TODO: Open contact selector for participant mode
-                }}
-              >
-                <View style={styles.inviteOptionIcon}>
-                  <Feather name="users" size={32} color="#e91e63" />
-                </View>
-                <View style={styles.inviteOptionContent}>
-                  <Text style={styles.inviteOptionTitle}>Participate in Session</Text>
-                  <Text style={styles.inviteOptionDescription}>
-                    Invite someone to join as an active participant. They'll complete their own check-in.
-                  </Text>
-                </View>
-                <Feather name="chevron-right" size={20} color="#ccc" />
-              </TouchableOpacity>
-            </ScrollView>
-
-            <TouchableOpacity
-              style={styles.modalCloseButton}
-              onPress={() => setShowInviteModal(false)}
-            >
-              <Text style={styles.modalCloseButtonText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </KeyboardAvoidingView>
   );
 };
@@ -379,6 +575,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f8f9fa',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 14,
+    color: '#666',
   },
   header: {
     flexDirection: 'row',
@@ -402,19 +603,109 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
+  emotionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+    gap: 6,
+  },
+  emotionText: {
+    fontSize: 13,
+    color: '#e91e63',
+    fontWeight: '500',
+  },
   headerSubtitle: {
     fontSize: 12,
     color: '#666',
-    marginTop: 2,
+    marginTop: 4,
   },
-  headerButtons: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  headerButton: {
-    padding: 8,
+  participantsButton: {
+    width: 40,
+    height: 40,
     borderRadius: 20,
+    backgroundColor: '#fce7f3',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    width: '85%',
+    maxHeight: '70%',
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 10,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  modalCloseButton: {
+    padding: 5,
+  },
+  participantCount: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 15,
+  },
+  participantsList: {
+    maxHeight: 400,
+  },
+  participantItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
     backgroundColor: '#f8f9fa',
+    borderRadius: 10,
+    marginBottom: 8,
+  },
+  participantInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  participantName: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#333',
+  },
+  participantRole: {
+    fontSize: 15,
+    color: '#666',
+  },
+  statusDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginLeft: 8,
+  },
+  statusDotActive: {
+    backgroundColor: '#10b981',
+  },
+  statusDotPending: {
+    backgroundColor: '#f59e0b',
+  },
+  statusDotInvited: {
+    backgroundColor: '#9ca3af',
   },
   messagesList: {
     padding: 15,
@@ -428,6 +719,21 @@ const styles = StyleSheet.create({
   },
   aiMessageContainer: {
     alignItems: 'flex-start',
+  },
+  otherUserMessageContainer: {
+    alignItems: 'flex-start',
+  },
+  senderName: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#666',
+    marginBottom: 4,
+  },
+  senderNameLeft: {
+    marginLeft: 12,
+  },
+  senderNameRight: {
+    marginRight: 12,
   },
   messageBubble: {
     maxWidth: '80%',
@@ -447,11 +753,30 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
+  otherUserMessageBubble: {
+    backgroundColor: '#0891b2',
+    borderBottomLeftRadius: 5,
+  },
+  loadingMessageBubble: {
+    backgroundColor: '#f0f0f0',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  loadingIndicator: {
+    marginRight: 8,
+  },
   messageText: {
     fontSize: 16,
     lineHeight: 22,
   },
+  loadingMessageText: {
+    fontStyle: 'italic',
+    color: '#999',
+  },
   userMessageText: {
+    color: 'white',
+  },
+  otherUserMessageText: {
     color: 'white',
   },
   aiMessageText: {
@@ -509,105 +834,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
   },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    maxHeight: '80%',
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e9ecef',
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  modalBody: {
-    padding: 20,
-  },
-  modalDescription: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  modifierItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#f8f9fa',
-    padding: 15,
-    borderRadius: 12,
-    marginBottom: 12,
-  },
-  modifierInfo: {
-    flex: 1,
-    marginRight: 15,
-  },
-  modifierTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 4,
-  },
-  modifierDescription: {
-    fontSize: 13,
-    color: '#666',
-  },
-  modalCloseButton: {
-    backgroundColor: '#e91e63',
-    margin: 20,
-    padding: 15,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  modalCloseButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  inviteOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f8f9fa',
-    padding: 15,
-    borderRadius: 12,
-    marginBottom: 12,
-  },
-  inviteOptionIcon: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  inviteOptionContent: {
-    flex: 1,
-  },
-  inviteOptionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 4,
-  },
-  inviteOptionDescription: {
-    fontSize: 13,
-    color: '#666',
-    lineHeight: 18,
-  },
 });
 
-export default MessageThreadScreen;
+export default MessageThread;

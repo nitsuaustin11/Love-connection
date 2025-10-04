@@ -6,10 +6,11 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import useAuthStore from '../store/authStore';
-import { getUserProfile } from '../services/userProfileService';
+import { getUserProfile, updateUserProfile } from '../services/userProfileService';
 import {
   formatMbtiResult,
   formatSixHumanNeedsResult,
@@ -18,9 +19,11 @@ import {
 
 const ContactDetailScreen = ({ route, navigation }) => {
   const { contact } = route.params;
-  const { user } = useAuthStore();
+  const { user, refreshUserProfile } = useAuthStore();
   const [contactProfile, setContactProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [participantRole, setParticipantRole] = useState(contact.participantRole || 'participant');
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     loadContactProfile();
@@ -39,6 +42,30 @@ const ContactDetailScreen = ({ route, navigation }) => {
 
   const canViewAboutMe = contactProfile?.appPreferences?.privacy?.contactsCanViewAboutMe ?? true;
   const canViewPersonality = contactProfile?.appPreferences?.privacy?.contactsCanViewPersonality ?? true;
+
+  const handleSaveRole = async () => {
+    setSaving(true);
+    try {
+      // Find the contact in user's contacts array and update it
+      const updatedContacts = user.contacts.map(c =>
+        c.id === contact.id
+          ? { ...c, participantRole }
+          : c
+      );
+
+      await updateUserProfile(user.uid, {
+        contacts: updatedContacts
+      });
+
+      await refreshUserProfile();
+      Alert.alert('Success', 'Participant role updated successfully');
+    } catch (error) {
+      console.error('Error updating participant role:', error);
+      Alert.alert('Error', 'Failed to update role. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -69,6 +96,78 @@ const ContactDetailScreen = ({ route, navigation }) => {
           <View style={styles.relationshipBadge}>
             <Text style={styles.relationshipText}>{contact.relationship}</Text>
           </View>
+        </View>
+
+        {/* Participant Role Selection */}
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Therapy Session Role</Text>
+          <Text style={styles.roleDescription}>
+            Choose how {contact.name} will join therapy sessions with you
+          </Text>
+
+          <TouchableOpacity
+            style={[styles.roleOption, participantRole === 'participant' && styles.roleOptionSelected]}
+            onPress={() => setParticipantRole('participant')}
+          >
+            <View style={styles.roleIconContainer}>
+              <Feather
+                name="users"
+                size={24}
+                color={participantRole === 'participant' ? '#e91e63' : '#666'}
+              />
+            </View>
+            <View style={styles.roleContent}>
+              <Text style={[
+                styles.roleTitle,
+                participantRole === 'participant' && styles.roleTextSelected
+              ]}>
+                Participant
+              </Text>
+              <Text style={styles.roleSubtext}>
+                Active participant - must complete check-in before joining session
+              </Text>
+            </View>
+            {participantRole === 'participant' && (
+              <Feather name="check-circle" size={24} color="#e91e63" />
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.roleOption, participantRole === 'assistant' && styles.roleOptionSelected]}
+            onPress={() => setParticipantRole('assistant')}
+          >
+            <View style={styles.roleIconContainer}>
+              <Feather
+                name="life-buoy"
+                size={24}
+                color={participantRole === 'assistant' ? '#0891b2' : '#666'}
+              />
+            </View>
+            <View style={styles.roleContent}>
+              <Text style={[
+                styles.roleTitle,
+                participantRole === 'assistant' && styles.roleTextSelected
+              ]}>
+                Assistant
+              </Text>
+              <Text style={styles.roleSubtext}>
+                Observer & supporter - can join immediately without check-in
+              </Text>
+            </View>
+            {participantRole === 'assistant' && (
+              <Feather name="check-circle" size={24} color="#0891b2" />
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.saveRoleButton, saving && styles.saveRoleButtonDisabled]}
+            onPress={handleSaveRole}
+            disabled={saving}
+          >
+            <Text style={styles.saveRoleButtonText}>
+              {saving ? 'Saving...' : 'Save Role Preference'}
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* About Me Section */}
@@ -392,6 +491,67 @@ const styles = StyleSheet.create({
     color: '#999',
     textAlign: 'center',
     lineHeight: 20,
+  },
+  roleDescription: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 20,
+    lineHeight: 20,
+  },
+  roleOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f8f9fa',
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 12,
+    borderWidth: 2,
+    borderColor: '#e9ecef',
+  },
+  roleOptionSelected: {
+    borderColor: '#e91e63',
+    backgroundColor: '#fce7f3',
+  },
+  roleIconContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  roleContent: {
+    flex: 1,
+  },
+  roleTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 4,
+  },
+  roleTextSelected: {
+    color: '#e91e63',
+  },
+  roleSubtext: {
+    fontSize: 13,
+    color: '#666',
+    lineHeight: 18,
+  },
+  saveRoleButton: {
+    backgroundColor: '#e91e63',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  saveRoleButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  saveRoleButtonDisabled: {
+    backgroundColor: '#ccc',
   },
 });
 

@@ -27,8 +27,10 @@ const CheckInScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [showContactSelection, setShowContactSelection] = useState(false);
   const [selectedContacts, setSelectedContacts] = useState([]);
+  const [contactRoles, setContactRoles] = useState({}); // Map of contactId -> role ('participant' | 'assistant')
   const [checkInCompleted, setCheckInCompleted] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [checkInName, setCheckInName] = useState('');
 
   // Check if user has completed personality tests
   const hasPersonalityType = user?.personalityTests?.mbti?.completed || false;
@@ -44,6 +46,18 @@ const CheckInScreen = ({ navigation }) => {
     "Guilt",
     "Hopeless"
   ];
+
+  // Auto-populate check-in name when emotion is selected
+  useEffect(() => {
+    if (selectedEmotion && !checkInName) {
+      const today = new Date().toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric'
+      });
+      setCheckInName(`${selectedEmotion} - ${today}`);
+    }
+  }, [selectedEmotion]);
 
   const handlePersonalityRedirect = () => {
     navigation.navigate('PersonalityTest');
@@ -71,8 +85,28 @@ const CheckInScreen = ({ navigation }) => {
   const handleEmotionSelect = (emotion) => {
     setSelectedEmotion(emotion);
     setShowFollowUp(true);
-    setResponses({}); // Clear previous responses
+
+    // Initialize responses with default values for slider fields
+    const initialResponses = {};
+    const basicFields = checkInFields.basic || {};
+    const advancedFields = checkInFields.advanced || {};
+
+    // Initialize all slider fields with default value of 1
+    Object.keys(basicFields).forEach(fieldKey => {
+      if (basicFields[fieldKey].formType === 'slider') {
+        initialResponses[fieldKey] = 1;
+      }
+    });
+
+    Object.keys(advancedFields).forEach(fieldKey => {
+      if (advancedFields[fieldKey].formType === 'slider') {
+        initialResponses[fieldKey] = 1;
+      }
+    });
+
+    setResponses(initialResponses);
     console.log('Selected emotion:', emotion);
+    console.log('Initialized slider responses:', initialResponses);
   };
 
   const handleAddCustomEmotion = () => {
@@ -125,13 +159,17 @@ const CheckInScreen = ({ navigation }) => {
 
   const renderField = (fieldKey, field) => {
     const currentValue = responses[fieldKey];
+    const isRequired = field.required === true;
 
     switch (field.formType) {
       case 'checkbox':
         if (field.selectionType === 'single') {
           return (
             <View key={fieldKey} style={styles.fieldContainer}>
-              <Text style={styles.fieldQuestion}>{field.question}</Text>
+              <Text style={styles.fieldQuestion}>
+                {field.question}
+                {isRequired && <Text style={styles.requiredIndicator}> *</Text>}
+              </Text>
               <View style={styles.checkboxContainer}>
                 {field.options.map((option, index) => (
                   <TouchableOpacity
@@ -156,7 +194,10 @@ const CheckInScreen = ({ navigation }) => {
         } else if (field.selectionType === 'multiple') {
           return (
             <View key={fieldKey} style={styles.fieldContainer}>
-              <Text style={styles.fieldQuestion}>{field.question}</Text>
+              <Text style={styles.fieldQuestion}>
+                {field.question}
+                {isRequired && <Text style={styles.requiredIndicator}> *</Text>}
+              </Text>
               <View style={styles.checkboxContainer}>
                 {field.options.map((option, index) => {
                   const isSelected = Array.isArray(currentValue) && currentValue.includes(option);
@@ -194,7 +235,10 @@ const CheckInScreen = ({ navigation }) => {
       case 'slider':
         return (
           <View key={fieldKey} style={styles.fieldContainer}>
-            <Text style={styles.fieldQuestion}>{field.question}</Text>
+            <Text style={styles.fieldQuestion}>
+              {field.question}
+              {isRequired && <Text style={styles.requiredIndicator}> *</Text>}
+            </Text>
             <View style={styles.sliderContainer}>
               <Text style={styles.sliderValue}>{currentValue || 1}</Text>
               <Slider
@@ -219,7 +263,10 @@ const CheckInScreen = ({ navigation }) => {
       case 'textInput':
         return (
           <View key={fieldKey} style={styles.fieldContainer}>
-            <Text style={styles.fieldQuestion}>{field.question}</Text>
+            <Text style={styles.fieldQuestion}>
+              {field.question}
+              {isRequired && <Text style={styles.requiredIndicator}> *</Text>}
+            </Text>
             <TextInput
               style={styles.textInput}
               value={currentValue || ''}
@@ -237,6 +284,48 @@ const CheckInScreen = ({ navigation }) => {
   };
 
   const handleSendToContacts = async () => {
+    // Validate required fields before proceeding
+    const basicFields = checkInFields.basic || {};
+    const advancedFields = checkInFields.advanced || {};
+    const missingFields = [];
+
+    // Check basic required fields
+    Object.keys(basicFields).forEach(fieldKey => {
+      const field = basicFields[fieldKey];
+      if (field.required === true) {
+        const response = responses[fieldKey];
+        // Check if response is missing or empty
+        if (response === undefined || response === null || response === '' ||
+            (Array.isArray(response) && response.length === 0)) {
+          missingFields.push(field.question);
+        }
+      }
+    });
+
+    // Check advanced required fields (only if advanced section is shown)
+    if (showAdvanced) {
+      Object.keys(advancedFields).forEach(fieldKey => {
+        const field = advancedFields[fieldKey];
+        if (field.required === true) {
+          const response = responses[fieldKey];
+          if (response === undefined || response === null || response === '' ||
+              (Array.isArray(response) && response.length === 0)) {
+            missingFields.push(field.question);
+          }
+        }
+      });
+    }
+
+    // Show alert if required fields are missing
+    if (missingFields.length > 0) {
+      Alert.alert(
+        'Required Fields Missing',
+        `Please answer the following required questions:\n\n${missingFields.map(q => `• ${q}`).join('\n')}`,
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
     // First complete the check-in (same logic as handleCompleteCheckIn)
     try {
       // Generate check-in context from responses
@@ -289,11 +378,30 @@ const CheckInScreen = ({ navigation }) => {
     setSelectedContacts(prev => {
       const isSelected = prev.some(c => c.id === contact.id);
       if (isSelected) {
-        return prev.filter(c => c.id !== contact.id);
+        // Remove contact
+        const newContacts = prev.filter(c => c.id !== contact.id);
+        // Remove role setting
+        setContactRoles(prevRoles => {
+          const { [contact.id]: removed, ...rest } = prevRoles;
+          return rest;
+        });
+        return newContacts;
       } else {
+        // Add contact with default role
+        setContactRoles(prevRoles => ({
+          ...prevRoles,
+          [contact.id]: contact.participantRole || 'participant' // Use saved preference or default to participant
+        }));
         return [...prev, contact];
       }
     });
+  };
+
+  const handleRoleToggle = (contactId, newRole) => {
+    setContactRoles(prev => ({
+      ...prev,
+      [contactId]: newRole
+    }));
   };
 
   const handleSendToSelectedContacts = async () => {
@@ -305,48 +413,58 @@ const CheckInScreen = ({ navigation }) => {
     try {
       console.log('=== SENDING CHECK-IN TO SELECTED CONTACTS ===');
       console.log('Selected Contacts:', selectedContacts.map(c => `${c.name} (${c.type})`));
+      console.log('Contact Roles:', contactRoles);
       console.log('');
 
-      // For now, handle only the first AI therapist contact
-      const aiTherapist = selectedContacts.find(c => c.type === 'ai_therapist');
+      // Generate check-in context
+      const checkInContext = await generateCheckInContext(responses, selectedEmotion);
+
+      console.log('=== CHECK-IN DATA DEBUG ===');
+      console.log('Responses object:', JSON.stringify(responses, null, 2));
+      console.log('Intensity (howMuch):', responses.howMuch);
+
+      // Prepare check-in data for thread creation
+      const checkInData = {
+        name: checkInName,
+        emotion: selectedEmotion,
+        responses: responses,
+        context: checkInContext,
+        timestamp: new Date().toISOString()
+      };
+
+      console.log('CheckInData object:', JSON.stringify(checkInData, null, 2));
+      console.log('=== END CHECK-IN DATA DEBUG ===');
+
+      // Handle AI therapist (solo session)
+      const aiTherapist = selectedContacts.find(c => c.type === 'ai_therapist' || c.type === 'ai');
 
       if (aiTherapist && aiTherapist.gptSettings) {
-        // 1. Create updated user context with check-in data
-        const checkInContext = await generateCheckInContext(responses, selectedEmotion);
-        const updatedUser = {
-          ...user,
-          gptMessageContext: {
-            ...user?.gptMessageContext,
-            currentEmotionalContext: {
-              ...user?.gptMessageContext?.currentEmotionalContext,
-              primaryEmotion: selectedEmotion,
-              checkInContext: checkInContext,
-              checkInResponses: responses,
-              lastCheckInAt: new Date().toISOString()
-            },
-            lastUpdated: new Date().toISOString()
-          }
-        };
-
-        // 2. Create new message thread
+        // Create new message thread with check-in data
         const thread = await createMessageThread(
           user.uid,
           aiTherapist.id,
           aiTherapist.name,
-          aiTherapist.type
+          aiTherapist.type,
+          checkInData
         );
 
         console.log('Created thread:', thread.threadId);
 
-        // 3. Create check-in summary message (user's message)
-        const checkInSummary = createCheckInSummaryMessage(selectedEmotion, checkInContext);
+        // Create check-in summary message (user's message)
+        const personalityContext = user?.gptMessageContext?.personalityContext || {};
+        const checkInSummary = await createCheckInSummaryMessage(
+          selectedEmotion,
+          checkInContext,
+          personalityContext,
+          user
+        );
 
         await addMessageToThread(thread.threadId, {
-          sender: 'user',
+          sender: user.uid, // Use actual user ID instead of 'user' string
           content: checkInSummary,
         });
 
-        // 4. Generate AI response (demo for now)
+        // Generate AI response (demo for now)
         await addMessageToThread(thread.threadId, {
           sender: 'ai',
           content: 'Demo of chat GPT response',
@@ -354,15 +472,16 @@ const CheckInScreen = ({ navigation }) => {
 
         console.log('Added initial messages to thread');
 
-        // 5. Clear check-in state
+        // Clear check-in state
         setShowContactSelection(false);
         setShowFollowUp(false);
         setSelectedEmotion(null);
         setResponses({});
         setSelectedContacts([]);
+        setContactRoles({});
         setCheckInCompleted(false);
 
-        // 6. Navigate to message thread
+        // Navigate to message thread
         navigation.navigate('Messages', {
           screen: 'MessageThread',
           params: {
@@ -370,6 +489,84 @@ const CheckInScreen = ({ navigation }) => {
             contactName: aiTherapist.name,
           }
         });
+      }
+
+      // Handle user contacts (multi-user sessions)
+      const userContacts = selectedContacts.filter(c => c.type !== 'ai_therapist' && c.type !== 'ai');
+
+      if (userContacts.length > 0) {
+        const { sendSessionInvite } = require('../services/sessionInvitationService');
+
+        let firstThreadId = null;
+        let firstContactName = null;
+
+        // For each user contact, create thread and send invite
+        for (const contact of userContacts) {
+          const role = contactRoles[contact.id] || 'participant';
+
+          // Create a thread for this contact
+          const thread = await createMessageThread(
+            user.uid,
+            contact.id,
+            contact.name,
+            'user',
+            checkInData
+          );
+
+          console.log(`Created thread for ${contact.name}:`, thread.threadId);
+
+          // Store first thread info for navigation
+          if (!firstThreadId) {
+            firstThreadId = thread.threadId;
+            firstContactName = contact.name;
+          }
+
+          // Send session invite
+          await sendSessionInvite(thread.threadId, user.uid, contact.id, role);
+
+          console.log(`Sent ${role} invite to ${contact.name}`);
+
+          // Create initial check-in message
+          const personalityContext = user?.gptMessageContext?.personalityContext || {};
+          const checkInSummary = await createCheckInSummaryMessage(
+            selectedEmotion,
+            checkInContext,
+            personalityContext,
+            user
+          );
+          await addMessageToThread(thread.threadId, {
+            sender: user.uid, // Use actual user ID instead of 'user' string
+            content: checkInSummary,
+          });
+        }
+
+        // Clear check-in state
+        setShowContactSelection(false);
+        setShowFollowUp(false);
+        setSelectedEmotion(null);
+        setResponses({});
+        setSelectedContacts([]);
+        setContactRoles({});
+        setCheckInCompleted(false);
+
+        // Navigate to first created thread (or Messages List if multiple contacts)
+        if (userContacts.length === 1 && firstThreadId) {
+          // Single contact - navigate directly to the thread
+          navigation.navigate('Messages', {
+            screen: 'MessageThread',
+            params: {
+              threadId: firstThreadId,
+              contactName: firstContactName,
+            }
+          });
+        } else {
+          // Multiple contacts - show alert then navigate to Messages List
+          Alert.alert(
+            'Invites Sent!',
+            `Session invites sent to ${userContacts.length} contacts. They'll be able to join once they accept.`,
+            [{ text: 'OK', onPress: () => navigation.navigate('Messages', { screen: 'MessagesList' }) }]
+          );
+        }
       }
 
     } catch (error) {
@@ -407,36 +604,92 @@ const CheckInScreen = ({ navigation }) => {
             ) : (
               activeContacts.map(contact => {
                 const isSelected = selectedContacts.some(c => c.id === contact.id);
+                const isUserContact = contact.type !== 'ai_therapist' && contact.type !== 'ai';
+                const currentRole = contactRoles[contact.id] || 'participant';
+
                 return (
-                  <TouchableOpacity
-                    key={contact.id}
-                    style={[
-                      styles.contactItem,
-                      isSelected && styles.contactItemSelected
-                    ]}
-                    onPress={() => handleContactToggle(contact)}
-                  >
-                    <View style={styles.contactInfo}>
-                      <Text style={[
-                        styles.contactName,
-                        isSelected && styles.contactNameSelected
+                  <View key={contact.id}>
+                    <TouchableOpacity
+                      style={[
+                        styles.contactItem,
+                        isSelected && styles.contactItemSelected
+                      ]}
+                      onPress={() => handleContactToggle(contact)}
+                    >
+                      <View style={styles.contactInfo}>
+                        <Text style={[
+                          styles.contactName,
+                          isSelected && styles.contactNameSelected
+                        ]}>
+                          {contact.name}
+                        </Text>
+                        <Text style={[
+                          styles.contactType,
+                          isSelected && styles.contactTypeSelected
+                        ]}>
+                          {contact.type === 'ai_therapist' ? 'AI Therapist' : 'Personal Contact'}
+                        </Text>
+                      </View>
+                      <View style={[
+                        styles.contactCheckbox,
+                        isSelected && styles.contactCheckboxSelected
                       ]}>
-                        {contact.name}
-                      </Text>
-                      <Text style={[
-                        styles.contactType,
-                        isSelected && styles.contactTypeSelected
-                      ]}>
-                        {contact.type === 'ai_therapist' ? 'AI Therapist' : 'Personal Contact'}
-                      </Text>
-                    </View>
-                    <View style={[
-                      styles.contactCheckbox,
-                      isSelected && styles.contactCheckboxSelected
-                    ]}>
-                      {isSelected && <Text style={styles.checkboxText}>✓</Text>}
-                    </View>
-                  </TouchableOpacity>
+                        {isSelected && <Text style={styles.checkboxText}>✓</Text>}
+                      </View>
+                    </TouchableOpacity>
+
+                    {/* Role Toggle for User Contacts */}
+                    {isSelected && isUserContact && (
+                      <View style={styles.roleToggleContainer}>
+                        <Text style={styles.roleToggleLabel}>Join as:</Text>
+                        <View style={styles.roleToggleButtons}>
+                          <TouchableOpacity
+                            style={[
+                              styles.roleToggleButton,
+                              currentRole === 'participant' && styles.roleToggleButtonActive
+                            ]}
+                            onPress={() => handleRoleToggle(contact.id, 'participant')}
+                          >
+                            <Feather
+                              name="users"
+                              size={16}
+                              color={currentRole === 'participant' ? '#fff' : '#e91e63'}
+                            />
+                            <Text style={[
+                              styles.roleToggleButtonText,
+                              currentRole === 'participant' && styles.roleToggleButtonTextActive
+                            ]}>
+                              Participant
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={[
+                              styles.roleToggleButton,
+                              currentRole === 'assistant' && styles.roleToggleButtonActive
+                            ]}
+                            onPress={() => handleRoleToggle(contact.id, 'assistant')}
+                          >
+                            <Feather
+                              name="life-buoy"
+                              size={16}
+                              color={currentRole === 'assistant' ? '#fff' : '#0891b2'}
+                            />
+                            <Text style={[
+                              styles.roleToggleButtonText,
+                              currentRole === 'assistant' && styles.roleToggleButtonTextActive
+                            ]}>
+                              Assistant
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                        <Text style={styles.roleToggleHint}>
+                          {currentRole === 'participant'
+                            ? '→ Must check-in before joining'
+                            : '→ Can join immediately'}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
                 );
               })
             )}
@@ -502,6 +755,18 @@ const CheckInScreen = ({ navigation }) => {
           <Text style={styles.followUpDescription}>
             Share what's contributing to this feeling and how we can help you work through it.
           </Text>
+
+          {/* Check-In Name Field */}
+          <View style={styles.checkInNameFieldContainer}>
+            <Text style={styles.checkInNameFieldLabel}>Check-In Name</Text>
+            <TextInput
+              style={styles.checkInNameFieldInput}
+              value={checkInName}
+              onChangeText={setCheckInName}
+              placeholder="Name this check-in..."
+              maxLength={50}
+            />
+          </View>
 
           {loading ? (
             <View style={styles.loadingContainer}>
@@ -653,13 +918,6 @@ const CheckInScreen = ({ navigation }) => {
             <Text style={styles.addEmotionButtonText}>+ ADD emotion</Text>
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity
-          style={styles.debugButton}
-          onPress={handleDebugGPTContext}
-        >
-          <Text style={styles.debugButtonText}>🐛 Debug Old Context</Text>
-        </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.debugButton, { backgroundColor: '#0891b2', borderColor: '#0e7490' }]}
@@ -904,6 +1162,24 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     marginBottom: 20,
   },
+  checkInNameFieldContainer: {
+    marginBottom: 20,
+  },
+  checkInNameFieldLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 10,
+  },
+  checkInNameFieldInput: {
+    backgroundColor: '#f8f9fa',
+    borderRadius: 10,
+    padding: 15,
+    fontSize: 16,
+    color: '#333',
+    borderWidth: 1,
+    borderColor: '#e9ecef',
+  },
   followUpContent: {
     backgroundColor: '#f8f9fa',
     padding: 20,
@@ -935,6 +1211,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#333',
     marginBottom: 15,
+  },
+  requiredIndicator: {
+    color: '#ef4444',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   checkboxContainer: {
     flexDirection: 'row',
@@ -1137,6 +1418,57 @@ const styles = StyleSheet.create({
     color: '#0891b2',
     marginBottom: 15,
     textAlign: 'center',
+  },
+  roleToggleContainer: {
+    backgroundColor: '#f8f9fa',
+    padding: 12,
+    marginHorizontal: 10,
+    marginTop: -5,
+    marginBottom: 10,
+    borderRadius: 8,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+  },
+  roleToggleLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#666',
+    marginBottom: 8,
+  },
+  roleToggleButtons: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  roleToggleButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    backgroundColor: 'white',
+    borderWidth: 2,
+    borderColor: '#e9ecef',
+    gap: 6,
+  },
+  roleToggleButtonActive: {
+    backgroundColor: '#e91e63',
+    borderColor: '#e91e63',
+  },
+  roleToggleButtonText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#666',
+  },
+  roleToggleButtonTextActive: {
+    color: '#fff',
+  },
+  roleToggleHint: {
+    fontSize: 11,
+    color: '#666',
+    marginTop: 6,
+    fontStyle: 'italic',
   },
 });
 

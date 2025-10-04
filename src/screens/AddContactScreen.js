@@ -20,6 +20,7 @@ const AddContactScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
   const [relationship, setRelationship] = useState('');
+  const [participantRole, setParticipantRole] = useState('participant');
   const [loading, setLoading] = useState(false);
 
   const handleSendRequest = async () => {
@@ -86,6 +87,7 @@ const AddContactScreen = ({ navigation }) => {
         targetName: `${targetUser.profile?.firstName || ''} ${targetUser.profile?.lastName || ''}`.trim() || 'User',
         nickname: nickname.trim(),
         relationship: relationship.trim(),
+        participantRole: participantRole,
         status: 'pending',
         sentAt: new Date().toISOString(),
       };
@@ -98,6 +100,7 @@ const AddContactScreen = ({ navigation }) => {
         fromName: `${user.profile?.firstName || ''} ${user.profile?.lastName || ''}`.trim() || 'User',
         nickname: nickname.trim(),
         relationship: relationship.trim(),
+        participantRole: participantRole,
         status: 'pending',
         receivedAt: new Date().toISOString(),
       };
@@ -185,6 +188,67 @@ const AddContactScreen = ({ navigation }) => {
             onChangeText={setRelationship}
             autoCapitalize="words"
           />
+        </View>
+
+        <View style={styles.inputSection}>
+          <Text style={styles.label}>Therapy Session Role</Text>
+          <Text style={styles.roleHint}>
+            How will this person participate in therapy sessions?
+          </Text>
+
+          <TouchableOpacity
+            style={[styles.roleOption, participantRole === 'participant' && styles.roleOptionSelected]}
+            onPress={() => setParticipantRole('participant')}
+          >
+            <View style={styles.roleIconContainer}>
+              <Feather
+                name="users"
+                size={24}
+                color={participantRole === 'participant' ? '#e91e63' : '#666'}
+              />
+            </View>
+            <View style={styles.roleContent}>
+              <Text style={[
+                styles.roleTitle,
+                participantRole === 'participant' && styles.roleTextSelected
+              ]}>
+                Participant
+              </Text>
+              <Text style={styles.roleSubtext}>
+                Active participant - must check-in before joining
+              </Text>
+            </View>
+            {participantRole === 'participant' && (
+              <Feather name="check-circle" size={24} color="#e91e63" />
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.roleOption, participantRole === 'assistant' && styles.roleOptionSelected]}
+            onPress={() => setParticipantRole('assistant')}
+          >
+            <View style={styles.roleIconContainer}>
+              <Feather
+                name="life-buoy"
+                size={24}
+                color={participantRole === 'assistant' ? '#0891b2' : '#666'}
+              />
+            </View>
+            <View style={styles.roleContent}>
+              <Text style={[
+                styles.roleTitle,
+                participantRole === 'assistant' && styles.roleTextSelected
+              ]}>
+                Assistant
+              </Text>
+              <Text style={styles.roleSubtext}>
+                Observer & supporter - joins immediately
+              </Text>
+            </View>
+            {participantRole === 'assistant' && (
+              <Feather name="check-circle" size={24} color="#0891b2" />
+            )}
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity
@@ -286,6 +350,51 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     backgroundColor: '#ccc',
+  },
+  roleHint: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 12,
+  },
+  roleOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 12,
+    borderWidth: 2,
+    borderColor: '#e9ecef',
+  },
+  roleOptionSelected: {
+    borderColor: '#e91e63',
+    backgroundColor: '#fce7f3',
+  },
+  roleIconContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#f8f9fa',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  roleContent: {
+    flex: 1,
+  },
+  roleTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 4,
+  },
+  roleTextSelected: {
+    color: '#e91e63',
+  },
+  roleSubtext: {
+    fontSize: 13,
+    color: '#666',
+    lineHeight: 18,
   },
 });
 

@@ -86,6 +86,7 @@ export const createDefaultUserProfile = (user, additionalData = {}) => ({
       type: "ai_therapist",
       isActive: true,
       canReceiveEmotionUpdates: true,
+      participantRole: null, // null for AI therapists, "assistant" | "participant" for user contacts
       gptSettings: {
         responseStyle: "analytical_yet_empathetic",
         conversationDepth: "moderate",
@@ -316,6 +317,7 @@ const ensureGeneralTherapist = (existingProfile) => {
       type: "ai_therapist",
       isActive: true,
       canReceiveEmotionUpdates: true,
+      participantRole: null,
       gptSettings: {
         responseStyle: "analytical_yet_empathetic",
         conversationDepth: "moderate",
