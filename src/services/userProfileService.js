@@ -144,7 +144,9 @@ export const createDefaultUserProfile = (user, additionalData = {}) => ({
     privacy: {
       shareEmotionDataWithContacts: true,
       allowAiLearning: true,
-      anonymousUsageData: false
+      anonymousUsageData: false,
+      contactsCanViewAboutMe: true,
+      contactsCanViewPersonality: true
     },
     ui: {
       theme: "light",
@@ -154,6 +156,12 @@ export const createDefaultUserProfile = (user, additionalData = {}) => ({
     checkIn: {
       mode: "basic"
     }
+  },
+
+  // Contact requests
+  contactRequests: {
+    incoming: [],
+    outgoing: []
   },
 
   // Profile completion tracking

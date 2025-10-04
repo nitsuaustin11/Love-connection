@@ -131,7 +131,16 @@ const MessagesScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <DebugConsole />
-      <Text style={styles.title}>Messages</Text>
+
+      <View style={styles.header}>
+        <Text style={styles.title}>Messages</Text>
+        <TouchableOpacity
+          style={styles.contactsButton}
+          onPress={() => navigation.navigate('Profile', { screen: 'Contacts' })}
+        >
+          <Feather name="users" size={20} color="#e91e63" />
+        </TouchableOpacity>
+      </View>
 
       {threads.length === 0 ? (
         <View style={styles.emptyContainer}>
@@ -164,13 +173,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    marginTop: 60,
+    marginBottom: 20,
+    position: 'relative',
+  },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
     color: '#e91e63',
-    textAlign: 'center',
-    marginTop: 60,
-    marginBottom: 20,
+  },
+  contactsButton: {
+    position: 'absolute',
+    right: 20,
+    padding: 8,
+    backgroundColor: '#fce7f3',
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   emptyContainer: {
     flex: 1,

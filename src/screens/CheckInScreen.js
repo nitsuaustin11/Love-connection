@@ -449,7 +449,9 @@ const CheckInScreen = ({ navigation }) => {
               disabled={selectedContacts.length === 0}
             >
               <Text style={styles.sendButtonText}>
-                Send to {selectedContacts.length} Contact{selectedContacts.length !== 1 ? 's' : ''}
+                {selectedContacts.length === 1
+                  ? `Send to ${selectedContacts[0].name}`
+                  : `Send to ${selectedContacts.length} Contacts`}
               </Text>
             </TouchableOpacity>
           </View>

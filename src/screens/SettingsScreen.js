@@ -249,6 +249,30 @@ const SettingsScreen = ({ navigation }) => {
           {renderSection('Privacy & Data', 'shield')}
           <View style={styles.card}>
             {renderToggle(
+              'Contacts Can View About Me',
+              'Let contacts see your profile description and interests',
+              user?.appPreferences?.privacy?.contactsCanViewAboutMe ?? true,
+              (value) => {
+                const { updateUserProfile } = require('../services/userProfileService');
+                updateUserProfile(user.uid, {
+                  'appPreferences.privacy.contactsCanViewAboutMe': value,
+                });
+                refreshUserProfile();
+              }
+            )}
+            {renderToggle(
+              'Contacts Can View Personality Tests',
+              'Let contacts see your MBTI, Six Needs, and Love Languages',
+              user?.appPreferences?.privacy?.contactsCanViewPersonality ?? true,
+              (value) => {
+                const { updateUserProfile } = require('../services/userProfileService');
+                updateUserProfile(user.uid, {
+                  'appPreferences.privacy.contactsCanViewPersonality': value,
+                });
+                refreshUserProfile();
+              }
+            )}
+            {renderToggle(
               'Share Emotion Data',
               'Allow sharing check-ins with contacts',
               shareEmotionData,

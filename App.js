@@ -19,12 +19,16 @@ import MessagesScreen from './src/screens/MessagesScreen';
 import MessageThreadScreen from './src/screens/MessageThreadScreen';
 import ContactsScreen from './src/screens/ContactsScreen';
 import AddAITherapistScreen from './src/screens/AddAITherapistScreen';
+import EditAITherapistScreen from './src/screens/EditAITherapistScreen';
+import AddContactScreen from './src/screens/AddContactScreen';
+import ContactRequestsScreen from './src/screens/ContactRequestsScreen';
 import MBTIDetailScreen from './src/screens/MBTIDetailScreen';
 import SixHumanNeedsDetailScreen from './src/screens/SixHumanNeedsDetailScreen';
 import LoveLanguagesDetailScreen from './src/screens/LoveLanguagesDetailScreen';
 import AddSixNeedsResults from './src/screens/AddSixNeedsResults';
 import AddMBTIResults from './src/screens/AddMBTIResults';
 import AddLoveLanguagesResults from './src/screens/AddLoveLanguagesResults';
+import ContactDetailScreen from './src/screens/ContactDetailScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -51,6 +55,10 @@ function ProfileStackNavigator() {
       <Stack.Screen name="CreateProfile" component={CreateProfileScreen} />
       <Stack.Screen name="Contacts" component={ContactsScreen} />
       <Stack.Screen name="AddAITherapist" component={AddAITherapistScreen} />
+      <Stack.Screen name="EditAITherapist" component={EditAITherapistScreen} />
+      <Stack.Screen name="AddContact" component={AddContactScreen} />
+      <Stack.Screen name="ContactRequests" component={ContactRequestsScreen} />
+      <Stack.Screen name="ContactDetail" component={ContactDetailScreen} />
     </Stack.Navigator>
   );
 }
@@ -102,6 +110,12 @@ function TabNavigator() {
         name="Messages"
         component={MessagesStackNavigator}
         options={{ tabBarLabel: 'Messages' }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            // Reset the Messages stack to the first screen when tab is pressed
+            navigation.navigate('Messages', { screen: 'MessagesList' });
+          },
+        })}
       />
       <Tab.Screen
         name="Profile"
