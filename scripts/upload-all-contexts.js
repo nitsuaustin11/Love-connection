@@ -30,6 +30,39 @@ const CONTEXTS_DIR = path.join(__dirname, '..', 'gpt-contexts');
 console.log(`${colors.green}✓ Firebase initialized${colors.reset}\n`);
 
 /**
+ * Validate data for Firestore compatibility
+ */
+function validateFirestoreData(obj, path = '') {
+  if (obj === undefined) {
+    return { valid: false, error: `Undefined value at ${path}` };
+  }
+
+  if (typeof obj !== 'object' || obj === null) {
+    return { valid: true };
+  }
+
+  if (Array.isArray(obj)) {
+    for (let i = 0; i < obj.length; i++) {
+      const result = validateFirestoreData(obj[i], `${path}[${i}]`);
+      if (!result.valid) return result;
+    }
+    return { valid: true };
+  }
+
+  for (const [key, value] of Object.entries(obj)) {
+    // Check for reserved field names
+    if (key === 'type' || key === '__name__') {
+      console.log(`  ${colors.yellow}Warning:${colors.reset} Field "${key}" at ${path} might conflict with Firestore`);
+    }
+
+    const result = validateFirestoreData(value, path ? `${path}.${key}` : key);
+    if (!result.valid) return result;
+  }
+
+  return { valid: true };
+}
+
+/**
  * Upload a single context file to Firebase
  */
 async function uploadContextFile(filePath) {
@@ -43,6 +76,13 @@ async function uploadContextFile(filePath) {
     const content = fs.readFileSync(filePath, 'utf8');
     const contextData = JSON.parse(content);
 
+    // Validate data structure
+    console.log(`  Validating data structure...`);
+    const validation = validateFirestoreData(contextData);
+    if (!validation.valid) {
+      throw new Error(`Invalid Firestore data: ${validation.error}`);
+    }
+
     // Add metadata
     const dataToUpload = {
       ...contextData,
@@ -53,15 +93,32 @@ async function uploadContextFile(filePath) {
       }
     };
 
+    // Test if data can be serialized
+    try {
+      JSON.stringify(dataToUpload);
+    } catch (serializeError) {
+      throw new Error(`Cannot serialize data: ${serializeError.message}`);
+    }
+
+    console.log(`  Data size: ${JSON.stringify(dataToUpload).length} bytes`);
+
     // Upload to Firebase: gptContexts/{filename}
     const docRef = doc(db, 'gptContexts', fileName);
-    await setDoc(docRef, dataToUpload);
+    await setDoc(docRef, dataToUpload, { merge: true });
 
     console.log(`  ${colors.green}✓ Uploaded to:${colors.reset} gptContexts/${fileName}`);
     return { success: true, fileName: displayName };
 
   } catch (error) {
-    console.log(`  ${colors.red}✗ Upload failed:${colors.reset} ${error.message}`);
+    console.log(`  ${colors.red}✗ Upload failed${colors.reset}`);
+    console.log(`  Error type: ${error.code || error.name}`);
+    console.log(`  Error message: ${error.message}`);
+    if (error.details) {
+      console.log(`  Error details: ${JSON.stringify(error.details, null, 2)}`);
+    }
+    if (error.stack) {
+      console.log(`  Stack trace: ${error.stack.split('\n').slice(0, 3).join('\n')}`);
+    }
     return { success: false, fileName: displayName, error: error.message };
   }
 }
